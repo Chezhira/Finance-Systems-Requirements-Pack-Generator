@@ -179,7 +179,7 @@ Each pack includes:
 * Plain-language process-map summary
 * Trigger, intake, validation, exception, approval, reporting, evidence, and sign-off flow
 
-The HTML process map follows the finance control-flow design, opens directly in a browser, and includes print and SVG controls. It uses Mermaid's browser renderer from a CDN when internet access is available. The raw Mermaid source remains embedded in the file for editing or offline use.
+The HTML process map follows the finance control-flow design, opens directly in a browser, and uses deterministic HTML/CSS nodes and connectors. Mermaid source remains available as a secondary technical download and inside a closed advanced section.
 
 The app does not call external APIs, scrape the web, or use live web RAG during export generation.
 

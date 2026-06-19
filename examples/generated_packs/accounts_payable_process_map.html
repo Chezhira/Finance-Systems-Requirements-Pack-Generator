@@ -7,7 +7,7 @@
   <style>
     :root {
       --ink:#0f1b2d; --ink-soft:#3a4659; --muted:#7c8597;
-      --bg:#eef1f5; --card:#ffffff; --line:#dde3ea;
+      --bg:#eef1f5; --card:#ffffff; --line:#dde3ea; --connector:#a9b6c8;
       --gate:#0f1b2d; --step:#0e7c66; --decide:#b45309; --fix:#b91c1c;
       --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
       --sans:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,
@@ -16,14 +16,14 @@
     * { box-sizing:border-box; }
     html { -webkit-text-size-adjust:100%; }
     body {
-      margin:0; padding:48px 24px 64px; font-family:var(--sans); color:var(--ink);
-      background:var(--bg); line-height:1.55;
+      margin:0; padding:48px 24px 64px; background:var(--bg); color:var(--ink);
+      font-family:var(--sans); line-height:1.55;
     }
     .wrap { max-width:1180px; margin:0 auto; }
     .eyebrow {
-      display:flex; align-items:center; gap:10px; margin:0 0 12px;
-      color:var(--step); font-family:var(--mono); font-size:11.5px;
-      font-weight:600; letter-spacing:.22em; text-transform:uppercase;
+      display:flex; align-items:center; gap:10px; margin:0 0 12px; color:var(--step);
+      font-family:var(--mono); font-size:11.5px; font-weight:600; letter-spacing:.22em;
+      text-transform:uppercase;
     }
     .eyebrow::before { content:""; width:26px; height:2px; background:var(--step); }
     h1 { margin:0 0 8px; color:var(--ink); font-size:30px; font-weight:650; }
@@ -41,18 +41,53 @@
     .flow-tag {
       color:var(--muted); font-family:var(--mono); font-size:11px; letter-spacing:.06em;
     }
-    .diagram {
-      display:flex; min-height:220px; align-items:center; padding:30px 22px; overflow-x:auto;
+    .flow-scroll { padding:34px 22px; overflow-x:auto; background:#fff; }
+    .flow-track {
+      display:flex; min-width:1680px; align-items:center; justify-content:flex-start;
     }
-    .diagram svg {
-      display:block; width:100%; min-width:980px; height:auto; margin:0 auto; max-width:100%;
+    .flow-node {
+      display:flex; width:180px; min-height:94px; flex:0 0 180px; flex-direction:column;
+      align-items:center; justify-content:center; padding:14px 13px; border:2px solid var(--step);
+      border-radius:6px; background:#fff; color:var(--ink); text-align:center;
     }
-    .render-status { margin:0; padding:12px 22px; color:var(--muted); font-size:12px; }
-    .diagram-message { width:100%; margin:0; color:var(--muted); text-align:center; }
-    .render-fallback {
-      width:100%; max-width:720px; margin:0 auto; padding:18px 20px; text-align:center;
-      background:#f8fafc; border:1px solid var(--line); border-radius:8px; color:var(--ink-soft);
+    .flow-node.gate {
+      width:158px; flex-basis:158px; border-color:var(--gate); background:var(--gate); color:#fff;
     }
+    .flow-node.decide {
+      width:170px; flex-basis:170px; border-color:var(--decide); background:#fef3c7;
+      color:#7c2d12;
+    }
+    .flow-node.fix {
+      width:178px; min-height:78px; flex-basis:178px; border-color:var(--fix);
+      background:#fee2e2; color:#7f1d1d;
+    }
+    .node-kind {
+      margin-bottom:6px; font-family:var(--mono); font-size:9px; font-weight:700;
+      letter-spacing:.12em; text-transform:uppercase; opacity:.72;
+    }
+    .node-label { font-size:13px; font-weight:600; line-height:1.35; }
+    .connector {
+      position:relative; width:32px; height:2px; flex:0 0 32px; background:var(--connector);
+    }
+    .connector::after {
+      content:""; position:absolute; top:-4px; right:-1px; border-width:5px 0 5px 7px;
+      border-style:solid; border-color:transparent transparent transparent var(--connector);
+    }
+    .branch-options {
+      display:grid; width:242px; flex:0 0 242px; gap:14px; padding:0 10px;
+    }
+    .branch { display:flex; align-items:center; gap:8px; }
+    .branch-label {
+      width:24px; flex:0 0 24px; color:var(--muted); font-family:var(--mono);
+      font-size:10px; font-weight:700; text-transform:uppercase;
+    }
+    .branch-line { position:relative; height:2px; flex:1; background:var(--connector); }
+    .branch-line::after {
+      content:""; position:absolute; top:-4px; right:-1px; border-width:5px 0 5px 7px;
+      border-style:solid; border-color:transparent transparent transparent var(--connector);
+    }
+    .branch.yes { align-items:center; }
+    .branch.yes .branch-line { min-width:16px; }
     .legend {
       display:flex; flex-wrap:wrap; gap:10px 26px; padding:18px 22px;
       border-top:1px solid var(--line); background:#fbfcfe;
@@ -71,7 +106,6 @@
     }
     button:hover { border-color:var(--step); color:var(--step); }
     button.primary { background:var(--ink); border-color:var(--ink); color:#fff; }
-    button:disabled { cursor:not-allowed; opacity:.5; }
     .source {
       margin-top:22px; background:var(--card); border:1px solid var(--line); border-radius:8px;
     }
@@ -89,10 +123,12 @@
       .card-head { align-items:flex-start; flex-direction:column; }
     }
     @media print {
+      @page { size:landscape; margin:.4in; }
       body { padding:0; background:#fff; }
       .card { box-shadow:none; }
-      .toolbar, .source, .render-status { display:none; }
-      .diagram { overflow:visible; }
+      .toolbar, .source { display:none; }
+      .flow-scroll { overflow:visible; padding:22px 12px; }
+      .flow-track { min-width:1680px; zoom:.62; }
       footer { margin-top:12px; }
     }
   </style>
@@ -108,29 +144,44 @@
         <h2 id="flow-heading">Process flow</h2>
         <span class="flow-tag">trigger &rarr; sign-off</span>
       </div>
-      <div class="diagram" id="diagram">
-        <p class="diagram-message">Rendering process map&hellip;</p>
+      <div class="flow-scroll">
+        <div class="flow-track" role="img" aria-label="Accounts Payable - Process Map">
+          <div class="flow-node gate"><span class="node-kind">Start</span><span class="node-label">Accounts Payable trigger</span></div>
+          <span class="connector" aria-hidden="true"></span>
+          <div class="flow-node step"><span class="node-kind">Intake</span><span class="node-label">Email approvals, shared AP tracker, and ERP purchase ledger</span></div>
+          <span class="connector" aria-hidden="true"></span>
+          <div class="flow-node step"><span class="node-kind">Validate</span><span class="node-label">Validate data, ownership, and required evidence</span></div>
+          <span class="connector" aria-hidden="true"></span>
+          <div class="flow-node decide"><span class="node-kind">Decision</span><span class="node-label">Exception or control gap?</span></div>
+          <div class="branch-options" aria-label="Exception decision routes">
+            <div class="branch no">
+              <span class="branch-label">No</span><span class="branch-line"></span>
+            </div>
+            <div class="branch yes">
+              <span class="branch-label">Yes</span>
+              <div class="flow-node fix"><span class="node-kind">Remediate</span><span class="node-label">Resolve exception and update evidence</span></div>
+              <span class="branch-line"></span>
+            </div>
+          </div>
+          <div class="flow-node step"><span class="node-kind">Approve</span><span class="node-label">Accounts Payable approval / review</span></div>
+          <span class="connector" aria-hidden="true"></span>
+          <div class="flow-node step"><span class="node-kind">Evidence</span><span class="node-label">Aged approval backlog, blocked invoices, and payment readiness summary</span></div>
+          <span class="connector" aria-hidden="true"></span>
+          <div class="flow-node gate"><span class="node-kind">Sign-off</span><span class="node-label">Accounts Payable sign-off / readiness</span></div>
+        </div>
       </div>
-      <p class="render-status" id="render-status">
-        Browser rendering uses Mermaid when internet access is available.
-      </p>
       <div class="legend" aria-label="Process map legend">
         <div class="key"><span class="swatch gate"></span><b>Gateway</b> &mdash; start / end</div>
-        <div class="key">
-          <span class="swatch step"></span><b>Process step</b> &mdash; controlled sequence
-        </div>
+        <div class="key"><span class="swatch step"></span><b>Process step</b> &mdash; sequence</div>
         <div class="key">
           <span class="swatch decide"></span><b>Decision</b> &mdash; control check
         </div>
-        <div class="key">
-          <span class="swatch fix"></span><b>Exception</b> &mdash; resolve and re-enter
-        </div>
+        <div class="key"><span class="swatch fix"></span><b>Exception</b> &mdash; remediate</div>
       </div>
     </section>
 
     <div class="toolbar">
       <button class="primary" type="button" onclick="window.print()">Print / Save as PDF</button>
-      <button id="download-svg" type="button" onclick="downloadSVG()" disabled>Download SVG</button>
       <button type="button" onclick="copySource()">Copy Mermaid source</button>
       <button type="button" onclick="downloadSource()">Download Mermaid source</button>
     </div>
@@ -160,9 +211,6 @@
     </details>
 
     <footer>
-      <p>
-        Diagram rendering uses Mermaid's browser renderer and may require internet access.
-      </p>
       <p>This pack was generated from fictional, public-safe sample inputs. It does not contain real employer, client, supplier, bank, VAT, payroll, or operational data. Do not upload confidential business information into a public demo.</p>
       <p>
         Generated by Chez Solutions &middot; deterministic finance systems implementation artefact
@@ -198,47 +246,6 @@
       anchor.remove();
       URL.revokeObjectURL(url);
     }
-    function downloadSVG() {
-      const svg = document.querySelector('#diagram svg');
-      if (!svg) return;
-      const data = new XMLSerializer().serializeToString(svg);
-      const url = URL.createObjectURL(new Blob([data], {type:'image/svg+xml'}));
-      const anchor = document.createElement('a');
-      anchor.href = url;
-      anchor.download = 'accounts-payable-process-map.svg';
-      document.body.appendChild(anchor);
-      anchor.click();
-      anchor.remove();
-      URL.revokeObjectURL(url);
-    }
-  </script>
-  <script type="module">
-    document.addEventListener('DOMContentLoaded', async () => {
-      const diagram = document.getElementById('diagram');
-      const status = document.getElementById('render-status');
-      try {
-        const { default: mermaid } = await import('https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs');
-        mermaid.initialize({
-          startOnLoad:false,
-          securityLevel:'strict',
-          theme:'base',
-          flowchart:{htmlLabels:true,curve:'basis',useMaxWidth:true},
-          themeVariables:{fontFamily:'Segoe UI, Arial, sans-serif',lineColor:'#94a3b8'}
-        });
-        const rendered = await mermaid.render('finance-process-map', getSource());
-        diagram.innerHTML = rendered.svg;
-        if (rendered.bindFunctions) rendered.bindFunctions(diagram);
-        status.textContent = 'Rendered in your browser.';
-        document.getElementById('download-svg').disabled = false;
-      } catch (error) {
-        diagram.innerHTML = `
-          <div class="render-fallback" role="status">
-            Diagram could not render automatically. Use Copy Mermaid source or Download Mermaid
-            source to open it in a Mermaid-compatible tool.
-          </div>`;
-        status.textContent = 'The technical source remains available from the controls below.';
-      }
-    });
   </script>
 </body>
 </html>

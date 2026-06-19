@@ -1,3 +1,5 @@
+from streamlit.testing.v1 import AppTest
+
 import app
 from finance_requirements_generator import generate_pack
 from finance_requirements_generator.process_library import load_all_templates
@@ -23,6 +25,24 @@ def test_sample_generation_smoke() -> None:
 
     assert pack.process_name == "Bank Reconciliation"
     assert pack.uat_test_cases[0].test_id == "UAT-01"
+
+
+def test_streamlit_process_map_source_is_secondary_and_collapsed() -> None:
+    streamlit_app = AppTest.from_file("app.py", default_timeout=30).run()
+    streamlit_app.button[0].click().run()
+
+    assert not streamlit_app.exception
+    download_labels = {item.label for item in streamlit_app.get("download_button")}
+    advanced = [
+        item
+        for item in streamlit_app.expander
+        if item.label == "Advanced: Mermaid source"
+    ]
+
+    assert advanced
+    assert not advanced[0].proto.expanded
+    assert "Download process map as HTML" in download_labels
+    assert "Download Mermaid source" in download_labels
 
 
 def test_streamlit_preview_fields_exist_on_generated_packs() -> None:

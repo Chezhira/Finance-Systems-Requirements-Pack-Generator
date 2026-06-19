@@ -40,4 +40,4 @@ Target-system mapping should ask the user to select the ERP or finance system, u
 
 The v0.4.0 outputs add visual process documentation and control-risk exports without changing that deterministic posture. Review the browser-viewable HTML map, Mermaid source, Word-friendly process-map summary, CSV matrix, and XLSX matrix as implementation-preparation artefacts.
 
-The HTML process map opens directly in a browser. It uses Mermaid's browser renderer from a CDN when internet access is available and always includes the raw Mermaid source for editing or offline use. Export generation does not call external APIs, scrape the web, or use live web RAG.
+The HTML process map opens directly in a browser and renders with deterministic HTML/CSS nodes and connectors. Mermaid source remains available as a secondary technical download and inside a closed advanced section. Export generation does not call external APIs, scrape the web, or use live web RAG.

@@ -76,6 +76,18 @@ class ControlRiskRow:
 
 
 @dataclass(frozen=True)
+class ProcessMapFlow:
+    trigger: str
+    source: str
+    validation: str
+    decision: str
+    exception_resolution: str
+    approval: str
+    reporting: str
+    signoff: str
+
+
+@dataclass(frozen=True)
 class SOPDraft:
     purpose: str
     scope: str
@@ -113,6 +125,7 @@ class RequirementsPack:
     risks_and_dependencies: list[str]
     implementation_notes: list[str]
     control_risk_matrix: list[ControlRiskRow] = field(default_factory=list)
+    process_map_flow: ProcessMapFlow | None = None
     mermaid_process_map: str = ""
     process_map_summary: list[str] = field(default_factory=list)
     target_system: str = ""

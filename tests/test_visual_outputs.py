@@ -61,6 +61,30 @@ def test_mermaid_process_map_generation() -> None:
     assert "class D decide" in pack.mermaid_process_map
     assert "class E fix" in pack.mermaid_process_map
     assert pack.process_map_summary
+    assert pack.process_map_flow
+
+
+def test_structured_process_map_generation_for_all_processes() -> None:
+    for intake in DEFAULT_SAMPLE_INPUTS.values():
+        pack = generate_pack(intake)
+        flow = pack.process_map_flow
+
+        assert flow is not None
+        assert all(
+            getattr(flow, field)
+            for field in (
+                "trigger",
+                "source",
+                "validation",
+                "decision",
+                "exception_resolution",
+                "approval",
+                "reporting",
+                "signoff",
+            )
+        )
+        assert flow.trigger in pack.mermaid_process_map
+        assert flow.signoff in pack.mermaid_process_map
 
 
 def test_browser_process_map_export_is_styled_and_offline_safe(monkeypatch) -> None:
@@ -76,17 +100,31 @@ def test_browser_process_map_export_is_styled_and_offline_safe(monkeypatch) -> N
     assert "Accounts Payable &mdash; Process Map" in html
     assert escape(pack.mermaid_process_map) in html
     assert html.count(escape(pack.mermaid_process_map)) == 1
-    assert 'class="diagram" id="diagram"' in html
-    assert "mermaid.render('finance-process-map', getSource())" in html
-    assert "mermaid.esm.min.mjs" in html
-    assert all(name in html for name in ("gate", "step", "decide", "fix"))
+    assert 'class="flow-track"' in html
+    assert all(name in html for name in ("flow-node gate", "flow-node step", "flow-node decide"))
+    assert "flow-node fix" in html
+    assert pack.process_map_flow is not None
+    for label in (
+        pack.process_map_flow.trigger,
+        pack.process_map_flow.source,
+        pack.process_map_flow.validation,
+        pack.process_map_flow.decision,
+        pack.process_map_flow.exception_resolution,
+        pack.process_map_flow.approval,
+        pack.process_map_flow.reporting,
+        pack.process_map_flow.signoff,
+    ):
+        assert escape(label) in html
+    assert "mermaid.esm.min.mjs" not in html
+    assert "mermaid.render" not in html
     assert '<details class="source">' in html
     assert '<details class="source" open' not in html
     assert "Advanced: Mermaid source" in html
     assert "Copy Mermaid source" in html
     assert "Download Mermaid source" in html
     assert "function downloadSource()" in html
-    assert "Diagram could not render automatically" in html
+    assert "Rendering process map" not in html
+    assert "Diagram could not render automatically" not in html
     assert "Print / Save as PDF" in html
 
 

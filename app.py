@@ -357,31 +357,28 @@ def render_downloads(pack) -> None:
 def render_visual_outputs(pack) -> None:
     st.subheader("Visual Process Documentation")
     process_map_html = pack_process_map_html_bytes(pack)
-    with st.expander("Browser-viewable process map", expanded=False):
-        if hasattr(st, "iframe"):
-            st.iframe(process_map_html.decode("utf-8"), height=760)
-        else:
-            components.html(process_map_html.decode("utf-8"), height=760, scrolling=True)
-        st.caption(
-            "Open the HTML file directly in a browser to view the process map. "
-            "Internet access is required for the Mermaid renderer; the raw source remains included."
+    if hasattr(st, "iframe"):
+        st.iframe(process_map_html.decode("utf-8"), height=720)
+    else:
+        components.html(process_map_html.decode("utf-8"), height=720, scrolling=True)
+    st.caption("Open the downloaded HTML file directly in a browser to review or print the map.")
+    html_col, source_col = st.columns(2)
+    with html_col:
+        st.download_button(
+            "Download process map as HTML",
+            data=process_map_html,
+            file_name=f"{pack.process_key.replace('_', '-')}-process-map.html",
+            mime="text/html",
         )
+    with source_col:
+        st.download_button(
+            "Download Mermaid source",
+            data=pack.mermaid_process_map,
+            file_name=f"{pack.process_key.replace('_', '-')}-process-map.mmd",
+            mime="text/plain",
+        )
+    with st.expander("Advanced: Mermaid source", expanded=False):
         st.code(pack.mermaid_process_map, language="mermaid")
-        source_col, html_col = st.columns(2)
-        with source_col:
-            st.download_button(
-                "Download Mermaid source",
-                data=pack.mermaid_process_map,
-                file_name=f"{pack.process_key.replace('_', '-')}-process-map.mmd",
-                mime="text/plain",
-            )
-        with html_col:
-            st.download_button(
-                "Download process map as HTML",
-                data=process_map_html,
-                file_name=f"{pack.process_key.replace('_', '-')}-process-map.html",
-                mime="text/html",
-            )
     with st.expander("Control-risk matrix preview", expanded=False):
         st.dataframe(
             [

@@ -3,8 +3,9 @@ from __future__ import annotations
 from finance_requirements_generator.control_risk import generate_control_risk_matrix
 from finance_requirements_generator.process_library import load_process_template
 from finance_requirements_generator.process_map import (
-    generate_mermaid_process_map,
-    generate_process_map_summary,
+    generate_process_map_flow,
+    render_mermaid_process_map,
+    render_process_map_summary,
 )
 from finance_requirements_generator.questionnaire import validate_intake
 from finance_requirements_generator.schemas import IntakeAnswers, RequirementsPack, UATTestCase
@@ -39,6 +40,7 @@ def generate_pack(intake: IntakeAnswers) -> RequirementsPack:
         )
         for index, item in enumerate(template["uat_test_cases"], start=1)
     ]
+    process_map_flow = generate_process_map_flow(template["name"], intake)
 
     return RequirementsPack(
         process_key=intake.process_key,
@@ -77,8 +79,9 @@ def generate_pack(intake: IntakeAnswers) -> RequirementsPack:
             functional_requirements,
             list(template["risks_and_dependencies"]),
         ),
-        mermaid_process_map=generate_mermaid_process_map(template["name"], intake),
-        process_map_summary=generate_process_map_summary(template["name"], intake),
+        process_map_flow=process_map_flow,
+        mermaid_process_map=render_mermaid_process_map(process_map_flow),
+        process_map_summary=render_process_map_summary(process_map_flow, template["name"]),
         target_system=intake.target_system,
         target_system_fit_gap_mapping=get_fit_gap_mapping(
             intake.process_key,
