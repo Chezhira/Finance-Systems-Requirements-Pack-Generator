@@ -12,7 +12,7 @@ def generate_mermaid_process_map(process_name: str, intake: IntakeAnswers) -> st
     signoff = f"{process_name} sign-off / readiness"
     return "\n".join(
         [
-            "flowchart TD",
+            "flowchart LR",
             f"    A[{_escape_mermaid(trigger)}] --> B[{_escape_mermaid(source)}]",
             f"    B --> C[{_escape_mermaid('Validate data, ownership, and required evidence')}]",
             "    C --> D{Exception or control gap?}",
@@ -21,6 +21,14 @@ def generate_mermaid_process_map(process_name: str, intake: IntakeAnswers) -> st
             f"    E --> F[{_escape_mermaid(approval)}]",
             f"    F --> G[{_escape_mermaid(reporting)}]",
             f"    G --> H[{_escape_mermaid(signoff)}]",
+            "    class A,H gate",
+            "    class B,C,F,G step",
+            "    class D decide",
+            "    class E fix",
+            "    classDef gate fill:#0f1b2d,stroke:#0f1b2d,color:#ffffff,font-weight:600",
+            "    classDef step fill:#ffffff,stroke:#0e7c66,color:#0f1b2d,stroke-width:2px",
+            "    classDef decide fill:#fef3c7,stroke:#b45309,color:#7c2d12,stroke-width:2px",
+            "    classDef fix fill:#fee2e2,stroke:#b91c1c,color:#7f1d1d,stroke-width:2px",
         ]
     )
 

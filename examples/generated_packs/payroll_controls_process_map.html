@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payroll Controls - Process Map</title>
+  <style>
+    :root {
+      --ink:#0f1b2d; --ink-soft:#3a4659; --muted:#7c8597;
+      --bg:#eef1f5; --card:#ffffff; --line:#dde3ea;
+      --gate:#0f1b2d; --step:#0e7c66; --decide:#b45309; --fix:#b91c1c;
+      --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+      --sans:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,
+        Arial,sans-serif;
+    }
+    * { box-sizing:border-box; }
+    html { -webkit-text-size-adjust:100%; }
+    body {
+      margin:0; padding:48px 24px 64px; font-family:var(--sans); color:var(--ink);
+      background:var(--bg); line-height:1.55;
+    }
+    .wrap { max-width:1180px; margin:0 auto; }
+    .eyebrow {
+      display:flex; align-items:center; gap:10px; margin:0 0 12px;
+      color:var(--step); font-family:var(--mono); font-size:11.5px;
+      font-weight:600; letter-spacing:.22em; text-transform:uppercase;
+    }
+    .eyebrow::before { content:""; width:26px; height:2px; background:var(--step); }
+    h1 { margin:0 0 8px; color:var(--ink); font-size:30px; font-weight:650; }
+    .sub { max-width:72ch; margin:0; color:var(--ink-soft); font-size:15.5px; }
+    .card {
+      margin-top:30px; overflow:hidden; background:var(--card); border:1px solid var(--line);
+      border-radius:8px;
+      box-shadow:0 1px 2px rgba(16,24,40,.04), 0 18px 40px -24px rgba(16,24,40,.18);
+    }
+    .card-head {
+      display:flex; justify-content:space-between; align-items:center; gap:16px;
+      padding:16px 22px; border-bottom:1px solid var(--line); background:#fbfcfe;
+    }
+    .card-head h2 { margin:0; color:var(--ink-soft); font-size:13px; font-weight:600; }
+    .flow-tag {
+      color:var(--muted); font-family:var(--mono); font-size:11px; letter-spacing:.06em;
+    }
+    .diagram { min-height:260px; padding:30px 22px; overflow-x:auto; }
+    .diagram svg {
+      display:block; width:100%; min-width:980px; height:auto; margin:0 auto; max-width:100%;
+    }
+    .render-status { margin:0; padding:12px 22px; color:var(--muted); font-size:12px; }
+    .legend {
+      display:flex; flex-wrap:wrap; gap:10px 26px; padding:18px 22px;
+      border-top:1px solid var(--line); background:#fbfcfe;
+    }
+    .key { display:flex; align-items:center; gap:9px; color:var(--ink-soft); font-size:13px; }
+    .key b { color:var(--ink); font-weight:600; }
+    .swatch { width:15px; height:15px; border-radius:4px; flex:0 0 auto; }
+    .swatch.gate { background:var(--gate); }
+    .swatch.step { background:#fff; border:1.5px solid var(--step); }
+    .swatch.decide { background:#fef3c7; border:1.5px solid var(--decide); }
+    .swatch.fix { background:#fee2e2; border:1.5px solid var(--fix); }
+    .toolbar { display:flex; flex-wrap:wrap; gap:10px; margin-top:22px; }
+    button {
+      padding:10px 17px; cursor:pointer; background:#fff; border:1px solid var(--line);
+      border-radius:8px; color:var(--ink); font:inherit; font-size:14px; font-weight:550;
+    }
+    button:hover { border-color:var(--step); color:var(--step); }
+    button.primary { background:var(--ink); border-color:var(--ink); color:#fff; }
+    button:disabled { cursor:not-allowed; opacity:.5; }
+    .source {
+      margin-top:22px; background:var(--card); border:1px solid var(--line); border-radius:8px;
+    }
+    .source summary { padding:14px 18px; cursor:pointer; color:var(--ink-soft); font-weight:600; }
+    .source-note { margin:0; padding:0 18px 14px; color:var(--muted); font-size:13px; }
+    pre.raw-source {
+      margin:0; padding:18px; overflow:auto; border-top:1px solid var(--line);
+      background:#f8fafc; color:#243247; font-family:var(--mono); font-size:12px; white-space:pre;
+    }
+    footer { margin-top:20px; color:var(--muted); font-family:var(--mono); font-size:12px; }
+    footer p { margin:5px 0; }
+    @media (max-width:640px) {
+      body { padding:32px 16px 48px; }
+      h1 { font-size:24px; }
+      .card-head { align-items:flex-start; flex-direction:column; }
+    }
+    @media print {
+      body { padding:0; background:#fff; }
+      .card { box-shadow:none; }
+      .toolbar, .source, .render-status { display:none; }
+      .diagram { overflow:visible; }
+      footer { margin-top:12px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <p class="eyebrow">Finance Operations &middot; Control Flow</p>
+    <h1>Payroll Controls &mdash; Process Map</h1>
+    <p class="sub">Payroll Controls control flow from process trigger through validation, exception resolution, approval, reporting, and implementation readiness.</p>
+
+    <section class="card" aria-labelledby="flow-heading">
+      <div class="card-head">
+        <h2 id="flow-heading">Process flow</h2>
+        <span class="flow-tag">trigger &rarr; sign-off</span>
+      </div>
+      <div class="diagram" id="diagram">
+        <pre class="mermaid">flowchart LR
+    A[Payroll Controls trigger] --&gt; B[Payroll bureau portal, HR change forms, GL payroll journals, and bank approval workflow]
+    B --&gt; C[Validate data, ownership, and required evidence]
+    C --&gt; D{Exception or control gap?}
+    D -- Yes --&gt; E[Resolve exception and update evidence]
+    D -- No --&gt; F[Payroll Controls approval / review]
+    E --&gt; F[Payroll Controls approval / review]
+    F --&gt; G[Payroll changes, exceptions, register-to-GL reconciliation, and payment approval summary]
+    G --&gt; H[Payroll Controls sign-off / readiness]
+    class A,H gate
+    class B,C,F,G step
+    class D decide
+    class E fix
+    classDef gate fill:#0f1b2d,stroke:#0f1b2d,color:#ffffff,font-weight:600
+    classDef step fill:#ffffff,stroke:#0e7c66,color:#0f1b2d,stroke-width:2px
+    classDef decide fill:#fef3c7,stroke:#b45309,color:#7c2d12,stroke-width:2px
+    classDef fix fill:#fee2e2,stroke:#b91c1c,color:#7f1d1d,stroke-width:2px</pre>
+      </div>
+      <p class="render-status" id="render-status">
+        Loading the browser-rendered process map. The source remains available below.
+      </p>
+      <div class="legend" aria-label="Process map legend">
+        <div class="key"><span class="swatch gate"></span><b>Gateway</b> &mdash; start / end</div>
+        <div class="key">
+          <span class="swatch step"></span><b>Process step</b> &mdash; controlled sequence
+        </div>
+        <div class="key">
+          <span class="swatch decide"></span><b>Decision</b> &mdash; control check
+        </div>
+        <div class="key">
+          <span class="swatch fix"></span><b>Exception</b> &mdash; resolve and re-enter
+        </div>
+      </div>
+    </section>
+
+    <div class="toolbar">
+      <button class="primary" type="button" onclick="window.print()">Print / Save as PDF</button>
+      <button id="download-svg" type="button" onclick="downloadSVG()" disabled>Download SVG</button>
+      <button type="button" onclick="copySource()">Copy Mermaid source</button>
+    </div>
+
+    <details class="source" open>
+      <summary>Raw Mermaid source and offline fallback</summary>
+      <p class="source-note">
+        Copy this source into Mermaid-compatible tools for editing or offline rendering.
+      </p>
+      <pre class="raw-source" id="raw-source">flowchart LR
+    A[Payroll Controls trigger] --&gt; B[Payroll bureau portal, HR change forms, GL payroll journals, and bank approval workflow]
+    B --&gt; C[Validate data, ownership, and required evidence]
+    C --&gt; D{Exception or control gap?}
+    D -- Yes --&gt; E[Resolve exception and update evidence]
+    D -- No --&gt; F[Payroll Controls approval / review]
+    E --&gt; F[Payroll Controls approval / review]
+    F --&gt; G[Payroll changes, exceptions, register-to-GL reconciliation, and payment approval summary]
+    G --&gt; H[Payroll Controls sign-off / readiness]
+    class A,H gate
+    class B,C,F,G step
+    class D decide
+    class E fix
+    classDef gate fill:#0f1b2d,stroke:#0f1b2d,color:#ffffff,font-weight:600
+    classDef step fill:#ffffff,stroke:#0e7c66,color:#0f1b2d,stroke-width:2px
+    classDef decide fill:#fef3c7,stroke:#b45309,color:#7c2d12,stroke-width:2px
+    classDef fix fill:#fee2e2,stroke:#b91c1c,color:#7f1d1d,stroke-width:2px</pre>
+    </details>
+
+    <footer>
+      <p>
+        This HTML file uses Mermaid's browser renderer when opened with internet access.
+        The raw Mermaid source is included below for editing or offline use.
+      </p>
+      <p>This pack was generated from fictional, public-safe sample inputs. It does not contain real employer, client, supplier, bank, VAT, payroll, or operational data. Do not upload confidential business information into a public demo.</p>
+      <p>
+        Generated by Chez Solutions &middot; deterministic finance systems implementation artefact
+      </p>
+    </footer>
+  </main>
+  <script>
+    function copySource() {
+      navigator.clipboard.writeText(document.getElementById('raw-source').textContent);
+    }
+    function downloadSVG() {
+      const svg = document.querySelector('#diagram svg');
+      if (!svg) return;
+      const data = new XMLSerializer().serializeToString(svg);
+      const url = URL.createObjectURL(new Blob([data], {type:'image/svg+xml'}));
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = 'payroll-controls-process-map.svg';
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      URL.revokeObjectURL(url);
+    }
+  </script>
+  <script type="module">
+    const status = document.getElementById('render-status');
+    try {
+      const { default: mermaid } = await import('https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs');
+      mermaid.initialize({
+        startOnLoad:false,
+        securityLevel:'strict',
+        theme:'base',
+        flowchart:{htmlLabels:true,curve:'basis',useMaxWidth:true},
+        themeVariables:{fontFamily:'Segoe UI, Arial, sans-serif',lineColor:'#94a3b8'}
+      });
+      await mermaid.run({nodes:document.querySelectorAll('.mermaid')});
+      status.textContent =
+        'Rendered in your browser. Use the controls below to print or download the SVG.';
+      document.getElementById('download-svg').disabled = false;
+    } catch (error) {
+      status.textContent =
+        'The Mermaid renderer could not load. ' +
+        'The complete source is available below for offline use.';
+    }
+  </script>
+</body>
+</html>

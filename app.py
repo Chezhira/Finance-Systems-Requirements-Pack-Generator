@@ -9,10 +9,12 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 import streamlit as st
+import streamlit.components.v1 as components
 
 from finance_requirements_generator.exports import (
     pack_control_risk_csv_bytes,
     pack_control_risk_xlsx_bytes,
+    pack_process_map_html_bytes,
     pack_to_docx_bytes,
     pack_to_markdown,
 )
@@ -354,15 +356,32 @@ def render_downloads(pack) -> None:
 
 def render_visual_outputs(pack) -> None:
     st.subheader("Visual Process Documentation")
-    with st.expander("Mermaid process map", expanded=False):
-        st.code(pack.mermaid_process_map, language="mermaid")
-        st.caption("Copy this Mermaid text into Mermaid-compatible tools for rendering.")
-        st.download_button(
-            "Download Mermaid",
-            data=pack.mermaid_process_map,
-            file_name=f"{pack.process_key.replace('_', '-')}-process-map.mmd",
-            mime="text/plain",
+    process_map_html = pack_process_map_html_bytes(pack)
+    with st.expander("Browser-viewable process map", expanded=False):
+        if hasattr(st, "iframe"):
+            st.iframe(process_map_html.decode("utf-8"), height=760)
+        else:
+            components.html(process_map_html.decode("utf-8"), height=760, scrolling=True)
+        st.caption(
+            "Open the HTML file directly in a browser to view the process map. "
+            "Internet access is required for the Mermaid renderer; the raw source remains included."
         )
+        st.code(pack.mermaid_process_map, language="mermaid")
+        source_col, html_col = st.columns(2)
+        with source_col:
+            st.download_button(
+                "Download Mermaid source",
+                data=pack.mermaid_process_map,
+                file_name=f"{pack.process_key.replace('_', '-')}-process-map.mmd",
+                mime="text/plain",
+            )
+        with html_col:
+            st.download_button(
+                "Download process map as HTML",
+                data=process_map_html,
+                file_name=f"{pack.process_key.replace('_', '-')}-process-map.html",
+                mime="text/html",
+            )
     with st.expander("Control-risk matrix preview", expanded=False):
         st.dataframe(
             [

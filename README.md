@@ -74,6 +74,7 @@ Each generated requirements pack can include:
 * Optional target-system fit-gap mapping
 * Visual process documentation
 * Mermaid process map
+* Browser-viewable finance control-flow process map
 * Control-risk matrix
 * Public-safe sample data note
 
@@ -174,10 +175,13 @@ v0.4.0 adds deterministic process-map output for implementation review.
 Each pack includes:
 
 * Mermaid process map text
+* Browser-viewable HTML process map for non-technical reviewers
 * Plain-language process-map summary
 * Trigger, intake, validation, exception, approval, reporting, evidence, and sign-off flow
 
-The Mermaid output is editable and can be copied into Mermaid-compatible tools for rendering.
+The HTML process map follows the finance control-flow design, opens directly in a browser, and includes print and SVG controls. It uses Mermaid's browser renderer from a CDN when internet access is available. The raw Mermaid source remains embedded in the file for editing or offline use.
+
+The app does not call external APIs, scrape the web, or use live web RAG during export generation.
 
 ## Control-Risk Matrix Export
 
@@ -299,6 +303,7 @@ The application is built with:
 * CSV/XLSX control-risk matrix export
 * Curated target-system mapping data
 * Mermaid process map generation
+* Browser-viewable HTML process map export
 * Pytest test suite
 * Ruff linting
 * GitHub Actions CI
@@ -321,7 +326,7 @@ streamlit run app.py
 python scripts\generate_examples.py --output-dir examples\generated_packs
 ```
 
-This regenerates the Markdown and DOCX sample packs in:
+This regenerates the Markdown and DOCX sample packs, representative control-risk matrices, and browser-viewable process maps in:
 
 ```text
 examples/generated_packs/
@@ -396,7 +401,7 @@ This release moves the project from a requirements pack generator into a broader
 
 Added deterministic visual process documentation and control-risk export outputs.
 
-The app now generates Mermaid process maps, Word-friendly process-map summaries, control-risk matrix sections, and downloadable CSV/XLSX control-risk matrices for finance systems implementation review.
+The app now generates styled browser-viewable process maps, editable Mermaid source, Word-friendly process-map summaries, control-risk matrix sections, and downloadable CSV/XLSX control-risk matrices for finance systems implementation review.
 
 ## Roadmap
 

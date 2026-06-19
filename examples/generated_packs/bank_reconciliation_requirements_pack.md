@@ -131,7 +131,7 @@ The future-state scope covers Bank statement ingestion, matching status, excepti
 The Mermaid diagram below can be copied into Mermaid-compatible tools for rendering.
 
 ```mermaid
-flowchart TD
+flowchart LR
     A[Bank Reconciliation trigger] --> B[Bank portal exports, ERP cashbook, and month-end spreadsheet reconciliation]
     B --> C[Validate data, ownership, and required evidence]
     C --> D{Exception or control gap?}
@@ -140,6 +140,14 @@ flowchart TD
     E --> F[Bank Reconciliation approval / review]
     F --> G[Daily unmatched item ageing and month-end reconciliation evidence pack]
     G --> H[Bank Reconciliation sign-off / readiness]
+    class A,H gate
+    class B,C,F,G step
+    class D decide
+    class E fix
+    classDef gate fill:#0f1b2d,stroke:#0f1b2d,color:#ffffff,font-weight:600
+    classDef step fill:#ffffff,stroke:#0e7c66,color:#0f1b2d,stroke-width:2px
+    classDef decide fill:#fef3c7,stroke:#b45309,color:#7c2d12,stroke-width:2px
+    classDef fix fill:#fee2e2,stroke:#b91c1c,color:#7f1d1d,stroke-width:2px
 ```
 
 ### Process Map Summary

@@ -131,7 +131,7 @@ The future-state scope covers Close task calendar, preparer/reviewer ownership, 
 The Mermaid diagram below can be copied into Mermaid-compatible tools for rendering.
 
 ```mermaid
-flowchart TD
+flowchart LR
     A[Month-end Close trigger] --> B[Close checklist spreadsheet, ERP journals, and shared evidence folders]
     B --> C[Validate data, ownership, and required evidence]
     C --> D{Exception or control gap?}
@@ -140,6 +140,14 @@ flowchart TD
     E --> F[Month-end Close approval / review]
     F --> G[Close task status, overdue items, reconciliation risk, and journal approval dashboard]
     G --> H[Month-end Close sign-off / readiness]
+    class A,H gate
+    class B,C,F,G step
+    class D decide
+    class E fix
+    classDef gate fill:#0f1b2d,stroke:#0f1b2d,color:#ffffff,font-weight:600
+    classDef step fill:#ffffff,stroke:#0e7c66,color:#0f1b2d,stroke-width:2px
+    classDef decide fill:#fef3c7,stroke:#b45309,color:#7c2d12,stroke-width:2px
+    classDef fix fill:#fee2e2,stroke:#b91c1c,color:#7f1d1d,stroke-width:2px
 ```
 
 ### Process Map Summary

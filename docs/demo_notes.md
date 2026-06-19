@@ -10,8 +10,8 @@ This repository demonstrates how structured finance intake can become implementa
 4. Select a target ERP/system if candidate fit-gap mapping is useful.
 5. Review the editable intake fields before generating the pack.
 6. Generate the pack and inspect the expandable sections.
-7. Preview the Mermaid process map and control-risk matrix.
-8. Download Markdown, DOCX, CSV, or XLSX outputs.
+7. Preview the finance control-flow process map and control-risk matrix.
+8. Download Markdown, DOCX, CSV, XLSX, Mermaid source, or browser-viewable HTML outputs.
 
 ## What to look for
 
@@ -21,7 +21,8 @@ This repository demonstrates how structured finance intake can become implementa
 - SOP upload support for TXT, Markdown, and DOCX workflow notes.
 - Guided SOP builder support for teams that do not have a documented SOP yet.
 - Curated target-system mapping notes that use repository data only.
-- Mermaid process map output for process documentation.
+- Browser-viewable HTML process maps for non-technical reviewers, using the finance control-flow design.
+- Editable Mermaid source for technical users and downstream documentation tools.
 - Control-risk matrix export as CSV and XLSX.
 - Deterministic output from bundled templates, with no external AI/API calls, no web scraping, and no live web RAG.
 - Sample outputs under `examples/generated_packs`.
@@ -37,4 +38,6 @@ The v0.3.0 flow supports users with SOPs and users without SOPs. The intake does
 
 Target-system mapping should ask the user to select the ERP or finance system, use curated capability mappings stored in the repository, and generate candidate fit-gap notes for review. The app should not use live web RAG, scrape ERP vendor websites, call external AI/APIs, or claim that any ERP capability is guaranteed.
 
-The v0.4.0 outputs add visual process documentation and control-risk exports without changing that deterministic posture. Review the Mermaid text, Word-friendly process-map summary, CSV matrix, and XLSX matrix as implementation-preparation artefacts.
+The v0.4.0 outputs add visual process documentation and control-risk exports without changing that deterministic posture. Review the browser-viewable HTML map, Mermaid source, Word-friendly process-map summary, CSV matrix, and XLSX matrix as implementation-preparation artefacts.
+
+The HTML process map opens directly in a browser. It uses Mermaid's browser renderer from a CDN when internet access is available and always includes the raw Mermaid source for editing or offline use. Export generation does not call external APIs, scrape the web, or use live web RAG.

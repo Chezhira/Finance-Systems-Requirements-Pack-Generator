@@ -1,3 +1,4 @@
+from html import escape
 from io import BytesIO
 from pathlib import Path
 
@@ -7,6 +8,7 @@ from openpyxl import load_workbook
 from finance_requirements_generator.exports import (
     pack_control_risk_csv_bytes,
     pack_control_risk_xlsx_bytes,
+    pack_process_map_html_bytes,
     pack_to_docx_bytes,
     pack_to_markdown,
 )
@@ -50,11 +52,35 @@ def test_control_risk_csv_and_xlsx_exports_open() -> None:
 def test_mermaid_process_map_generation() -> None:
     pack = generate_pack(DEFAULT_SAMPLE_INPUTS["month_end_close"])
 
-    assert pack.mermaid_process_map.startswith("flowchart TD")
+    assert pack.mermaid_process_map.startswith("flowchart LR")
     assert "Exception or control gap?" in pack.mermaid_process_map
     assert "G[" in pack.mermaid_process_map
     assert "dashboard" in pack.mermaid_process_map
+    assert "class A,H gate" in pack.mermaid_process_map
+    assert "class B,C,F,G step" in pack.mermaid_process_map
+    assert "class D decide" in pack.mermaid_process_map
+    assert "class E fix" in pack.mermaid_process_map
     assert pack.process_map_summary
+
+
+def test_browser_process_map_export_is_styled_and_offline_safe(monkeypatch) -> None:
+    def fail_network(*args, **kwargs):
+        raise AssertionError("HTML export generation must not access the network")
+
+    monkeypatch.setattr("socket.create_connection", fail_network)
+    pack = generate_pack(DEFAULT_SAMPLE_INPUTS["accounts_payable"])
+    content = pack_process_map_html_bytes(pack)
+    html = content.decode("utf-8")
+
+    assert isinstance(content, bytes)
+    assert "Accounts Payable &mdash; Process Map" in html
+    assert escape(pack.mermaid_process_map) in html
+    assert 'class="mermaid"' in html
+    assert "mermaid.esm.min.mjs" in html
+    assert all(name in html for name in ("gate", "step", "decide", "fix"))
+    assert "Raw Mermaid source and offline fallback" in html
+    assert "uses Mermaid's browser renderer when opened with internet access" in html
+    assert "Print / Save as PDF" in html
 
 
 def test_markdown_and_docx_include_visual_sections() -> None:
@@ -81,3 +107,6 @@ def test_generate_examples_creates_representative_matrix_samples(tmp_path: Path)
     assert "accounts_payable_control_risk_matrix.xlsx" in names
     assert "month_end_close_control_risk_matrix.csv" in names
     assert "payroll_controls_control_risk_matrix.xlsx" in names
+    assert "accounts_payable_process_map.html" in names
+    assert "month_end_close_process_map.html" in names
+    assert "payroll_controls_process_map.html" in names

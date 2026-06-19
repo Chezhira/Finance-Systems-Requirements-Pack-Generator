@@ -131,7 +131,7 @@ The future-state scope covers Supplier invoice intake, validation, coding, appro
 The Mermaid diagram below can be copied into Mermaid-compatible tools for rendering.
 
 ```mermaid
-flowchart TD
+flowchart LR
     A[Accounts Payable trigger] --> B[Email approvals, shared AP tracker, and ERP purchase ledger]
     B --> C[Validate data, ownership, and required evidence]
     C --> D{Exception or control gap?}
@@ -140,6 +140,14 @@ flowchart TD
     E --> F[Accounts Payable approval / review]
     F --> G[Aged approval backlog, blocked invoices, and payment readiness summary]
     G --> H[Accounts Payable sign-off / readiness]
+    class A,H gate
+    class B,C,F,G step
+    class D decide
+    class E fix
+    classDef gate fill:#0f1b2d,stroke:#0f1b2d,color:#ffffff,font-weight:600
+    classDef step fill:#ffffff,stroke:#0e7c66,color:#0f1b2d,stroke-width:2px
+    classDef decide fill:#fef3c7,stroke:#b45309,color:#7c2d12,stroke-width:2px
+    classDef fix fill:#fee2e2,stroke:#b91c1c,color:#7f1d1d,stroke-width:2px
 ```
 
 ### Process Map Summary
