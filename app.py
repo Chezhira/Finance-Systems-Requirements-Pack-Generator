@@ -52,15 +52,18 @@ def main() -> None:
             current_tools = st.text_area("Current tools/process", sample.current_tools)
             reporting_needs = st.text_area("Reporting requirement", sample.reporting_needs)
             compliance_focus = st.text_area("Compliance/control focus", sample.compliance_focus)
+            pain_point_options = templates[process_key]["pain_point_prompts"]
+            default_pain_points = safe_multiselect_defaults(
+                sample.pain_points,
+                pain_point_options,
+            )
             pain_points = st.multiselect(
                 "Pain points",
-                options=templates[process_key]["pain_point_prompts"],
-                default=sample.pain_points,
+                options=pain_point_options,
+                default=default_pain_points,
             )
             control_options = templates[process_key]["controls"]
-            default_controls = [
-                item for item in sample.control_concerns if item in control_options
-            ] or control_options[:2]
+            default_controls = safe_multiselect_defaults(sample.control_concerns, control_options)
             control_concerns = st.multiselect(
                 "Control concerns",
                 options=control_options,
@@ -90,6 +93,10 @@ def main() -> None:
     render_pack(pack)
     render_downloads(pack)
     render_gallery()
+
+
+def safe_multiselect_defaults(defaults: list[str], options: list[str]) -> list[str]:
+    return [item for item in defaults if item in options] or options[:2]
 
 
 def render_pack(pack) -> None:
