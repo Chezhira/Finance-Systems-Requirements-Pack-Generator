@@ -9,11 +9,32 @@ def test_app_and_core_imports() -> None:
     assert callable(generate_pack)
 
 
+def test_process_option_label_handles_keys_and_display_labels() -> None:
+    templates = load_all_templates()
+
+    assert app.process_option_label("accounts_payable", templates) == "Accounts Payable"
+    assert app.process_option_label("Accounts Payable", templates) == "Accounts Payable"
+    assert app.resolve_process_key("accounts_payable", templates) == "accounts_payable"
+    assert app.resolve_process_key("Accounts Payable", templates) == "accounts_payable"
+
+
 def test_sample_generation_smoke() -> None:
     pack = generate_pack(DEFAULT_SAMPLE_INPUTS["bank_reconciliation"])
 
     assert pack.process_name == "Bank Reconciliation"
     assert pack.uat_test_cases[0].test_id == "UAT-01"
+
+
+def test_streamlit_preview_fields_exist_on_generated_packs() -> None:
+    for intake in DEFAULT_SAMPLE_INPUTS.values():
+        pack = generate_pack(intake)
+        preview = app.preview_sections(pack)
+
+        assert preview
+        assert [title for title, _value in preview] == [
+            title for title, _field in app.PACK_PREVIEW_FIELDS
+        ]
+        assert all(value for _title, value in preview)
 
 
 def test_sample_pain_point_defaults_are_streamlit_safe() -> None:

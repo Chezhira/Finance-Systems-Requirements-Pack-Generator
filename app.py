@@ -16,6 +16,23 @@ from finance_requirements_generator.questionnaire import DEFAULT_SAMPLE_INPUTS
 from finance_requirements_generator.schemas import IntakeAnswers
 from finance_requirements_generator.template_engine import generate_pack
 
+PACK_PREVIEW_FIELDS = [
+    ("Executive Summary", "executive_summary"),
+    ("Business Problem", "business_problem"),
+    ("Process Scope", "process_scope"),
+    ("In Scope", "in_scope"),
+    ("Out of Scope", "out_of_scope"),
+    ("Stakeholders and Roles", "stakeholders_and_roles"),
+    ("Functional Requirements", "functional_requirements"),
+    ("Data Requirements", "data_requirements"),
+    ("Controls and Audit Trail", "controls_and_audit_trail"),
+    ("Reporting Requirements", "reporting_requirements"),
+    ("User Stories", "user_stories"),
+    ("UAT Test Cases", "uat_test_cases"),
+    ("Acceptance Criteria", "acceptance_criteria"),
+    ("Risks and Dependencies", "risks_and_dependencies"),
+]
+
 
 def main() -> None:
     st.set_page_config(
@@ -33,11 +50,12 @@ def main() -> None:
         "covering controls, data, audit trail, user stories, UAT, and acceptance criteria."
     )
 
-    process_key = st.selectbox(
+    selected_process = st.selectbox(
         "Finance process",
         options=list(SUPPORTED_PROCESSES),
-        format_func=lambda key: templates[key]["name"],
+        format_func=lambda key: process_option_label(key, templates),
     )
+    process_key = resolve_process_key(selected_process, templates)
     sample = DEFAULT_SAMPLE_INPUTS[process_key]
 
     with st.form("intake_form"):
@@ -99,36 +117,46 @@ def safe_multiselect_defaults(defaults: list[str], options: list[str]) -> list[s
     return [item for item in defaults if item in options] or options[:2]
 
 
+def process_option_label(process_key: str, templates: dict) -> str:
+    if process_key in templates:
+        return templates[process_key]["name"]
+    return process_key
+
+
+def resolve_process_key(selected_process: str, templates: dict) -> str:
+    if selected_process in templates:
+        return selected_process
+    for process_key, template in templates.items():
+        if selected_process == template["name"]:
+            return process_key
+    raise ValueError(f"Unsupported process selection: {selected_process}")
+
+
 def render_pack(pack) -> None:
     st.subheader(f"{pack.process_name} Pack Preview")
-    for title, value in [
-        ("Executive Summary", pack.executive_summary),
-        ("Business Problem", pack.business_problem),
-        ("Process Scope", pack.process_scope),
-        ("In Scope", pack.in_scope),
-        ("Out of Scope", pack.out_of_scope),
-        ("Stakeholders and Roles", pack.stakeholders_and_roles),
-        ("Functional Requirements", pack.functional_requirements),
-        ("Data Requirements", pack.data_requirements),
-        ("Controls and Audit Trail", pack.controls + pack.audit_trail_requirements),
-        ("Reporting Requirements", pack.reporting_requirements),
-        ("User Stories", pack.user_stories),
-        (
-            "UAT Test Cases",
-            [
-                f"{case.test_id}: {case.scenario} Expected result: {case.expected_result}"
-                for case in pack.uat_test_cases
-            ],
-        ),
-        ("Acceptance Criteria", pack.acceptance_criteria),
-        ("Risks and Dependencies", pack.risks_and_dependencies),
-    ]:
+    for title, value in preview_sections(pack):
         with st.expander(title, expanded=title == "Executive Summary"):
             if isinstance(value, str):
                 st.write(value)
             else:
                 for item in value:
                     st.markdown(f"- {item}")
+
+
+def preview_sections(pack) -> list[tuple[str, object]]:
+    values = []
+    for title, field_name in PACK_PREVIEW_FIELDS:
+        if field_name == "controls_and_audit_trail":
+            value = pack.controls + pack.audit_trail_requirements
+        elif field_name == "uat_test_cases":
+            value = [
+                f"{case.test_id}: {case.scenario} Expected result: {case.expected_result}"
+                for case in pack.uat_test_cases
+            ]
+        else:
+            value = getattr(pack, field_name)
+        values.append((title, value))
+    return values
 
 
 def render_downloads(pack) -> None:
