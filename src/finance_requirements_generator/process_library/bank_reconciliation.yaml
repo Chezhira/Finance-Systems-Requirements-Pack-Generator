@@ -1,0 +1,79 @@
+key: bank_reconciliation
+name: Bank Reconciliation
+purpose: Improve unmatched-line visibility, suspense clearing, ageing, ownership, and reviewer sign-off.
+pain_point_prompts:
+  - Unmatched bank statement lines
+  - Suspense account ageing
+  - Manual owner/status tracking
+  - Weak reviewer sign-off evidence
+baseline_scope:
+  - Bank statement ingestion, matching status, exception ownership, suspense clearing, and reviewer sign-off.
+  - Daily visibility of unmatched receipts, payments, fees, and transfers.
+  - Month-end reconciliation evidence suitable for finance and audit review.
+functional_requirements:
+  - Import or capture bank statement date, value date, description, amount, currency, and bank account.
+  - Match bank lines to ledger transactions using reference, amount, date tolerance, and counterparty.
+  - Track unmatched lines with owner, status, reason code, ageing, and expected resolution date.
+  - Separate unreconciled receipts, unreconciled payments, bank fees, transfers, and unknown items.
+  - Link suspense account entries to the originating bank line and clearing journal.
+  - Require reviewer sign-off once reconciliation differences are explained or cleared.
+  - Produce a month-end reconciliation pack with outstanding items and movement commentary.
+  - Escalate high-value or aged unmatched lines based on finance policy thresholds.
+non_functional_requirements:
+  - Matching status must be clear to preparers, reviewers, and auditors.
+  - The reconciliation evidence must be exportable without manual spreadsheet formatting.
+  - The workflow must support daily review and formal month-end sign-off.
+  - The system must retain historic reconciliation packs for audit lookback.
+  - User permissions must distinguish preparer updates from reviewer approval.
+data_requirements:
+  - Bank account ID
+  - Statement line ID
+  - Ledger transaction ID
+  - Match status
+  - Exception owner
+  - Ageing bucket
+  - Suspense account reference
+  - Reviewer sign-off timestamp
+controls:
+  - Reviewer sign-off required before a reconciliation period is marked complete.
+  - Aged unmatched lines escalate after the policy threshold.
+  - Suspense clearing entries require reason codes and supporting notes.
+  - Manual match overrides require reviewer approval.
+  - Reconciliation status is locked after period close except through controlled reopen.
+audit_trail_requirements:
+  - Store all matching, unmatching, manual override, and suspense clearing actions.
+  - Record preparer completion and reviewer sign-off timestamps.
+  - Keep owner/status history for aged unmatched lines.
+  - Preserve supporting notes and evidence links for unresolved differences.
+  - Record period reopen requests with reason, requester, approver, and date.
+user_stories:
+  - As a reconciliation preparer, I want unmatched lines grouped by ageing so that old differences are prioritised.
+  - As a finance manager, I want suspense clearing status so that unresolved items do not hide at month end.
+  - As a reviewer, I want clear sign-off evidence so that reconciliation completion is defensible.
+  - As an auditor, I want manual match override history so that judgemental matches can be reviewed.
+  - As a treasury analyst, I want bank fees and transfers separated so that routine items are cleared quickly.
+uat_test_cases:
+  - scenario: A bank statement line has no ledger match after import.
+    expected: The line is marked unmatched with owner, ageing, and reason fields required.
+  - scenario: A suspense item remains open past the policy threshold.
+    expected: The item is escalated and appears in the aged suspense view.
+  - scenario: A preparer manually matches two transactions.
+    expected: The manual override is logged and requires reviewer approval.
+  - scenario: Reviewer signs off a completed reconciliation.
+    expected: Reviewer name, timestamp, and outstanding item summary are saved.
+  - scenario: A closed reconciliation period is reopened.
+    expected: Reopen reason and approver are recorded before edits are allowed.
+  - scenario: Month-end pack is exported.
+    expected: The pack includes unmatched lines, ageing, suspense movements, and reviewer sign-off.
+acceptance_criteria:
+  - Unmatched lines show owner, status, ageing, reason, and expected resolution date.
+  - Suspense account items can be traced from bank line to clearing journal.
+  - Reviewer sign-off is mandatory before period completion.
+  - Manual overrides are visible in the audit trail.
+  - Month-end reconciliation pack exports without manual formatting.
+risks_and_dependencies:
+  - Bank statement formats must be standardised across accounts.
+  - Ledger reference quality may limit automated matching rates.
+  - Finance policy thresholds for ageing and escalation must be approved.
+  - Reviewer roles must be configured before go-live.
+  - Historic suspense items may need cleanup before migration.

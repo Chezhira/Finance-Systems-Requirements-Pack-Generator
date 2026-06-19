@@ -1,0 +1,79 @@
+key: accounts_payable
+name: Accounts Payable
+purpose: Strengthen invoice capture, supplier controls, approvals, matching, and payment evidence.
+pain_point_prompts:
+  - Duplicate invoices
+  - Manual approval chasing
+  - Weak supplier master data controls
+  - Inconsistent payment evidence
+baseline_scope:
+  - Supplier invoice intake, validation, coding, approval, payment readiness, and evidence capture.
+  - Three-way match readiness across purchase order, goods receipt, and supplier invoice data.
+  - Segregation of duties between supplier maintenance, invoice approval, and payment release.
+functional_requirements:
+  - Capture supplier invoice number, supplier name, invoice date, due date, tax amount, purchase order reference, and payment status.
+  - Detect potential duplicate invoices using supplier, invoice number, invoice date, currency, and gross amount.
+  - Flag invoices without purchase order or goods receipt evidence where three-way match is required.
+  - Route invoices to the correct approver based on cost centre, amount threshold, and supplier category.
+  - Prevent payment release until invoice approval controls are complete.
+  - Maintain supplier master data change history for bank details, tax identifiers, and payment terms.
+  - Record exception reasons for blocked, disputed, or partially matched invoices.
+  - Provide an aged invoice and approval backlog view for finance review.
+non_functional_requirements:
+  - The workflow must be auditable by finance users without database access.
+  - Screen labels and exports must use finance-friendly terminology.
+  - The solution must support month-end reporting without manual spreadsheet consolidation.
+  - Access must separate invoice preparation, approval, supplier maintenance, and payment release duties.
+  - Exported evidence should be readable by internal audit and external audit reviewers.
+data_requirements:
+  - Supplier master ID
+  - Supplier invoice number
+  - Purchase order reference
+  - Goods receipt reference
+  - Invoice gross amount
+  - Tax amount
+  - Approval owner
+  - Payment batch reference
+controls:
+  - Duplicate invoice warning before approval or payment release.
+  - Approval threshold control by amount and cost centre.
+  - Supplier bank detail change review before first payment after change.
+  - Three-way match exception review for PO-backed purchases.
+  - Segregation of duties control between supplier maintenance and payment approval.
+audit_trail_requirements:
+  - Store invoice creation, coding, approval, rejection, and payment readiness timestamps.
+  - Record every approval decision with approver, date, amount, and delegation status.
+  - Keep before-and-after supplier master data values for sensitive changes.
+  - Preserve evidence links for invoice image, purchase order, goods receipt, and payment batch.
+  - Track exception resolution notes and reviewer sign-off.
+user_stories:
+  - As an AP clerk, I want duplicate invoice warnings so that I can stop duplicate payments before approval.
+  - As a finance manager, I want approval ageing by owner so that overdue invoices can be escalated.
+  - As an AP controller, I want three-way match exceptions grouped by reason so that supplier disputes can be resolved.
+  - As an internal auditor, I want supplier bank detail change history so that payment fraud risk can be reviewed.
+  - As a payment approver, I want evidence that invoice approval controls are complete before release.
+uat_test_cases:
+  - scenario: Duplicate invoice number is entered for the same supplier and gross amount.
+    expected: The system flags the invoice and blocks payment readiness until reviewed.
+  - scenario: PO-backed invoice is missing goods receipt evidence.
+    expected: The invoice appears in the three-way match exception queue.
+  - scenario: Invoice value exceeds the standard approval threshold.
+    expected: Approval routes to the higher authority approver.
+  - scenario: Supplier bank details are changed before a payment run.
+    expected: The payment is held until supplier master review is complete.
+  - scenario: Invoice is rejected by the approver.
+    expected: The rejection reason and timestamp are stored in the audit trail.
+  - scenario: AP manager opens the month-end backlog report.
+    expected: The report shows aged invoices, blocked invoices, and approval owner status.
+acceptance_criteria:
+  - Duplicate invoice/payment approval controls are configured and visible in test evidence.
+  - At least 95% of supplier invoices contain required supplier, invoice, tax, approval, and payment fields.
+  - Three-way match exceptions can be exported with owner, reason, and ageing.
+  - Supplier master changes show old value, new value, requester, reviewer, and timestamp.
+  - Payment readiness cannot be reached without required approval evidence.
+risks_and_dependencies:
+  - Supplier master data may require cleansing before controls can operate reliably.
+  - Purchase order and goods receipt data must be available for three-way match readiness.
+  - Delegated approval rules must be signed off by finance leadership.
+  - Payment platform integration scope must be confirmed before build.
+  - Users need training on exception reason codes to avoid inconsistent reporting.

@@ -1,0 +1,16 @@
+process_key: accounts_payable
+company_name: Northstar Trading Ltd
+entity_type: Wholesale trading group
+current_tools: Email approvals, shared AP tracker, and ERP purchase ledger
+erp_platform: Odoo Finance
+monthly_volume: 1,200 supplier invoices per month
+pain_points:
+  - Duplicate invoices
+  - Manual approval chasing
+  - Weak supplier master controls
+control_concerns:
+  - Payment approval evidence
+  - Segregation of duties
+reporting_needs: Aged approval backlog, blocked invoices, and payment readiness summary
+compliance_focus: Internal audit review of supplier changes and payment controls
+deadline: 10 weeks

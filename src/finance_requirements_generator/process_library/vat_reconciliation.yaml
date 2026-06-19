@@ -1,0 +1,79 @@
+key: vat_reconciliation
+name: VAT Reconciliation
+purpose: Reconcile source registers, VAT return boxes, and GL VAT control accounts with filing evidence.
+pain_point_prompts:
+  - VAT return differences
+  - Manual source register checks
+  - Weak GL VAT control account reconciliation
+  - Missing filing evidence
+baseline_scope:
+  - VAT source register extraction, VAT return box mapping, GL VAT control account reconciliation, and filing evidence.
+  - Clear ownership of reconciling differences before submission.
+  - Audit trail for adjustments, review, and filing approval.
+functional_requirements:
+  - Capture VAT source register totals for sales, purchases, output tax, input tax, and adjustments.
+  - Map source register totals to VAT return boxes using approved tax code rules.
+  - Reconcile VAT return boxes to GL VAT control accounts for the reporting period.
+  - Identify differences by tax code, transaction source, entity, and reporting period.
+  - Track reconciling items with owner, status, reason, amount, and resolution action.
+  - Store filing evidence including return version, approver, submission reference, and filing date.
+  - Prevent submission readiness until material differences are reviewed.
+  - Produce a VAT reconciliation pack for finance manager and audit review.
+non_functional_requirements:
+  - VAT logic must be transparent to finance reviewers and not hidden in spreadsheets.
+  - The pack must preserve calculations and sign-off evidence for audit lookback.
+  - The design must support multiple VAT entities without mixing registrations.
+  - Access must separate preparer, reviewer, and filing approver duties.
+  - Exports must be clear enough for external tax advisor review.
+data_requirements:
+  - VAT registration/entity
+  - Tax code
+  - Source register amount
+  - VAT return box number
+  - GL VAT control account
+  - Reconciling difference
+  - Adjustment journal reference
+  - Filing submission reference
+controls:
+  - VAT return cannot be marked ready where material differences are unresolved.
+  - Adjustments require reason code, supporting note, and reviewer approval.
+  - VAT return box mapping changes require finance owner sign-off.
+  - GL VAT control account reconciliation must be completed before filing approval.
+  - Filing evidence must include approver, date, and submission reference.
+audit_trail_requirements:
+  - Store source register extraction date, preparer, and data source.
+  - Record VAT box mapping versions and change approvals.
+  - Preserve reconciling difference owner/status history.
+  - Keep adjustment journal references and review decisions.
+  - Record filing approval and submission evidence.
+user_stories:
+  - As a tax preparer, I want source registers mapped to VAT return boxes so that return totals are traceable.
+  - As a finance reviewer, I want GL VAT control accounts reconciled so that balance sheet VAT is explained.
+  - As a tax manager, I want material differences blocked before filing so that submission risk is reduced.
+  - As an auditor, I want VAT box mapping history so that changes to tax treatment can be reviewed.
+  - As a finance controller, I want filing evidence stored with the pack so that audit requests are faster.
+uat_test_cases:
+  - scenario: Source register total does not agree to a VAT return box.
+    expected: A reconciling difference is created with owner, amount, and reason fields.
+  - scenario: GL VAT control account does not agree to return liability.
+    expected: The variance is flagged and submission readiness is blocked if material.
+  - scenario: VAT return box mapping is changed.
+    expected: The change is versioned and requires finance owner sign-off.
+  - scenario: Adjustment journal is posted after review.
+    expected: Journal reference and approval evidence are stored against the difference.
+  - scenario: Filing approval is attempted without submission reference.
+    expected: Filing evidence is incomplete and approval cannot be finalised.
+  - scenario: VAT reconciliation pack is exported.
+    expected: The pack includes source registers, VAT return boxes, GL VAT control accounts, differences, and filing evidence.
+acceptance_criteria:
+  - Source registers, VAT return boxes, and GL VAT control accounts are reconciled in one pack.
+  - Material differences are owner-assigned and cannot be ignored before filing.
+  - VAT box mapping changes are versioned and approved.
+  - Filing evidence includes submission reference, approver, and filing date.
+  - Adjustments are supported by reason, journal reference, and reviewer sign-off.
+risks_and_dependencies:
+  - Tax code mapping must be agreed before configuration.
+  - GL VAT control accounts may require cleanup before reliable reconciliation.
+  - Filing approval roles must match the finance governance model.
+  - External tax advisor review may be required for complex adjustments.
+  - Multi-entity VAT registrations need clear scope before rollout.

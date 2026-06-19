@@ -1,0 +1,16 @@
+process_key: bank_reconciliation
+company_name: BlueRiver Foods Ltd
+entity_type: Multi-site food distribution business
+current_tools: Bank portal exports, ERP cashbook, and month-end spreadsheet reconciliation
+erp_platform: Microsoft Dynamics 365 Business Central
+monthly_volume: 8 bank accounts with roughly 4,500 statement lines per month
+pain_points:
+  - Unmatched bank statement lines
+  - Suspense account ageing
+  - Manual owner/status tracking
+control_concerns:
+  - Reviewer sign-off
+  - Manual match overrides
+reporting_needs: Daily unmatched item ageing and month-end reconciliation evidence pack
+compliance_focus: Month-end close evidence and internal control review
+deadline: 8 weeks
