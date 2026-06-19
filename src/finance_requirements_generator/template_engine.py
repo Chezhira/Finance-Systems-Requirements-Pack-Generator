@@ -4,6 +4,11 @@ from finance_requirements_generator.process_library import load_process_template
 from finance_requirements_generator.questionnaire import validate_intake
 from finance_requirements_generator.schemas import IntakeAnswers, RequirementsPack, UATTestCase
 from finance_requirements_generator.system_mapping import get_fit_gap_mapping
+from finance_requirements_generator.text_cleanup import (
+    clean_fragment,
+    clean_items,
+    clean_sentence,
+)
 
 
 def generate_pack(intake: IntakeAnswers) -> RequirementsPack:
@@ -67,19 +72,19 @@ def generate_pack(intake: IntakeAnswers) -> RequirementsPack:
 
 def _executive_summary(intake: IntakeAnswers, template: dict) -> str:
     pain_points = _join_items(_lower_first_items(_normalise_items(intake.pain_points)))
-    return (
+    return clean_sentence(
         f"{intake.company_name} needs a structured {template['name']} requirements pack "
         f"to reduce rework, clarify control ownership, and make {intake.erp_platform} "
         f"implementation decisions testable. The pack translates {pain_points} into "
         f"requirements for workflow, data, controls, reporting, audit trail, and UAT. "
-        f"It is sized for {intake.monthly_volume} and frames the control design, "
+        f"It is sized for {clean_fragment(intake.monthly_volume)} and frames the control design, "
         f"reporting outputs, and acceptance criteria needed within a target delivery "
-        f"window of {intake.deadline}."
+        f"window of {clean_fragment(intake.deadline)}."
     )
 
 
 def _business_problem(intake: IntakeAnswers, template: dict) -> str:
-    return (
+    return clean_sentence(
         f"The current {template['name']} process relies on {intake.current_tools}. "
         f"That creates avoidable risk around "
         f"{_join_items(_lower_first_items(_normalise_items(intake.pain_points)))} "
@@ -92,7 +97,7 @@ def _business_problem(intake: IntakeAnswers, template: dict) -> str:
 
 def _process_scope(intake: IntakeAnswers, template: dict) -> str:
     scope = _semicolon_join(_normalise_items(template["baseline_scope"]))
-    return (
+    return clean_sentence(
         f"The future-state scope covers {scope}. The design will support "
         f"{intake.entity_type.lower()} users on {intake.erp_platform}, with emphasis on "
         f"{intake.compliance_focus.lower()}."
@@ -110,8 +115,11 @@ def _in_scope(intake: IntakeAnswers, template: dict) -> list[str]:
             "Process pain points covering "
             f"{_join_items(_lower_first_items(_normalise_items(intake.pain_points)))}."
         ),
-        f"Reporting requirement: {intake.reporting_needs}.",
-        f"Implementation window and readiness assumptions for the {intake.deadline} target window.",
+        f"Reporting requirement: {clean_fragment(intake.reporting_needs)}.",
+        (
+            "Implementation window and readiness assumptions for the "
+            f"{clean_fragment(intake.deadline)} target window."
+        ),
     ]
 
 
@@ -157,7 +165,7 @@ def _implementation_notes(intake: IntakeAnswers, template: dict) -> list[str]:
 
 def _reporting_requirements(intake: IntakeAnswers, template: dict) -> list[str]:
     return [
-        f"RPT-01: Provide {intake.reporting_needs}.",
+        f"RPT-01: Provide {clean_fragment(intake.reporting_needs)}.",
         (
             "RPT-02: Show owner, status, ageing, exception reason, and next action "
             f"where relevant to {template['name']}."
@@ -195,7 +203,7 @@ def _join_items(items: list[str]) -> str:
 
 
 def _normalise_items(items: list[str]) -> list[str]:
-    return [item.rstrip(".") for item in items]
+    return clean_items(items)
 
 
 def _lower_first_items(items: list[str]) -> list[str]:

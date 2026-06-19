@@ -13,6 +13,7 @@ from docx.oxml.ns import qn
 from docx.shared import Inches, Pt, RGBColor, Twips
 
 from finance_requirements_generator.schemas import RequirementsPack, UATTestCase
+from finance_requirements_generator.text_cleanup import capitalize_first
 
 CONTENT_DXA = 9360
 ID_COL_DXA = 1250
@@ -445,8 +446,11 @@ def _add_two_column_table(document: Document, headers: list[str], items: list[st
     _set_table_width(table, CONTENT_DXA)
     _set_grid_widths(table, widths)
     _set_header_row(table.rows[0], headers, widths)
+    capitalize_second_column = headers == ["Role", "Responsibility"]
     for row_number, item in enumerate(items, start=1):
         left, right = _split_identifier(item)
+        if capitalize_second_column:
+            right = capitalize_first(right)
         row = table.add_row()
         _set_body_cell(row.cells[0], left, width=widths[0], id_cell=headers[0] == "ID")
         _set_body_cell(row.cells[1], right, width=widths[1], zebra=row_number % 2 == 0)
@@ -870,11 +874,19 @@ def _split_identifier(item: str) -> tuple[str, str]:
 
 
 def _split_user_story(story: str) -> tuple[str, str]:
-    if not story.startswith("As a ") or ", I want " not in story:
+    match = re.match(r"As an?\s+(.+?),\s+I want\s+(.+)", story, flags=re.IGNORECASE)
+    if not match:
         return "User", story
-    role, rest = story[5:].split(", I want ", 1)
+    role, rest = match.groups()
     need = rest.replace(" so that ", " so ")
-    return role.title(), need[:1].upper() + need[1:]
+    return _format_role(role), need[:1].upper() + need[1:]
+
+
+def _format_role(role: str) -> str:
+    formatted = role.title()
+    for acronym in ("AP", "AR", "VAT", "GL", "ERP", "UAT"):
+        formatted = re.sub(rf"\b{acronym.title()}\b", acronym, formatted)
+    return formatted
 
 
 def _add_page_number(paragraph) -> None:

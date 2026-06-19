@@ -101,6 +101,20 @@ def test_docx_export_matches_reference_cover_contents_and_pagination(tmp_path) -
     )
 
 
+def test_docx_user_story_roles_and_responsibilities_are_polished(tmp_path) -> None:
+    pack = generate_pack(DEFAULT_SAMPLE_INPUTS["accounts_payable"])
+    output_path = export_docx(pack, tmp_path / "ap_pack.docx")
+    document = Document(output_path)
+    table_text = [_table_text(table) for table in document.tables]
+    joined = "\n".join(table_text)
+
+    assert "AP Clerk" in joined
+    assert "AP Controller" in joined
+    assert "Internal Auditor" in joined
+    assert "User\nDuplicate invoice warnings" not in joined
+    assert "Finance Transformation Lead\nAccountable" in joined
+
+
 def test_docx_download_bytes_open_as_word_document() -> None:
     pack = generate_pack(DEFAULT_SAMPLE_INPUTS["payroll_controls"])
     content = pack_to_docx_bytes(pack)

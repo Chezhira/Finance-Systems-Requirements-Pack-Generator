@@ -7,6 +7,7 @@ from pathlib import Path
 from docx import Document
 
 from finance_requirements_generator.schemas import IntakeAnswers, SOPDraft
+from finance_requirements_generator.text_cleanup import clean_fragment, clean_items, clean_sentence
 
 SECTION_ALIASES = {
     "trigger": ("trigger", "start", "when"),
@@ -88,16 +89,19 @@ def map_sop_text_to_intake(text: str, fallback: IntakeAnswers) -> SOPMappedField
             "before ERP or finance-system implementation decisions are made."
         ),
         scope=fallback.entity_type,
-        trigger=_first_nonempty(_join_lines(sections["trigger"]), "Trigger to be confirmed."),
+        trigger=_first_nonempty(
+            _join_lines(sections["trigger"]),
+            "Process trigger requires process owner confirmation.",
+        ),
         roles_and_responsibilities=_first_nonempty(
             _join_lines(sections["owner"]),
             f"{fallback.sponsor} to confirm process ownership and sign-off.",
         ),
         step_by_step_procedure=_items_from_lines(sections["steps"])
-        or ["Process steps to confirm."],
+        or ["Process steps require process owner confirmation."],
         controls_and_approvals=controls + approvals,
         exceptions_and_escalations=_items_from_lines(sections["exceptions"]) or [
-            "Exceptions and escalations to confirm."
+            "Exception and escalation rules require process owner confirmation."
         ],
         reports_and_evidence=reports + evidence,
         systems_and_data_used=_items_from_lines(sections["systems"] + sections["data_fields"])
@@ -109,10 +113,12 @@ def map_sop_text_to_intake(text: str, fallback: IntakeAnswers) -> SOPMappedField
     )
 
     return SOPMappedFields(
-        current_tools=current_tools,
-        pain_points=pain_points,
-        control_concerns=controls,
-        reporting_needs=_first_nonempty(_join_lines(sections["reports"]), fallback.reporting_needs),
+        current_tools=clean_sentence(current_tools),
+        pain_points=clean_items(pain_points),
+        control_concerns=clean_items(controls),
+        reporting_needs=clean_sentence(
+            _first_nonempty(_join_lines(sections["reports"]), fallback.reporting_needs)
+        ),
         compliance_focus=_first_nonempty(
             _join_lines(sections["controls"] + sections["audit_evidence"]),
             fallback.compliance_focus,
@@ -129,13 +135,14 @@ def build_sop_draft(answers: GuidedSOPAnswers, process_name: str, entity_type: s
             "pack generation."
         ),
         scope=f"{process_name} activities for {entity_type}.",
-        trigger=answers.process_trigger,
-        roles_and_responsibilities=answers.process_owner,
-        step_by_step_procedure=answers.key_process_steps,
-        controls_and_approvals=answers.controls + answers.approvals,
-        exceptions_and_escalations=answers.exceptions + answers.handoffs,
-        reports_and_evidence=answers.reports + answers.audit_evidence,
-        systems_and_data_used=[answers.systems_tools, *answers.data_fields],
+        trigger=clean_sentence(answers.process_trigger),
+        roles_and_responsibilities=clean_sentence(answers.process_owner),
+        step_by_step_procedure=clean_items(answers.key_process_steps),
+        controls_and_approvals=clean_items(answers.controls + answers.approvals),
+        exceptions_and_escalations=clean_items(answers.exceptions + answers.handoffs)
+        or ["Exception and escalation rules require process owner confirmation."],
+        reports_and_evidence=clean_items(answers.reports + answers.audit_evidence),
+        systems_and_data_used=clean_items([answers.systems_tools, *answers.data_fields]),
         review_and_sign_off=(
             "Review the SOP draft, update unclear handoffs or evidence gaps, and confirm owner "
             "sign-off before generating the requirements pack."
@@ -174,12 +181,17 @@ def guided_answers_to_mapped_fields(
 ) -> SOPMappedFields:
     sop = build_sop_draft(answers, process_name, entity_type)
     return SOPMappedFields(
-        current_tools=answers.systems_tools,
-        pain_points=answers.pain_points,
-        control_concerns=answers.controls,
-        reporting_needs=", ".join(answers.reports) or "Reporting needs to confirm.",
-        compliance_focus=", ".join(answers.controls + answers.audit_evidence)
-        or "Control evidence needs to confirm.",
+        current_tools=clean_sentence(answers.systems_tools),
+        pain_points=clean_items(answers.pain_points),
+        control_concerns=clean_items(answers.controls),
+        reporting_needs=clean_sentence(
+            ", ".join(clean_items(answers.reports))
+            or "Reporting needs require process owner confirmation."
+        ),
+        compliance_focus=clean_sentence(
+            ", ".join(clean_items(answers.controls + answers.audit_evidence))
+            or "Control evidence needs require process owner confirmation."
+        ),
         assumptions=["Guided SOP draft should be reviewed by the finance process owner."],
         sop_draft=sop,
     )
@@ -221,7 +233,7 @@ def _items_from_lines(lines: list[str]) -> list[str]:
     items = []
     for line in lines:
         for piece in line.replace(";", "\n").split("\n"):
-            item = piece.strip(" -*")
+            item = clean_fragment(piece.strip(" -*"))
             if item:
                 items.append(item)
     return items[:8]

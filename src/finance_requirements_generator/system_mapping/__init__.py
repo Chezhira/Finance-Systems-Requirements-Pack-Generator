@@ -6,6 +6,7 @@ from typing import Any
 import yaml
 
 from finance_requirements_generator.schemas import FitGapMappingRow
+from finance_requirements_generator.text_cleanup import clean_sentence
 
 TARGET_SYSTEMS = [
     "Odoo",
@@ -40,17 +41,17 @@ def get_fit_gap_mapping(process_key: str, target_system: str) -> list[FitGapMapp
         )
         rows.append(
             FitGapMappingRow(
-                current_state_area=item["current_state_area"],
-                target_system_capability_area=item["capability_area"],
-                candidate_fit_gap_view=system_note.get(
+                current_state_area=clean_sentence(item["current_state_area"]),
+                target_system_capability_area=clean_sentence(item["capability_area"]),
+                candidate_fit_gap_view=clean_sentence(system_note.get(
                     "candidate_fit_gap_view",
                     item.get("default_fit_gap_view", "Configuration dependent"),
-                ),
-                requirement_impact=item["requirement_impact"],
-                validation_note=system_note.get(
+                )),
+                requirement_impact=clean_sentence(item["requirement_impact"]),
+                validation_note=clean_sentence(system_note.get(
                     "validation_note",
                     item["validation_note"],
-                ),
+                )),
             )
         )
     return rows

@@ -130,3 +130,39 @@ def test_pack_includes_target_mapping_and_exports() -> None:
     assert markdown.rfind("Public-Safe Sample Data Note") > markdown.rfind(
         "Target-System Fit-Gap Mapping"
     )
+
+
+def test_generated_text_cleanup_removes_duplicate_punctuation() -> None:
+    sample = DEFAULT_SAMPLE_INPUTS["accounts_payable"]
+    intake = IntakeAnswers(
+        **{
+            **sample.__dict__,
+            "current_tools": "Workflow.",
+            "reporting_needs": "Payment readiness summary.",
+            "compliance_focus": "Supplier controls.;",
+            "pain_points": ["Manual approval chasing.", "Weak controls.;"],
+        }
+    )
+    pack = generate_pack(intake)
+    rendered = str(pack.section_map())
+
+    assert ".." not in rendered
+    assert ".;" not in rendered
+    assert ";." not in rendered
+
+
+def test_sop_fallback_wording_is_professional_review_gate() -> None:
+    mapped = map_sop_text_to_intake(
+        "Systems\nERP ledger",
+        DEFAULT_SAMPLE_INPUTS["accounts_payable"],
+    )
+
+    assert mapped.sop_draft is not None
+    assert (
+        "Exception and escalation rules require process owner confirmation."
+        in mapped.sop_draft.exceptions_and_escalations
+    )
+    assert (
+        "Exceptions and escalations to confirm."
+        not in mapped.sop_draft.exceptions_and_escalations
+    )
