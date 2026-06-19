@@ -75,11 +75,18 @@ def test_browser_process_map_export_is_styled_and_offline_safe(monkeypatch) -> N
     assert isinstance(content, bytes)
     assert "Accounts Payable &mdash; Process Map" in html
     assert escape(pack.mermaid_process_map) in html
-    assert 'class="mermaid"' in html
+    assert html.count(escape(pack.mermaid_process_map)) == 1
+    assert 'class="diagram" id="diagram"' in html
+    assert "mermaid.render('finance-process-map', getSource())" in html
     assert "mermaid.esm.min.mjs" in html
     assert all(name in html for name in ("gate", "step", "decide", "fix"))
-    assert "Raw Mermaid source and offline fallback" in html
-    assert "uses Mermaid's browser renderer when opened with internet access" in html
+    assert '<details class="source">' in html
+    assert '<details class="source" open' not in html
+    assert "Advanced: Mermaid source" in html
+    assert "Copy Mermaid source" in html
+    assert "Download Mermaid source" in html
+    assert "function downloadSource()" in html
+    assert "Diagram could not render automatically" in html
     assert "Print / Save as PDF" in html
 
 

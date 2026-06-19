@@ -19,7 +19,9 @@ def pack_process_map_html_bytes(pack: RequirementsPack) -> bytes:
         pack.public_safe_sample_data_note
         or "This public-safe sample output contains no confidential business information."
     )
-    download_name = f"{pack.process_key.replace('_', '-')}-process-map.svg"
+    filename_base = pack.process_key.replace("_", "-")
+    svg_download_name = f"{filename_base}-process-map.svg"
+    source_download_name = f"{filename_base}-process-map.mmd"
 
     html = f"""<!DOCTYPE html>
 <html lang="en">
@@ -64,11 +66,18 @@ def pack_process_map_html_bytes(pack: RequirementsPack) -> bytes:
     .flow-tag {{
       color:var(--muted); font-family:var(--mono); font-size:11px; letter-spacing:.06em;
     }}
-    .diagram {{ min-height:260px; padding:30px 22px; overflow-x:auto; }}
+    .diagram {{
+      display:flex; min-height:220px; align-items:center; padding:30px 22px; overflow-x:auto;
+    }}
     .diagram svg {{
       display:block; width:100%; min-width:980px; height:auto; margin:0 auto; max-width:100%;
     }}
     .render-status {{ margin:0; padding:12px 22px; color:var(--muted); font-size:12px; }}
+    .diagram-message {{ width:100%; margin:0; color:var(--muted); text-align:center; }}
+    .render-fallback {{
+      width:100%; max-width:720px; margin:0 auto; padding:18px 20px; text-align:center;
+      background:#f8fafc; border:1px solid var(--line); border-radius:8px; color:var(--ink-soft);
+    }}
     .legend {{
       display:flex; flex-wrap:wrap; gap:10px 26px; padding:18px 22px;
       border-top:1px solid var(--line); background:#fbfcfe;
@@ -125,10 +134,10 @@ def pack_process_map_html_bytes(pack: RequirementsPack) -> bytes:
         <span class="flow-tag">trigger &rarr; sign-off</span>
       </div>
       <div class="diagram" id="diagram">
-        <pre class="mermaid">{source}</pre>
+        <p class="diagram-message">Rendering process map&hellip;</p>
       </div>
       <p class="render-status" id="render-status">
-        Loading the browser-rendered process map. The source remains available below.
+        Browser rendering uses Mermaid when internet access is available.
       </p>
       <div class="legend" aria-label="Process map legend">
         <div class="key"><span class="swatch gate"></span><b>Gateway</b> &mdash; start / end</div>
@@ -148,20 +157,20 @@ def pack_process_map_html_bytes(pack: RequirementsPack) -> bytes:
       <button class="primary" type="button" onclick="window.print()">Print / Save as PDF</button>
       <button id="download-svg" type="button" onclick="downloadSVG()" disabled>Download SVG</button>
       <button type="button" onclick="copySource()">Copy Mermaid source</button>
+      <button type="button" onclick="downloadSource()">Download Mermaid source</button>
     </div>
 
-    <details class="source" open>
-      <summary>Raw Mermaid source and offline fallback</summary>
+    <details class="source">
+      <summary>Advanced: Mermaid source</summary>
       <p class="source-note">
-        Copy this source into Mermaid-compatible tools for editing or offline rendering.
+        Technical users can copy or download this source for Mermaid-compatible tools.
       </p>
       <pre class="raw-source" id="raw-source">{source}</pre>
     </details>
 
     <footer>
       <p>
-        This HTML file uses Mermaid's browser renderer when opened with internet access.
-        The raw Mermaid source is included below for editing or offline use.
+        Diagram rendering uses Mermaid's browser renderer and may require internet access.
       </p>
       <p>{public_safe_note}</p>
       <p>
@@ -170,8 +179,33 @@ def pack_process_map_html_bytes(pack: RequirementsPack) -> bytes:
     </footer>
   </main>
   <script>
-    function copySource() {{
-      navigator.clipboard.writeText(document.getElementById('raw-source').textContent);
+    function getSource() {{
+      return document.getElementById('raw-source').textContent;
+    }}
+    async function copySource() {{
+      const source = getSource();
+      if (navigator.clipboard && window.isSecureContext) {{
+        await navigator.clipboard.writeText(source);
+        return;
+      }}
+      const field = document.createElement('textarea');
+      field.value = source;
+      field.style.position = 'fixed';
+      field.style.opacity = '0';
+      document.body.appendChild(field);
+      field.select();
+      document.execCommand('copy');
+      field.remove();
+    }}
+    function downloadSource() {{
+      const url = URL.createObjectURL(new Blob([getSource()], {{type:'text/plain;charset=utf-8'}}));
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = '{source_download_name}';
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      URL.revokeObjectURL(url);
     }}
     function downloadSVG() {{
       const svg = document.querySelector('#diagram svg');
@@ -180,7 +214,7 @@ def pack_process_map_html_bytes(pack: RequirementsPack) -> bytes:
       const url = URL.createObjectURL(new Blob([data], {{type:'image/svg+xml'}}));
       const anchor = document.createElement('a');
       anchor.href = url;
-      anchor.download = '{download_name}';
+      anchor.download = '{svg_download_name}';
       document.body.appendChild(anchor);
       anchor.click();
       anchor.remove();
@@ -188,25 +222,32 @@ def pack_process_map_html_bytes(pack: RequirementsPack) -> bytes:
     }}
   </script>
   <script type="module">
-    const status = document.getElementById('render-status');
-    try {{
-      const {{ default: mermaid }} = await import('{MERMAID_CDN_URL}');
-      mermaid.initialize({{
-        startOnLoad:false,
-        securityLevel:'strict',
-        theme:'base',
-        flowchart:{{htmlLabels:true,curve:'basis',useMaxWidth:true}},
-        themeVariables:{{fontFamily:'Segoe UI, Arial, sans-serif',lineColor:'#94a3b8'}}
-      }});
-      await mermaid.run({{nodes:document.querySelectorAll('.mermaid')}});
-      status.textContent =
-        'Rendered in your browser. Use the controls below to print or download the SVG.';
-      document.getElementById('download-svg').disabled = false;
-    }} catch (error) {{
-      status.textContent =
-        'The Mermaid renderer could not load. ' +
-        'The complete source is available below for offline use.';
-    }}
+    document.addEventListener('DOMContentLoaded', async () => {{
+      const diagram = document.getElementById('diagram');
+      const status = document.getElementById('render-status');
+      try {{
+        const {{ default: mermaid }} = await import('{MERMAID_CDN_URL}');
+        mermaid.initialize({{
+          startOnLoad:false,
+          securityLevel:'strict',
+          theme:'base',
+          flowchart:{{htmlLabels:true,curve:'basis',useMaxWidth:true}},
+          themeVariables:{{fontFamily:'Segoe UI, Arial, sans-serif',lineColor:'#94a3b8'}}
+        }});
+        const rendered = await mermaid.render('finance-process-map', getSource());
+        diagram.innerHTML = rendered.svg;
+        if (rendered.bindFunctions) rendered.bindFunctions(diagram);
+        status.textContent = 'Rendered in your browser.';
+        document.getElementById('download-svg').disabled = false;
+      }} catch (error) {{
+        diagram.innerHTML = `
+          <div class="render-fallback" role="status">
+            Diagram could not render automatically. Use Copy Mermaid source or Download Mermaid
+            source to open it in a Mermaid-compatible tool.
+          </div>`;
+        status.textContent = 'The technical source remains available from the controls below.';
+      }}
+    }});
   </script>
 </body>
 </html>
