@@ -9,11 +9,10 @@ def generate_pack(intake: IntakeAnswers) -> RequirementsPack:
     validate_intake(intake)
     template = load_process_template(intake.process_key)
 
-    problem = _current_state_problem(intake, template)
-    future_scope = _future_state_scope(intake, template)
+    problem = _business_problem(intake, template)
+    process_scope = _process_scope(intake, template)
     functional_requirements = _personalise_requirements(
         template["functional_requirements"],
-        intake,
         prefix="FR",
     )
 
@@ -22,24 +21,25 @@ def generate_pack(intake: IntakeAnswers) -> RequirementsPack:
         process_name=template["name"],
         company_name=intake.company_name,
         executive_summary=_executive_summary(intake, template),
-        current_state_problem=problem,
-        future_state_scope=future_scope,
+        business_problem=problem,
+        process_scope=process_scope,
+        in_scope=_in_scope(intake, template),
+        out_of_scope=_out_of_scope(intake, template),
+        stakeholders_and_roles=_stakeholders_and_roles(intake, template),
         assumptions=_assumptions(intake),
         functional_requirements=functional_requirements,
         non_functional_requirements=_personalise_requirements(
             template["non_functional_requirements"],
-            intake,
             prefix="NFR",
         ),
         data_requirements=_personalise_requirements(
             template["data_requirements"],
-            intake,
             prefix="DR",
         ),
-        controls=_personalise_requirements(template["controls"], intake, prefix="CTRL"),
+        controls=_personalise_requirements(template["controls"], prefix="CTRL"),
+        reporting_requirements=_reporting_requirements(intake, template),
         audit_trail_requirements=_personalise_requirements(
             template["audit_trail_requirements"],
-            intake,
             prefix="AUD",
         ),
         user_stories=list(template["user_stories"]),
@@ -54,42 +54,85 @@ def generate_pack(intake: IntakeAnswers) -> RequirementsPack:
         acceptance_criteria=list(template["acceptance_criteria"]),
         risks_and_dependencies=list(template["risks_and_dependencies"]),
         implementation_notes=_implementation_notes(intake, template),
+        public_safe_sample_data_note=_public_safe_sample_data_note(),
     )
 
 
 def _executive_summary(intake: IntakeAnswers, template: dict) -> str:
-    pain_points = _join_items(intake.pain_points)
-    concerns = _join_items(intake.control_concerns)
+    pain_points = _join_items(_lower_first_items(_normalise_items(intake.pain_points)))
     return (
-        f"{intake.company_name} needs a structured {template['name']} requirements pack for "
-        f"{intake.erp_platform}. The MVP scope turns current finance pain points "
-        f"({pain_points}) into implementable requirements covering data capture, controls, "
-        f"audit trail, UAT, and reporting. The design is sized for {intake.monthly_volume} "
-        f"and prioritises {concerns} within a target delivery window of {intake.deadline}."
+        f"{intake.company_name} needs a structured {template['name']} requirements pack "
+        f"to reduce rework, clarify control ownership, and make {intake.erp_platform} "
+        f"implementation decisions testable. The pack translates {pain_points} into "
+        f"requirements for workflow, data, controls, reporting, audit trail, and UAT. "
+        f"It is sized for {intake.monthly_volume} and frames the control design, "
+        f"reporting outputs, and acceptance criteria needed within a target delivery "
+        f"window of {intake.deadline}."
     )
 
 
-def _current_state_problem(intake: IntakeAnswers, template: dict) -> str:
+def _business_problem(intake: IntakeAnswers, template: dict) -> str:
     return (
-        f"The current {template['name'].lower()} process relies on {intake.current_tools}. "
-        f"This creates avoidable risk around {_join_items(intake.pain_points)} and makes "
-        f"{intake.reporting_needs.lower()} harder to produce consistently. Finance needs "
-        f"clearer ownership, data standards, and review evidence before the process is ready "
-        f"for ERP optimisation or automation."
+        f"The current {template['name']} process relies on {intake.current_tools}. "
+        f"That creates avoidable risk around "
+        f"{_join_items(_lower_first_items(_normalise_items(intake.pain_points)))} "
+        f"and leaves finance without a consistent requirements baseline for process design, "
+        f"configuration, controls, reporting, and UAT. The implementation needs clearer "
+        f"ownership, defined data fields, control evidence, and acceptance criteria before "
+        f"ERP optimisation or automation can be delivered with confidence."
     )
 
 
-def _future_state_scope(intake: IntakeAnswers, template: dict) -> str:
-    scope = " ".join(template["baseline_scope"])
+def _process_scope(intake: IntakeAnswers, template: dict) -> str:
+    scope = _semicolon_join(_normalise_items(template["baseline_scope"]))
     return (
-        f"The future-state scope covers {scope} It will support {intake.entity_type.lower()} "
-        f"users on {intake.erp_platform}, with emphasis on {intake.compliance_focus.lower()}."
+        f"The future-state scope covers {scope}. The design will support "
+        f"{intake.entity_type.lower()} users on {intake.erp_platform}, with emphasis on "
+        f"{intake.compliance_focus.lower()}."
     )
+
+
+def _in_scope(intake: IntakeAnswers, template: dict) -> list[str]:
+    return [
+        f"{template['name']} requirements for the agreed {intake.entity_type.lower()} process.",
+        (
+            "Workflow, data, controls, reporting, audit trail, and UAT requirements "
+            f"for {intake.erp_platform}."
+        ),
+        (
+            "Process pain points covering "
+            f"{_join_items(_lower_first_items(_normalise_items(intake.pain_points)))}."
+        ),
+        f"Reporting requirement: {intake.reporting_needs}.",
+        f"Implementation window and readiness assumptions for the {intake.deadline} target window.",
+    ]
+
+
+def _out_of_scope(intake: IntakeAnswers, template: dict) -> list[str]:
+    return [
+        "Live system configuration, data migration execution, and production cutover.",
+        "Custom integration build or external workflow automation.",
+        "Legal, tax, HR, or statutory sign-off outside the finance process owner remit.",
+        "Direct processing of operational production data.",
+        f"Process areas outside {template['name']} unless approved as a separate phase.",
+    ]
+
+
+def _stakeholders_and_roles(intake: IntakeAnswers, template: dict) -> list[str]:
+    return [
+        f"{intake.sponsor}: accountable for business sign-off and prioritisation.",
+        f"{template['name']} process owner: validates workflow scope, controls, and exceptions.",
+        "Finance systems analyst: translates requirements into configuration and UAT coverage.",
+        "Preparer or operational user: confirms day-to-day inputs, handoffs, and evidence needs.",
+        (
+            "Reviewer or controller: approves control design, reporting outputs, and "
+            "acceptance criteria."
+        ),
+    ]
 
 
 def _assumptions(intake: IntakeAnswers) -> list[str]:
     base_assumptions = [
-        "All sample names and operating details in this pack are synthetic.",
         "The pack is a requirements accelerator and does not replace finance owner sign-off.",
         "System configuration will follow approved finance policies and access controls.",
     ]
@@ -100,22 +143,61 @@ def _implementation_notes(intake: IntakeAnswers, template: dict) -> list[str]:
     return [
         f"Confirm {template['name']} process owner and reviewer roles before design sign-off.",
         f"Validate the required data fields against {intake.erp_platform} configuration.",
-        "Run UAT with synthetic examples before loading production data.",
+        "Run UAT with approved sample scenarios before production data migration or cutover.",
         "Keep any future AI-assisted drafting behind structured templates and human approval.",
     ]
 
 
-def _personalise_requirements(items: list[str], intake: IntakeAnswers, prefix: str) -> list[str]:
+def _reporting_requirements(intake: IntakeAnswers, template: dict) -> list[str]:
+    return [
+        f"RPT-01: Provide {intake.reporting_needs}.",
+        (
+            "RPT-02: Show owner, status, ageing, exception reason, and next action "
+            f"where relevant to {template['name']}."
+        ),
+        "RPT-03: Support finance manager review with exportable period-end evidence.",
+        "RPT-04: Separate open exceptions from completed, approved, or signed-off items.",
+        (
+            "RPT-05: Make reporting outputs readable by finance users without system "
+            "administrator access."
+        ),
+    ]
+
+
+def _public_safe_sample_data_note() -> str:
+    return (
+        "This pack was generated from fictional, public-safe sample inputs. It does not "
+        "contain real employer, client, supplier, bank, VAT, payroll, or operational data. "
+        "Do not upload confidential business information into a public demo."
+    )
+
+
+def _personalise_requirements(items: list[str], prefix: str) -> list[str]:
     return [
         f"{prefix}-{index:02d}: {item}"
         for index, item in enumerate(items, start=1)
-    ] + [
-        f"{prefix}-{len(items) + 1:02d}: Provide reporting for {intake.reporting_needs}.",
-        f"{prefix}-{len(items) + 2:02d}: Evidence {intake.compliance_focus} for finance review.",
     ]
 
 
 def _join_items(items: list[str]) -> str:
     if len(items) == 1:
         return items[0]
+    if len(items) == 2:
+        return f"{items[0]} and {items[1]}"
     return f"{', '.join(items[:-1])}, and {items[-1]}"
+
+
+def _normalise_items(items: list[str]) -> list[str]:
+    return [item.rstrip(".") for item in items]
+
+
+def _lower_first_items(items: list[str]) -> list[str]:
+    return [f"{item[:1].lower()}{item[1:]}" if item else item for item in items]
+
+
+def _semicolon_join(items: list[str]) -> str:
+    if len(items) == 1:
+        return items[0]
+    if len(items) == 2:
+        return f"{items[0]}; and {items[1]}"
+    return f"{'; '.join(items[:-1])}; and {items[-1]}"

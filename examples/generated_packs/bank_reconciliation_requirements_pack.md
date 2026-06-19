@@ -1,27 +1,44 @@
 # Bank Reconciliation Requirements Pack
 
-**Synthetic company:** BlueRiver Foods Ltd
+**Prepared for:** BlueRiver Foods Ltd
 
-> Synthetic demo output only. Do not use this sample as client, employer, or operational data.
+**Purpose:** Translate finance process pain points into implementation-ready ERP requirements, controls, reporting needs, audit trail expectations, and UAT coverage.
 
 ## Executive Summary
 
-BlueRiver Foods Ltd needs a structured Bank Reconciliation requirements pack for Microsoft Dynamics 365 Business Central. The MVP scope turns current finance pain points (Unmatched bank statement lines, Suspense account ageing, and Manual owner/status tracking) into implementable requirements covering data capture, controls, audit trail, UAT, and reporting. The design is sized for 8 bank accounts with roughly 4,500 statement lines per month and prioritises Reviewer sign-off, and Manual match overrides within a target delivery window of 8 weeks.
+BlueRiver Foods Ltd needs a structured Bank Reconciliation requirements pack to reduce rework, clarify control ownership, and make Microsoft Dynamics 365 Business Central implementation decisions testable. The pack translates unmatched bank statement lines, suspense account ageing, and manual owner/status tracking into requirements for workflow, data, controls, reporting, audit trail, and UAT. It is sized for 8 bank accounts with roughly 4,500 statement lines per month and frames the control design, reporting outputs, and acceptance criteria needed within a target delivery window of 8 weeks.
 
-## Current-State Problem Statement
+## Business Problem
 
-The current bank reconciliation process relies on Bank portal exports, ERP cashbook, and month-end spreadsheet reconciliation. This creates avoidable risk around Unmatched bank statement lines, Suspense account ageing, and Manual owner/status tracking and makes daily unmatched item ageing and month-end reconciliation evidence pack harder to produce consistently. Finance needs clearer ownership, data standards, and review evidence before the process is ready for ERP optimisation or automation.
+The current Bank Reconciliation process relies on Bank portal exports, ERP cashbook, and month-end spreadsheet reconciliation. That creates avoidable risk around unmatched bank statement lines, suspense account ageing, and manual owner/status tracking and leaves finance without a consistent requirements baseline for process design, configuration, controls, reporting, and UAT. The implementation needs clearer ownership, defined data fields, control evidence, and acceptance criteria before ERP optimisation or automation can be delivered with confidence.
 
-## Future-State Process Scope
+## Process Scope
 
-The future-state scope covers Bank statement ingestion, matching status, exception ownership, suspense clearing, and reviewer sign-off. Daily visibility of unmatched receipts, payments, fees, and transfers. Month-end reconciliation evidence suitable for finance and audit review. It will support multi-site food distribution business users on Microsoft Dynamics 365 Business Central, with emphasis on month-end close evidence and internal control review.
+The future-state scope covers Bank statement ingestion, matching status, exception ownership, suspense clearing, and reviewer sign-off; Daily visibility of unmatched receipts, payments, fees, and transfers; and Month-end reconciliation evidence suitable for finance and audit review. The design will support multi-site food distribution business users on Microsoft Dynamics 365 Business Central, with emphasis on month-end close evidence and internal control review.
 
-## Assumptions
+## In Scope
 
-- All sample names and operating details in this pack are synthetic.
-- The pack is a requirements accelerator and does not replace finance owner sign-off.
-- System configuration will follow approved finance policies and access controls.
-- Bank statement files use a consistent export format.
+- Bank Reconciliation requirements for the agreed multi-site food distribution business process.
+- Workflow, data, controls, reporting, audit trail, and UAT requirements for Microsoft Dynamics 365 Business Central.
+- Process pain points covering unmatched bank statement lines, suspense account ageing, and manual owner/status tracking.
+- Reporting requirement: Daily unmatched item ageing and month-end reconciliation evidence pack.
+- Implementation window and readiness assumptions for the 8 weeks target window.
+
+## Out of Scope
+
+- Live system configuration, data migration execution, and production cutover.
+- Custom integration build or external workflow automation.
+- Legal, tax, HR, or statutory sign-off outside the finance process owner remit.
+- Direct processing of operational production data.
+- Process areas outside Bank Reconciliation unless approved as a separate phase.
+
+## Stakeholders and Roles
+
+- Finance Transformation Lead: accountable for business sign-off and prioritisation.
+- Bank Reconciliation process owner: validates workflow scope, controls, and exceptions.
+- Finance systems analyst: translates requirements into configuration and UAT coverage.
+- Preparer or operational user: confirms day-to-day inputs, handoffs, and evidence needs.
+- Reviewer or controller: approves control design, reporting outputs, and acceptance criteria.
 
 ## Functional Requirements
 
@@ -33,18 +50,6 @@ The future-state scope covers Bank statement ingestion, matching status, excepti
 - FR-06: Require reviewer sign-off once reconciliation differences are explained or cleared.
 - FR-07: Produce a month-end reconciliation pack with outstanding items and movement commentary.
 - FR-08: Escalate high-value or aged unmatched lines based on finance policy thresholds.
-- FR-09: Provide reporting for Daily unmatched item ageing and month-end reconciliation evidence pack.
-- FR-10: Evidence Month-end close evidence and internal control review for finance review.
-
-## Non-Functional Requirements
-
-- NFR-01: Matching status must be clear to preparers, reviewers, and auditors.
-- NFR-02: The reconciliation evidence must be exportable without manual spreadsheet formatting.
-- NFR-03: The workflow must support daily review and formal month-end sign-off.
-- NFR-04: The system must retain historic reconciliation packs for audit lookback.
-- NFR-05: User permissions must distinguish preparer updates from reviewer approval.
-- NFR-06: Provide reporting for Daily unmatched item ageing and month-end reconciliation evidence pack.
-- NFR-07: Evidence Month-end close evidence and internal control review for finance review.
 
 ## Data Requirements
 
@@ -56,8 +61,6 @@ The future-state scope covers Bank statement ingestion, matching status, excepti
 - DR-06: Ageing bucket
 - DR-07: Suspense account reference
 - DR-08: Reviewer sign-off timestamp
-- DR-09: Provide reporting for Daily unmatched item ageing and month-end reconciliation evidence pack.
-- DR-10: Evidence Month-end close evidence and internal control review for finance review.
 
 ## Controls
 
@@ -66,8 +69,14 @@ The future-state scope covers Bank statement ingestion, matching status, excepti
 - CTRL-03: Suspense clearing entries require reason codes and supporting notes.
 - CTRL-04: Manual match overrides require reviewer approval.
 - CTRL-05: Reconciliation status is locked after period close except through controlled reopen.
-- CTRL-06: Provide reporting for Daily unmatched item ageing and month-end reconciliation evidence pack.
-- CTRL-07: Evidence Month-end close evidence and internal control review for finance review.
+
+## Reporting Requirements
+
+- RPT-01: Provide Daily unmatched item ageing and month-end reconciliation evidence pack.
+- RPT-02: Show owner, status, ageing, exception reason, and next action where relevant to Bank Reconciliation.
+- RPT-03: Support finance manager review with exportable period-end evidence.
+- RPT-04: Separate open exceptions from completed, approved, or signed-off items.
+- RPT-05: Make reporting outputs readable by finance users without system administrator access.
 
 ## Audit Trail Requirements
 
@@ -76,8 +85,6 @@ The future-state scope covers Bank statement ingestion, matching status, excepti
 - AUD-03: Keep owner/status history for aged unmatched lines.
 - AUD-04: Preserve supporting notes and evidence links for unresolved differences.
 - AUD-05: Record period reopen requests with reason, requester, approver, and date.
-- AUD-06: Provide reporting for Daily unmatched item ageing and month-end reconciliation evidence pack.
-- AUD-07: Evidence Month-end close evidence and internal control review for finance review.
 
 ## User Stories
 
@@ -116,5 +123,9 @@ The future-state scope covers Bank statement ingestion, matching status, excepti
 
 - Confirm Bank Reconciliation process owner and reviewer roles before design sign-off.
 - Validate the required data fields against Microsoft Dynamics 365 Business Central configuration.
-- Run UAT with synthetic examples before loading production data.
+- Run UAT with approved sample scenarios before production data migration or cutover.
 - Keep any future AI-assisted drafting behind structured templates and human approval.
+
+## Public-Safe Sample Data Note
+
+This pack was generated from fictional, public-safe sample inputs. It does not contain real employer, client, supplier, bank, VAT, payroll, or operational data. Do not upload confidential business information into a public demo.

@@ -1,27 +1,44 @@
 # Month-end Close Requirements Pack
 
-**Synthetic company:** Cedar Grove Retail Ltd
+**Prepared for:** Cedar Grove Retail Ltd
 
-> Synthetic demo output only. Do not use this sample as client, employer, or operational data.
+**Purpose:** Translate finance process pain points into implementation-ready ERP requirements, controls, reporting needs, audit trail expectations, and UAT coverage.
 
 ## Executive Summary
 
-Cedar Grove Retail Ltd needs a structured Month-end Close requirements pack for Microsoft Dynamics 365 Finance. The MVP scope turns current finance pain points (Late close tasks, Manual close status tracking, and Missing reconciliation evidence) into implementable requirements covering data capture, controls, audit trail, UAT, and reporting. The design is sized for 125 close tasks, 70 reconciliations, and 220 journals per period and prioritises Reviewer sign-off required before high-risk reconciliations are marked complete. within a target delivery window of 12 weeks.
+Cedar Grove Retail Ltd needs a structured Month-end Close requirements pack to reduce rework, clarify control ownership, and make Microsoft Dynamics 365 Finance implementation decisions testable. The pack translates late close tasks, manual close status tracking, and missing reconciliation evidence into requirements for workflow, data, controls, reporting, audit trail, and UAT. It is sized for 125 close tasks, 70 reconciliations, and 220 journals per period and frames the control design, reporting outputs, and acceptance criteria needed within a target delivery window of 12 weeks.
 
-## Current-State Problem Statement
+## Business Problem
 
-The current month-end close process relies on Close checklist spreadsheet, ERP journals, and shared evidence folders. This creates avoidable risk around Late close tasks, Manual close status tracking, and Missing reconciliation evidence and makes close task status, overdue items, reconciliation risk, and journal approval dashboard harder to produce consistently. Finance needs clearer ownership, data standards, and review evidence before the process is ready for ERP optimisation or automation.
+The current Month-end Close process relies on Close checklist spreadsheet, ERP journals, and shared evidence folders. That creates avoidable risk around late close tasks, manual close status tracking, and missing reconciliation evidence and leaves finance without a consistent requirements baseline for process design, configuration, controls, reporting, and UAT. The implementation needs clearer ownership, defined data fields, control evidence, and acceptance criteria before ERP optimisation or automation can be delivered with confidence.
 
-## Future-State Process Scope
+## Process Scope
 
-The future-state scope covers Close task calendar, preparer/reviewer ownership, journal approval, reconciliation completion, and close reporting. Daily close status visibility with overdue task escalation and dependency tracking. Evidence pack for finance leadership, internal controls, and audit review. It will support multi-entity retail group users on Microsoft Dynamics 365 Finance, with emphasis on close evidence, journal approvals, reviewer sign-off, and period completion controls.
+The future-state scope covers Close task calendar, preparer/reviewer ownership, journal approval, reconciliation completion, and close reporting; Daily close status visibility with overdue task escalation and dependency tracking; and Evidence pack for finance leadership, internal controls, and audit review. The design will support multi-entity retail group users on Microsoft Dynamics 365 Finance, with emphasis on close evidence, journal approvals, reviewer sign-off, and period completion controls.
 
-## Assumptions
+## In Scope
 
-- All sample names and operating details in this pack are synthetic.
-- The pack is a requirements accelerator and does not replace finance owner sign-off.
-- System configuration will follow approved finance policies and access controls.
-- Close task owners and reviewer roles have been agreed by finance leadership.
+- Month-end Close requirements for the agreed multi-entity retail group process.
+- Workflow, data, controls, reporting, audit trail, and UAT requirements for Microsoft Dynamics 365 Finance.
+- Process pain points covering late close tasks, manual close status tracking, and missing reconciliation evidence.
+- Reporting requirement: Close task status, overdue items, reconciliation risk, and journal approval dashboard.
+- Implementation window and readiness assumptions for the 12 weeks target window.
+
+## Out of Scope
+
+- Live system configuration, data migration execution, and production cutover.
+- Custom integration build or external workflow automation.
+- Legal, tax, HR, or statutory sign-off outside the finance process owner remit.
+- Direct processing of operational production data.
+- Process areas outside Month-end Close unless approved as a separate phase.
+
+## Stakeholders and Roles
+
+- Finance Transformation Lead: accountable for business sign-off and prioritisation.
+- Month-end Close process owner: validates workflow scope, controls, and exceptions.
+- Finance systems analyst: translates requirements into configuration and UAT coverage.
+- Preparer or operational user: confirms day-to-day inputs, handoffs, and evidence needs.
+- Reviewer or controller: approves control design, reporting outputs, and acceptance criteria.
 
 ## Functional Requirements
 
@@ -33,18 +50,6 @@ The future-state scope covers Close task calendar, preparer/reviewer ownership, 
 - FR-06: Lock completed tasks after reviewer sign-off unless reopened through controlled approval.
 - FR-07: Produce a close dashboard showing task completion, late items, high-risk reconciliations, and journal status.
 - FR-08: Export a month-end close evidence pack with task, reconciliation, journal, and sign-off details.
-- FR-09: Provide reporting for Close task status, overdue items, reconciliation risk, and journal approval dashboard.
-- FR-10: Evidence Close evidence, journal approvals, reviewer sign-off, and period completion controls for finance review.
-
-## Non-Functional Requirements
-
-- NFR-01: Close status must be visible without relying on offline spreadsheet trackers.
-- NFR-02: Task and reconciliation evidence must be understandable to finance managers and auditors.
-- NFR-03: The workflow must support daily close stand-up review and formal period completion.
-- NFR-04: Access must separate preparer completion, reviewer approval, and close administrator changes.
-- NFR-05: Close reporting must preserve historic period evidence for audit lookback.
-- NFR-06: Provide reporting for Close task status, overdue items, reconciliation risk, and journal approval dashboard.
-- NFR-07: Evidence Close evidence, journal approvals, reviewer sign-off, and period completion controls for finance review.
 
 ## Data Requirements
 
@@ -56,8 +61,6 @@ The future-state scope covers Close task calendar, preparer/reviewer ownership, 
 - DR-06: Journal batch reference
 - DR-07: Completion evidence link
 - DR-08: Sign-off timestamp
-- DR-09: Provide reporting for Close task status, overdue items, reconciliation risk, and journal approval dashboard.
-- DR-10: Evidence Close evidence, journal approvals, reviewer sign-off, and period completion controls for finance review.
 
 ## Controls
 
@@ -66,8 +69,14 @@ The future-state scope covers Close task calendar, preparer/reviewer ownership, 
 - CTRL-03: Overdue close tasks escalate based on close calendar thresholds.
 - CTRL-04: Reopened tasks require reason, requester, approver, and timestamp.
 - CTRL-05: Period close completion requires all mandatory tasks and reconciliations to be signed off.
-- CTRL-06: Provide reporting for Close task status, overdue items, reconciliation risk, and journal approval dashboard.
-- CTRL-07: Evidence Close evidence, journal approvals, reviewer sign-off, and period completion controls for finance review.
+
+## Reporting Requirements
+
+- RPT-01: Provide Close task status, overdue items, reconciliation risk, and journal approval dashboard.
+- RPT-02: Show owner, status, ageing, exception reason, and next action where relevant to Month-end Close.
+- RPT-03: Support finance manager review with exportable period-end evidence.
+- RPT-04: Separate open exceptions from completed, approved, or signed-off items.
+- RPT-05: Make reporting outputs readable by finance users without system administrator access.
 
 ## Audit Trail Requirements
 
@@ -76,8 +85,6 @@ The future-state scope covers Close task calendar, preparer/reviewer ownership, 
 - AUD-03: Preserve reopen reasons and approval decisions for closed tasks.
 - AUD-04: Track reconciliation owner/status history for each close period.
 - AUD-05: Keep close pack export timestamp, preparer, reviewer, and final approver evidence.
-- AUD-06: Provide reporting for Close task status, overdue items, reconciliation risk, and journal approval dashboard.
-- AUD-07: Evidence Close evidence, journal approvals, reviewer sign-off, and period completion controls for finance review.
 
 ## User Stories
 
@@ -116,5 +123,9 @@ The future-state scope covers Close task calendar, preparer/reviewer ownership, 
 
 - Confirm Month-end Close process owner and reviewer roles before design sign-off.
 - Validate the required data fields against Microsoft Dynamics 365 Finance configuration.
-- Run UAT with synthetic examples before loading production data.
+- Run UAT with approved sample scenarios before production data migration or cutover.
 - Keep any future AI-assisted drafting behind structured templates and human approval.
+
+## Public-Safe Sample Data Note
+
+This pack was generated from fictional, public-safe sample inputs. It does not contain real employer, client, supplier, bank, VAT, payroll, or operational data. Do not upload confidential business information into a public demo.

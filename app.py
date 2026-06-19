@@ -103,10 +103,15 @@ def render_pack(pack) -> None:
     st.subheader(f"{pack.process_name} Pack Preview")
     for title, value in [
         ("Executive Summary", pack.executive_summary),
-        ("Current-State Problem Statement", pack.current_state_problem),
-        ("Future-State Process Scope", pack.future_state_scope),
+        ("Business Problem", pack.business_problem),
+        ("Process Scope", pack.process_scope),
+        ("In Scope", pack.in_scope),
+        ("Out of Scope", pack.out_of_scope),
+        ("Stakeholders and Roles", pack.stakeholders_and_roles),
         ("Functional Requirements", pack.functional_requirements),
+        ("Data Requirements", pack.data_requirements),
         ("Controls and Audit Trail", pack.controls + pack.audit_trail_requirements),
+        ("Reporting Requirements", pack.reporting_requirements),
         ("User Stories", pack.user_stories),
         (
             "UAT Test Cases",

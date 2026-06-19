@@ -1,27 +1,44 @@
 # Inventory Costing Requirements Pack
 
-**Synthetic company:** MapleWorks Components Ltd
+**Prepared for:** MapleWorks Components Ltd
 
-> Synthetic demo output only. Do not use this sample as client, employer, or operational data.
+**Purpose:** Translate finance process pain points into implementation-ready ERP requirements, controls, reporting needs, audit trail expectations, and UAT coverage.
 
 ## Executive Summary
 
-MapleWorks Components Ltd needs a structured Inventory Costing requirements pack for SAP Business One. The MVP scope turns current finance pain points (Inventory valuation differences, Cost variance review gaps, and Manual landed cost allocation) into implementable requirements covering data capture, controls, audit trail, UAT, and reporting. The design is sized for 4 warehouses, 2,800 SKUs, and monthly standard cost review and prioritises Standard cost changes require approval before effective date. within a target delivery window of 11 weeks.
+MapleWorks Components Ltd needs a structured Inventory Costing requirements pack to reduce rework, clarify control ownership, and make SAP Business One implementation decisions testable. The pack translates inventory valuation differences, cost variance review gaps, and manual landed cost allocation into requirements for workflow, data, controls, reporting, audit trail, and UAT. It is sized for 4 warehouses, 2,800 SKUs, and monthly standard cost review and frames the control design, reporting outputs, and acceptance criteria needed within a target delivery window of 11 weeks.
 
-## Current-State Problem Statement
+## Business Problem
 
-The current inventory costing process relies on ERP inventory module, warehouse adjustment logs, and costing spreadsheets. This creates avoidable risk around Inventory valuation differences, Cost variance review gaps, and Manual landed cost allocation and makes inventory valuation, cost variance, landed cost, and subledger-to-gl summary harder to produce consistently. Finance needs clearer ownership, data standards, and review evidence before the process is ready for ERP optimisation or automation.
+The current Inventory Costing process relies on ERP inventory module, warehouse adjustment logs, and costing spreadsheets. That creates avoidable risk around inventory valuation differences, cost variance review gaps, and manual landed cost allocation and leaves finance without a consistent requirements baseline for process design, configuration, controls, reporting, and UAT. The implementation needs clearer ownership, defined data fields, control evidence, and acceptance criteria before ERP optimisation or automation can be delivered with confidence.
 
-## Future-State Process Scope
+## Process Scope
 
-The future-state scope covers Inventory valuation, cost updates, landed cost allocation, variance review, stock adjustments, and GL reconciliation. Visibility of standard cost, actual cost, purchase price variance, production variance, and inventory ageing. Controls over costing method changes, manual adjustments, and reconciliation sign-off. It will support light manufacturing business users on SAP Business One, with emphasis on cost change approvals, stock adjustment controls, and valuation audit evidence.
+The future-state scope covers Inventory valuation, cost updates, landed cost allocation, variance review, stock adjustments, and GL reconciliation; Visibility of standard cost, actual cost, purchase price variance, production variance, and inventory ageing; and Controls over costing method changes, manual adjustments, and reconciliation sign-off. The design will support light manufacturing business users on SAP Business One, with emphasis on cost change approvals, stock adjustment controls, and valuation audit evidence.
 
-## Assumptions
+## In Scope
 
-- All sample names and operating details in this pack are synthetic.
-- The pack is a requirements accelerator and does not replace finance owner sign-off.
-- System configuration will follow approved finance policies and access controls.
-- Item master data includes active SKU and warehouse identifiers.
+- Inventory Costing requirements for the agreed light manufacturing business process.
+- Workflow, data, controls, reporting, audit trail, and UAT requirements for SAP Business One.
+- Process pain points covering inventory valuation differences, cost variance review gaps, and manual landed cost allocation.
+- Reporting requirement: Inventory valuation, cost variance, landed cost, and subledger-to-GL summary.
+- Implementation window and readiness assumptions for the 11 weeks target window.
+
+## Out of Scope
+
+- Live system configuration, data migration execution, and production cutover.
+- Custom integration build or external workflow automation.
+- Legal, tax, HR, or statutory sign-off outside the finance process owner remit.
+- Direct processing of operational production data.
+- Process areas outside Inventory Costing unless approved as a separate phase.
+
+## Stakeholders and Roles
+
+- Finance Transformation Lead: accountable for business sign-off and prioritisation.
+- Inventory Costing process owner: validates workflow scope, controls, and exceptions.
+- Finance systems analyst: translates requirements into configuration and UAT coverage.
+- Preparer or operational user: confirms day-to-day inputs, handoffs, and evidence needs.
+- Reviewer or controller: approves control design, reporting outputs, and acceptance criteria.
 
 ## Functional Requirements
 
@@ -33,18 +50,6 @@ The future-state scope covers Inventory valuation, cost updates, landed cost all
 - FR-06: Route stock adjustments and write-downs for approval before posting.
 - FR-07: Produce inventory valuation reports by SKU, warehouse, ageing bucket, cost method, and variance category.
 - FR-08: Preserve costing assumptions and supporting evidence for finance review.
-- FR-09: Provide reporting for Inventory valuation, cost variance, landed cost, and subledger-to-GL summary.
-- FR-10: Evidence Cost change approvals, stock adjustment controls, and valuation audit evidence for finance review.
-
-## Non-Functional Requirements
-
-- NFR-01: Costing reports must be understandable to finance, operations, and inventory control users.
-- NFR-02: The workflow must support period-end valuation review without offline spreadsheet rebuilds.
-- NFR-03: Access must separate cost maintenance, stock adjustment entry, adjustment approval, and GL posting.
-- NFR-04: Valuation evidence must be retained for audit and management review.
-- NFR-05: The design must support location-level reporting without mixing warehouse responsibilities.
-- NFR-06: Provide reporting for Inventory valuation, cost variance, landed cost, and subledger-to-GL summary.
-- NFR-07: Evidence Cost change approvals, stock adjustment controls, and valuation audit evidence for finance review.
 
 ## Data Requirements
 
@@ -56,8 +61,6 @@ The future-state scope covers Inventory valuation, cost updates, landed cost all
 - DR-06: Landed cost reference
 - DR-07: Inventory control account
 - DR-08: Cost variance reason code
-- DR-09: Provide reporting for Inventory valuation, cost variance, landed cost, and subledger-to-GL summary.
-- DR-10: Evidence Cost change approvals, stock adjustment controls, and valuation audit evidence for finance review.
 
 ## Controls
 
@@ -66,8 +69,14 @@ The future-state scope covers Inventory valuation, cost updates, landed cost all
 - CTRL-03: Inventory subledger-to-GL differences over threshold require owner assignment.
 - CTRL-04: Landed cost allocation basis must be approved and retained.
 - CTRL-05: Costing method changes require finance controller approval.
-- CTRL-06: Provide reporting for Inventory valuation, cost variance, landed cost, and subledger-to-GL summary.
-- CTRL-07: Evidence Cost change approvals, stock adjustment controls, and valuation audit evidence for finance review.
+
+## Reporting Requirements
+
+- RPT-01: Provide Inventory valuation, cost variance, landed cost, and subledger-to-GL summary.
+- RPT-02: Show owner, status, ageing, exception reason, and next action where relevant to Inventory Costing.
+- RPT-03: Support finance manager review with exportable period-end evidence.
+- RPT-04: Separate open exceptions from completed, approved, or signed-off items.
+- RPT-05: Make reporting outputs readable by finance users without system administrator access.
 
 ## Audit Trail Requirements
 
@@ -76,8 +85,6 @@ The future-state scope covers Inventory valuation, cost updates, landed cost all
 - AUD-03: Preserve landed cost allocation inputs, basis, reviewer, and timestamp.
 - AUD-04: Track subledger-to-GL reconciliation owner/status history.
 - AUD-05: Keep valuation report export and sign-off evidence by period.
-- AUD-06: Provide reporting for Inventory valuation, cost variance, landed cost, and subledger-to-GL summary.
-- AUD-07: Evidence Cost change approvals, stock adjustment controls, and valuation audit evidence for finance review.
 
 ## User Stories
 
@@ -116,5 +123,9 @@ The future-state scope covers Inventory valuation, cost updates, landed cost all
 
 - Confirm Inventory Costing process owner and reviewer roles before design sign-off.
 - Validate the required data fields against SAP Business One configuration.
-- Run UAT with synthetic examples before loading production data.
+- Run UAT with approved sample scenarios before production data migration or cutover.
 - Keep any future AI-assisted drafting behind structured templates and human approval.
+
+## Public-Safe Sample Data Note
+
+This pack was generated from fictional, public-safe sample inputs. It does not contain real employer, client, supplier, bank, VAT, payroll, or operational data. Do not upload confidential business information into a public demo.

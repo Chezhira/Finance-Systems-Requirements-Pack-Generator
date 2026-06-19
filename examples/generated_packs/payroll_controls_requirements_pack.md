@@ -1,27 +1,44 @@
 # Payroll Controls Requirements Pack
 
-**Synthetic company:** Riverstone Care Ltd
+**Prepared for:** Riverstone Care Ltd
 
-> Synthetic demo output only. Do not use this sample as client, employer, or operational data.
+**Purpose:** Translate finance process pain points into implementation-ready ERP requirements, controls, reporting needs, audit trail expectations, and UAT coverage.
 
 ## Executive Summary
 
-Riverstone Care Ltd needs a structured Payroll Controls requirements pack for Sage Payroll and Xero Finance. The MVP scope turns current finance pain points (Starter and leaver control gaps, Payroll change approval delays, and Manual payroll input checks) into implementable requirements covering data capture, controls, audit trail, UAT, and reporting. The design is sized for 650 employees and monthly payroll control review and prioritises Starter, leaver, salary, deduction, and bank detail changes require approval before payroll processing. within a target delivery window of 9 weeks.
+Riverstone Care Ltd needs a structured Payroll Controls requirements pack to reduce rework, clarify control ownership, and make Sage Payroll and Xero Finance implementation decisions testable. The pack translates starter and leaver control gaps, payroll change approval delays, and manual payroll input checks into requirements for workflow, data, controls, reporting, audit trail, and UAT. It is sized for 650 employees and monthly payroll control review and frames the control design, reporting outputs, and acceptance criteria needed within a target delivery window of 9 weeks.
 
-## Current-State Problem Statement
+## Business Problem
 
-The current payroll controls process relies on Payroll bureau portal, HR change forms, GL payroll journals, and bank approval workflow. This creates avoidable risk around Starter and leaver control gaps, Payroll change approval delays, and Manual payroll input checks and makes payroll changes, exceptions, register-to-gl reconciliation, and payment approval summary harder to produce consistently. Finance needs clearer ownership, data standards, and review evidence before the process is ready for ERP optimisation or automation.
+The current Payroll Controls process relies on Payroll bureau portal, HR change forms, GL payroll journals, and bank approval workflow. That creates avoidable risk around starter and leaver control gaps, payroll change approval delays, and manual payroll input checks and leaves finance without a consistent requirements baseline for process design, configuration, controls, reporting, and UAT. The implementation needs clearer ownership, defined data fields, control evidence, and acceptance criteria before ERP optimisation or automation can be delivered with confidence.
 
-## Future-State Process Scope
+## Process Scope
 
-The future-state scope covers Payroll master changes, input approval, exception review, payroll reconciliation, payment approval, and evidence retention. Controls over starters, leavers, salary changes, bank detail changes, overtime, deductions, and payroll payment files. Period-end payroll sign-off evidence for finance, HR, and audit review. It will support multi-site care services provider users on Sage Payroll and Xero Finance, with emphasis on payroll master data approval, exception review, payment file approval, and reconciliation.
+The future-state scope covers Payroll master changes, input approval, exception review, payroll reconciliation, payment approval, and evidence retention; Controls over starters, leavers, salary changes, bank detail changes, overtime, deductions, and payroll payment files; and Period-end payroll sign-off evidence for finance, HR, and audit review. The design will support multi-site care services provider users on Sage Payroll and Xero Finance, with emphasis on payroll master data approval, exception review, payment file approval, and reconciliation.
 
-## Assumptions
+## In Scope
 
-- All sample names and operating details in this pack are synthetic.
-- The pack is a requirements accelerator and does not replace finance owner sign-off.
-- System configuration will follow approved finance policies and access controls.
-- Public sample packs use fictional employee identifiers only.
+- Payroll Controls requirements for the agreed multi-site care services provider process.
+- Workflow, data, controls, reporting, audit trail, and UAT requirements for Sage Payroll and Xero Finance.
+- Process pain points covering starter and leaver control gaps, payroll change approval delays, and manual payroll input checks.
+- Reporting requirement: Payroll changes, exceptions, register-to-GL reconciliation, and payment approval summary.
+- Implementation window and readiness assumptions for the 9 weeks target window.
+
+## Out of Scope
+
+- Live system configuration, data migration execution, and production cutover.
+- Custom integration build or external workflow automation.
+- Legal, tax, HR, or statutory sign-off outside the finance process owner remit.
+- Direct processing of operational production data.
+- Process areas outside Payroll Controls unless approved as a separate phase.
+
+## Stakeholders and Roles
+
+- Finance Transformation Lead: accountable for business sign-off and prioritisation.
+- Payroll Controls process owner: validates workflow scope, controls, and exceptions.
+- Finance systems analyst: translates requirements into configuration and UAT coverage.
+- Preparer or operational user: confirms day-to-day inputs, handoffs, and evidence needs.
+- Reviewer or controller: approves control design, reporting outputs, and acceptance criteria.
 
 ## Functional Requirements
 
@@ -33,18 +50,6 @@ The future-state scope covers Payroll master changes, input approval, exception 
 - FR-06: Require payroll payment file approval before release to bank.
 - FR-07: Store leaver final pay checks, access removal confirmation, and termination effective date evidence.
 - FR-08: Produce payroll control pack with changes, exceptions, reconciliation, payment approval, and sign-off details.
-- FR-09: Provide reporting for Payroll changes, exceptions, register-to-GL reconciliation, and payment approval summary.
-- FR-10: Evidence Payroll master data approval, exception review, payment file approval, and reconciliation for finance review.
-
-## Non-Functional Requirements
-
-- NFR-01: Payroll control reporting must be clear to finance, HR, payroll, and audit reviewers.
-- NFR-02: Sensitive payroll evidence must be access-controlled by role.
-- NFR-03: The workflow must support payroll period cutoff discipline and controlled late changes.
-- NFR-04: Audit evidence must preserve approvals without exposing unnecessary personal data in public examples.
-- NFR-05: Reconciliation reporting must avoid manual spreadsheet rebuilds for core control totals.
-- NFR-06: Provide reporting for Payroll changes, exceptions, register-to-GL reconciliation, and payment approval summary.
-- NFR-07: Evidence Payroll master data approval, exception review, payment file approval, and reconciliation for finance review.
 
 ## Data Requirements
 
@@ -56,8 +61,6 @@ The future-state scope covers Payroll master changes, input approval, exception 
 - DR-06: Gross-to-net total
 - DR-07: Payroll control account
 - DR-08: Payment file reference
-- DR-09: Provide reporting for Payroll changes, exceptions, register-to-GL reconciliation, and payment approval summary.
-- DR-10: Evidence Payroll master data approval, exception review, payment file approval, and reconciliation for finance review.
 
 ## Controls
 
@@ -66,8 +69,14 @@ The future-state scope covers Payroll master changes, input approval, exception 
 - CTRL-03: Payroll exceptions over threshold require investigation and approval.
 - CTRL-04: Payroll register must reconcile to GL control accounts and payment file totals.
 - CTRL-05: Payroll payment file release requires finance approval.
-- CTRL-06: Provide reporting for Payroll changes, exceptions, register-to-GL reconciliation, and payment approval summary.
-- CTRL-07: Evidence Payroll master data approval, exception review, payment file approval, and reconciliation for finance review.
+
+## Reporting Requirements
+
+- RPT-01: Provide Payroll changes, exceptions, register-to-GL reconciliation, and payment approval summary.
+- RPT-02: Show owner, status, ageing, exception reason, and next action where relevant to Payroll Controls.
+- RPT-03: Support finance manager review with exportable period-end evidence.
+- RPT-04: Separate open exceptions from completed, approved, or signed-off items.
+- RPT-05: Make reporting outputs readable by finance users without system administrator access.
 
 ## Audit Trail Requirements
 
@@ -76,8 +85,6 @@ The future-state scope covers Payroll master changes, input approval, exception 
 - AUD-03: Preserve exception review notes and approval decisions.
 - AUD-04: Track payroll reconciliation owner/status history by period.
 - AUD-05: Keep payment file approval evidence with approver, date, amount, and bank file reference.
-- AUD-06: Provide reporting for Payroll changes, exceptions, register-to-GL reconciliation, and payment approval summary.
-- AUD-07: Evidence Payroll master data approval, exception review, payment file approval, and reconciliation for finance review.
 
 ## User Stories
 
@@ -116,5 +123,9 @@ The future-state scope covers Payroll master changes, input approval, exception 
 
 - Confirm Payroll Controls process owner and reviewer roles before design sign-off.
 - Validate the required data fields against Sage Payroll and Xero Finance configuration.
-- Run UAT with synthetic examples before loading production data.
+- Run UAT with approved sample scenarios before production data migration or cutover.
 - Keep any future AI-assisted drafting behind structured templates and human approval.
+
+## Public-Safe Sample Data Note
+
+This pack was generated from fictional, public-safe sample inputs. It does not contain real employer, client, supplier, bank, VAT, payroll, or operational data. Do not upload confidential business information into a public demo.

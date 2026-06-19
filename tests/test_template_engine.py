@@ -14,6 +14,7 @@ def test_sample_packs_include_required_sections() -> None:
         assert len(pack.functional_requirements) >= 8
         assert len(pack.controls) >= 5
         assert len(pack.audit_trail_requirements) >= 5
+        assert len(pack.reporting_requirements) >= 5
         assert len(pack.user_stories) >= 5
         assert len(pack.uat_test_cases) >= 6
         assert len(pack.acceptance_criteria) >= 5

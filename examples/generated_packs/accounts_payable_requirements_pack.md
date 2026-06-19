@@ -1,27 +1,44 @@
 # Accounts Payable Requirements Pack
 
-**Synthetic company:** Northstar Trading Ltd
+**Prepared for:** Northstar Trading Ltd
 
-> Synthetic demo output only. Do not use this sample as client, employer, or operational data.
+**Purpose:** Translate finance process pain points into implementation-ready ERP requirements, controls, reporting needs, audit trail expectations, and UAT coverage.
 
 ## Executive Summary
 
-Northstar Trading Ltd needs a structured Accounts Payable requirements pack for Odoo Finance. The MVP scope turns current finance pain points (Duplicate invoices, Manual approval chasing, and Weak supplier master controls) into implementable requirements covering data capture, controls, audit trail, UAT, and reporting. The design is sized for 1,200 supplier invoices per month and prioritises Payment approval evidence, and Segregation of duties within a target delivery window of 10 weeks.
+Northstar Trading Ltd needs a structured Accounts Payable requirements pack to reduce rework, clarify control ownership, and make Odoo Finance implementation decisions testable. The pack translates duplicate invoices, manual approval chasing, and weak supplier master controls into requirements for workflow, data, controls, reporting, audit trail, and UAT. It is sized for 1,200 supplier invoices per month and frames the control design, reporting outputs, and acceptance criteria needed within a target delivery window of 10 weeks.
 
-## Current-State Problem Statement
+## Business Problem
 
-The current accounts payable process relies on Email approvals, shared AP tracker, and ERP purchase ledger. This creates avoidable risk around Duplicate invoices, Manual approval chasing, and Weak supplier master controls and makes aged approval backlog, blocked invoices, and payment readiness summary harder to produce consistently. Finance needs clearer ownership, data standards, and review evidence before the process is ready for ERP optimisation or automation.
+The current Accounts Payable process relies on Email approvals, shared AP tracker, and ERP purchase ledger. That creates avoidable risk around duplicate invoices, manual approval chasing, and weak supplier master controls and leaves finance without a consistent requirements baseline for process design, configuration, controls, reporting, and UAT. The implementation needs clearer ownership, defined data fields, control evidence, and acceptance criteria before ERP optimisation or automation can be delivered with confidence.
 
-## Future-State Process Scope
+## Process Scope
 
-The future-state scope covers Supplier invoice intake, validation, coding, approval, payment readiness, and evidence capture. Three-way match readiness across purchase order, goods receipt, and supplier invoice data. Segregation of duties between supplier maintenance, invoice approval, and payment release. It will support wholesale trading group users on Odoo Finance, with emphasis on internal audit review of supplier changes and payment controls.
+The future-state scope covers Supplier invoice intake, validation, coding, approval, payment readiness, and evidence capture; Three-way match readiness across purchase order, goods receipt, and supplier invoice data; and Segregation of duties between supplier maintenance, invoice approval, and payment release. The design will support wholesale trading group users on Odoo Finance, with emphasis on internal audit review of supplier changes and payment controls.
 
-## Assumptions
+## In Scope
 
-- All sample names and operating details in this pack are synthetic.
-- The pack is a requirements accelerator and does not replace finance owner sign-off.
-- System configuration will follow approved finance policies and access controls.
-- Supplier records are already uniquely identified in the ERP.
+- Accounts Payable requirements for the agreed wholesale trading group process.
+- Workflow, data, controls, reporting, audit trail, and UAT requirements for Odoo Finance.
+- Process pain points covering duplicate invoices, manual approval chasing, and weak supplier master controls.
+- Reporting requirement: Aged approval backlog, blocked invoices, and payment readiness summary.
+- Implementation window and readiness assumptions for the 10 weeks target window.
+
+## Out of Scope
+
+- Live system configuration, data migration execution, and production cutover.
+- Custom integration build or external workflow automation.
+- Legal, tax, HR, or statutory sign-off outside the finance process owner remit.
+- Direct processing of operational production data.
+- Process areas outside Accounts Payable unless approved as a separate phase.
+
+## Stakeholders and Roles
+
+- Finance Transformation Lead: accountable for business sign-off and prioritisation.
+- Accounts Payable process owner: validates workflow scope, controls, and exceptions.
+- Finance systems analyst: translates requirements into configuration and UAT coverage.
+- Preparer or operational user: confirms day-to-day inputs, handoffs, and evidence needs.
+- Reviewer or controller: approves control design, reporting outputs, and acceptance criteria.
 
 ## Functional Requirements
 
@@ -33,18 +50,6 @@ The future-state scope covers Supplier invoice intake, validation, coding, appro
 - FR-06: Maintain supplier master data change history for bank details, tax identifiers, and payment terms.
 - FR-07: Record exception reasons for blocked, disputed, or partially matched invoices.
 - FR-08: Provide an aged invoice and approval backlog view for finance review.
-- FR-09: Provide reporting for Aged approval backlog, blocked invoices, and payment readiness summary.
-- FR-10: Evidence Internal audit review of supplier changes and payment controls for finance review.
-
-## Non-Functional Requirements
-
-- NFR-01: The workflow must be auditable by finance users without database access.
-- NFR-02: Screen labels and exports must use finance-friendly terminology.
-- NFR-03: The solution must support month-end reporting without manual spreadsheet consolidation.
-- NFR-04: Access must separate invoice preparation, approval, supplier maintenance, and payment release duties.
-- NFR-05: Exported evidence should be readable by internal audit and external audit reviewers.
-- NFR-06: Provide reporting for Aged approval backlog, blocked invoices, and payment readiness summary.
-- NFR-07: Evidence Internal audit review of supplier changes and payment controls for finance review.
 
 ## Data Requirements
 
@@ -56,8 +61,6 @@ The future-state scope covers Supplier invoice intake, validation, coding, appro
 - DR-06: Tax amount
 - DR-07: Approval owner
 - DR-08: Payment batch reference
-- DR-09: Provide reporting for Aged approval backlog, blocked invoices, and payment readiness summary.
-- DR-10: Evidence Internal audit review of supplier changes and payment controls for finance review.
 
 ## Controls
 
@@ -66,8 +69,14 @@ The future-state scope covers Supplier invoice intake, validation, coding, appro
 - CTRL-03: Supplier bank detail change review before first payment after change.
 - CTRL-04: Three-way match exception review for PO-backed purchases.
 - CTRL-05: Segregation of duties control between supplier maintenance and payment approval.
-- CTRL-06: Provide reporting for Aged approval backlog, blocked invoices, and payment readiness summary.
-- CTRL-07: Evidence Internal audit review of supplier changes and payment controls for finance review.
+
+## Reporting Requirements
+
+- RPT-01: Provide Aged approval backlog, blocked invoices, and payment readiness summary.
+- RPT-02: Show owner, status, ageing, exception reason, and next action where relevant to Accounts Payable.
+- RPT-03: Support finance manager review with exportable period-end evidence.
+- RPT-04: Separate open exceptions from completed, approved, or signed-off items.
+- RPT-05: Make reporting outputs readable by finance users without system administrator access.
 
 ## Audit Trail Requirements
 
@@ -76,8 +85,6 @@ The future-state scope covers Supplier invoice intake, validation, coding, appro
 - AUD-03: Keep before-and-after supplier master data values for sensitive changes.
 - AUD-04: Preserve evidence links for invoice image, purchase order, goods receipt, and payment batch.
 - AUD-05: Track exception resolution notes and reviewer sign-off.
-- AUD-06: Provide reporting for Aged approval backlog, blocked invoices, and payment readiness summary.
-- AUD-07: Evidence Internal audit review of supplier changes and payment controls for finance review.
 
 ## User Stories
 
@@ -116,5 +123,9 @@ The future-state scope covers Supplier invoice intake, validation, coding, appro
 
 - Confirm Accounts Payable process owner and reviewer roles before design sign-off.
 - Validate the required data fields against Odoo Finance configuration.
-- Run UAT with synthetic examples before loading production data.
+- Run UAT with approved sample scenarios before production data migration or cutover.
 - Keep any future AI-assisted drafting behind structured templates and human approval.
+
+## Public-Safe Sample Data Note
+
+This pack was generated from fictional, public-safe sample inputs. It does not contain real employer, client, supplier, bank, VAT, payroll, or operational data. Do not upload confidential business information into a public demo.

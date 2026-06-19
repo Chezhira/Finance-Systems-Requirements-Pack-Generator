@@ -6,19 +6,22 @@ from finance_requirements_generator.schemas import RequirementsPack, UATTestCase
 
 SECTION_TITLES = {
     "executive_summary": "Executive Summary",
-    "current_state_problem": "Current-State Problem Statement",
-    "future_state_scope": "Future-State Process Scope",
-    "assumptions": "Assumptions",
+    "business_problem": "Business Problem",
+    "process_scope": "Process Scope",
+    "in_scope": "In Scope",
+    "out_of_scope": "Out of Scope",
+    "stakeholders_and_roles": "Stakeholders and Roles",
     "functional_requirements": "Functional Requirements",
-    "non_functional_requirements": "Non-Functional Requirements",
     "data_requirements": "Data Requirements",
     "controls": "Controls",
+    "reporting_requirements": "Reporting Requirements",
     "audit_trail_requirements": "Audit Trail Requirements",
     "user_stories": "User Stories",
     "uat_test_cases": "UAT Test Cases",
     "acceptance_criteria": "Acceptance Criteria",
     "risks_and_dependencies": "Implementation Risks and Dependencies",
     "implementation_notes": "Implementation Notes",
+    "public_safe_sample_data_note": "Public-Safe Sample Data Note",
 }
 
 
@@ -26,10 +29,10 @@ def pack_to_markdown(pack: RequirementsPack) -> str:
     lines = [
         f"# {pack.process_name} Requirements Pack",
         "",
-        f"**Synthetic company:** {pack.company_name}",
+        f"**Prepared for:** {pack.company_name}",
         "",
-        "> Synthetic demo output only. Do not use this sample as client, employer, "
-        "or operational data.",
+        "**Purpose:** Translate finance process pain points into implementation-ready "
+        "ERP requirements, controls, reporting needs, audit trail expectations, and UAT coverage.",
         "",
     ]
 

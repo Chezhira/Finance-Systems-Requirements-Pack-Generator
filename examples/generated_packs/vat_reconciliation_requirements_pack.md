@@ -1,27 +1,44 @@
 # VAT Reconciliation Requirements Pack
 
-**Synthetic company:** Demo Manufacturing Co
+**Prepared for:** Demo Manufacturing Co
 
-> Synthetic demo output only. Do not use this sample as client, employer, or operational data.
+**Purpose:** Translate finance process pain points into implementation-ready ERP requirements, controls, reporting needs, audit trail expectations, and UAT coverage.
 
 ## Executive Summary
 
-Demo Manufacturing Co needs a structured VAT Reconciliation requirements pack for SAP Business One. The MVP scope turns current finance pain points (VAT return differences, Manual source register checks, and Missing filing evidence) into implementable requirements covering data capture, controls, audit trail, UAT, and reporting. The design is sized for Quarterly VAT return with 15 active tax codes and prioritises VAT return box mapping, and GL VAT control account reconciliation within a target delivery window of 6 weeks.
+Demo Manufacturing Co needs a structured VAT Reconciliation requirements pack to reduce rework, clarify control ownership, and make SAP Business One implementation decisions testable. The pack translates vAT return differences, manual source register checks, and missing filing evidence into requirements for workflow, data, controls, reporting, audit trail, and UAT. It is sized for Quarterly VAT return with 15 active tax codes and frames the control design, reporting outputs, and acceptance criteria needed within a target delivery window of 6 weeks.
 
-## Current-State Problem Statement
+## Business Problem
 
-The current vat reconciliation process relies on ERP tax reports, GL trial balance extracts, and offline VAT working papers. This creates avoidable risk around VAT return differences, Manual source register checks, and Missing filing evidence and makes vat source-to-return-to-gl reconciliation with difference owner status harder to produce consistently. Finance needs clearer ownership, data standards, and review evidence before the process is ready for ERP optimisation or automation.
+The current VAT Reconciliation process relies on ERP tax reports, GL trial balance extracts, and offline VAT working papers. That creates avoidable risk around vAT return differences, manual source register checks, and missing filing evidence and leaves finance without a consistent requirements baseline for process design, configuration, controls, reporting, and UAT. The implementation needs clearer ownership, defined data fields, control evidence, and acceptance criteria before ERP optimisation or automation can be delivered with confidence.
 
-## Future-State Process Scope
+## Process Scope
 
-The future-state scope covers VAT source register extraction, VAT return box mapping, GL VAT control account reconciliation, and filing evidence. Clear ownership of reconciling differences before submission. Audit trail for adjustments, review, and filing approval. It will support vat-registered manufacturing entity users on SAP Business One, with emphasis on vat filing evidence, adjustment approval, and audit trail.
+The future-state scope covers VAT source register extraction, VAT return box mapping, GL VAT control account reconciliation, and filing evidence; Clear ownership of reconciling differences before submission; and Audit trail for adjustments, review, and filing approval. The design will support vat-registered manufacturing entity users on SAP Business One, with emphasis on vat filing evidence, adjustment approval, and audit trail.
 
-## Assumptions
+## In Scope
 
-- All sample names and operating details in this pack are synthetic.
-- The pack is a requirements accelerator and does not replace finance owner sign-off.
-- System configuration will follow approved finance policies and access controls.
-- VAT registrations and tax codes are in scope for the pilot entity only.
+- VAT Reconciliation requirements for the agreed vat-registered manufacturing entity process.
+- Workflow, data, controls, reporting, audit trail, and UAT requirements for SAP Business One.
+- Process pain points covering vAT return differences, manual source register checks, and missing filing evidence.
+- Reporting requirement: VAT source-to-return-to-GL reconciliation with difference owner status.
+- Implementation window and readiness assumptions for the 6 weeks target window.
+
+## Out of Scope
+
+- Live system configuration, data migration execution, and production cutover.
+- Custom integration build or external workflow automation.
+- Legal, tax, HR, or statutory sign-off outside the finance process owner remit.
+- Direct processing of operational production data.
+- Process areas outside VAT Reconciliation unless approved as a separate phase.
+
+## Stakeholders and Roles
+
+- Finance Transformation Lead: accountable for business sign-off and prioritisation.
+- VAT Reconciliation process owner: validates workflow scope, controls, and exceptions.
+- Finance systems analyst: translates requirements into configuration and UAT coverage.
+- Preparer or operational user: confirms day-to-day inputs, handoffs, and evidence needs.
+- Reviewer or controller: approves control design, reporting outputs, and acceptance criteria.
 
 ## Functional Requirements
 
@@ -33,18 +50,6 @@ The future-state scope covers VAT source register extraction, VAT return box map
 - FR-06: Store filing evidence including return version, approver, submission reference, and filing date.
 - FR-07: Prevent submission readiness until material differences are reviewed.
 - FR-08: Produce a VAT reconciliation pack for finance manager and audit review.
-- FR-09: Provide reporting for VAT source-to-return-to-GL reconciliation with difference owner status.
-- FR-10: Evidence VAT filing evidence, adjustment approval, and audit trail for finance review.
-
-## Non-Functional Requirements
-
-- NFR-01: VAT logic must be transparent to finance reviewers and not hidden in spreadsheets.
-- NFR-02: The pack must preserve calculations and sign-off evidence for audit lookback.
-- NFR-03: The design must support multiple VAT entities without mixing registrations.
-- NFR-04: Access must separate preparer, reviewer, and filing approver duties.
-- NFR-05: Exports must be clear enough for external tax advisor review.
-- NFR-06: Provide reporting for VAT source-to-return-to-GL reconciliation with difference owner status.
-- NFR-07: Evidence VAT filing evidence, adjustment approval, and audit trail for finance review.
 
 ## Data Requirements
 
@@ -56,8 +61,6 @@ The future-state scope covers VAT source register extraction, VAT return box map
 - DR-06: Reconciling difference
 - DR-07: Adjustment journal reference
 - DR-08: Filing submission reference
-- DR-09: Provide reporting for VAT source-to-return-to-GL reconciliation with difference owner status.
-- DR-10: Evidence VAT filing evidence, adjustment approval, and audit trail for finance review.
 
 ## Controls
 
@@ -66,8 +69,14 @@ The future-state scope covers VAT source register extraction, VAT return box map
 - CTRL-03: VAT return box mapping changes require finance owner sign-off.
 - CTRL-04: GL VAT control account reconciliation must be completed before filing approval.
 - CTRL-05: Filing evidence must include approver, date, and submission reference.
-- CTRL-06: Provide reporting for VAT source-to-return-to-GL reconciliation with difference owner status.
-- CTRL-07: Evidence VAT filing evidence, adjustment approval, and audit trail for finance review.
+
+## Reporting Requirements
+
+- RPT-01: Provide VAT source-to-return-to-GL reconciliation with difference owner status.
+- RPT-02: Show owner, status, ageing, exception reason, and next action where relevant to VAT Reconciliation.
+- RPT-03: Support finance manager review with exportable period-end evidence.
+- RPT-04: Separate open exceptions from completed, approved, or signed-off items.
+- RPT-05: Make reporting outputs readable by finance users without system administrator access.
 
 ## Audit Trail Requirements
 
@@ -76,8 +85,6 @@ The future-state scope covers VAT source register extraction, VAT return box map
 - AUD-03: Preserve reconciling difference owner/status history.
 - AUD-04: Keep adjustment journal references and review decisions.
 - AUD-05: Record filing approval and submission evidence.
-- AUD-06: Provide reporting for VAT source-to-return-to-GL reconciliation with difference owner status.
-- AUD-07: Evidence VAT filing evidence, adjustment approval, and audit trail for finance review.
 
 ## User Stories
 
@@ -116,5 +123,9 @@ The future-state scope covers VAT source register extraction, VAT return box map
 
 - Confirm VAT Reconciliation process owner and reviewer roles before design sign-off.
 - Validate the required data fields against SAP Business One configuration.
-- Run UAT with synthetic examples before loading production data.
+- Run UAT with approved sample scenarios before production data migration or cutover.
 - Keep any future AI-assisted drafting behind structured templates and human approval.
+
+## Public-Safe Sample Data Note
+
+This pack was generated from fictional, public-safe sample inputs. It does not contain real employer, client, supplier, bank, VAT, payroll, or operational data. Do not upload confidential business information into a public demo.

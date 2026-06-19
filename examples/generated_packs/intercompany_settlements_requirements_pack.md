@@ -1,27 +1,44 @@
 # Intercompany Settlements Requirements Pack
 
-**Synthetic company:** Summit Group Holdings Ltd
+**Prepared for:** Summit Group Holdings Ltd
 
-> Synthetic demo output only. Do not use this sample as client, employer, or operational data.
+**Purpose:** Translate finance process pain points into implementation-ready ERP requirements, controls, reporting needs, audit trail expectations, and UAT coverage.
 
 ## Executive Summary
 
-Summit Group Holdings Ltd needs a structured Intercompany Settlements requirements pack for Oracle NetSuite OneWorld. The MVP scope turns current finance pain points (Intercompany mismatch ageing, Recharge rule ambiguity, and FX difference review gaps) into implementable requirements covering data capture, controls, audit trail, UAT, and reporting. The design is sized for 14 entities, 320 intercompany lines, and 5 settlement currencies per month and prioritises Counterparty confirmation is required before settlement readiness. within a target delivery window of 10 weeks.
+Summit Group Holdings Ltd needs a structured Intercompany Settlements requirements pack to reduce rework, clarify control ownership, and make Oracle NetSuite OneWorld implementation decisions testable. The pack translates intercompany mismatch ageing, recharge rule ambiguity, and fX difference review gaps into requirements for workflow, data, controls, reporting, audit trail, and UAT. It is sized for 14 entities, 320 intercompany lines, and 5 settlement currencies per month and frames the control design, reporting outputs, and acceptance criteria needed within a target delivery window of 10 weeks.
 
-## Current-State Problem Statement
+## Business Problem
 
-The current intercompany settlements process relies on Entity ERP ledgers, recharge spreadsheets, and group consolidation workbook. This creates avoidable risk around Intercompany mismatch ageing, Recharge rule ambiguity, and FX difference review gaps and makes entity-pair ageing, unmatched balances, recharge approvals, and fx difference summary harder to produce consistently. Finance needs clearer ownership, data standards, and review evidence before the process is ready for ERP optimisation or automation.
+The current Intercompany Settlements process relies on Entity ERP ledgers, recharge spreadsheets, and group consolidation workbook. That creates avoidable risk around intercompany mismatch ageing, recharge rule ambiguity, and fX difference review gaps and leaves finance without a consistent requirements baseline for process design, configuration, controls, reporting, and UAT. The implementation needs clearer ownership, defined data fields, control evidence, and acceptance criteria before ERP optimisation or automation can be delivered with confidence.
 
-## Future-State Process Scope
+## Process Scope
 
-The future-state scope covers Intercompany recharge creation, counterparty confirmation, matching, settlement tracking, FX difference review, and elimination support. Visibility of balances by entity, counterparty, transaction type, currency, owner, and ageing. Controls over recharge approval, settlement readiness, and period-end elimination evidence. It will support multi-entity group with shared service recharges users on Oracle NetSuite OneWorld, with emphasis on counterparty confirmation, recharge approval, settlement evidence, and elimination support.
+The future-state scope covers Intercompany recharge creation, counterparty confirmation, matching, settlement tracking, FX difference review, and elimination support; Visibility of balances by entity, counterparty, transaction type, currency, owner, and ageing; and Controls over recharge approval, settlement readiness, and period-end elimination evidence. The design will support multi-entity group with shared service recharges users on Oracle NetSuite OneWorld, with emphasis on counterparty confirmation, recharge approval, settlement evidence, and elimination support.
 
-## Assumptions
+## In Scope
 
-- All sample names and operating details in this pack are synthetic.
-- The pack is a requirements accelerator and does not replace finance owner sign-off.
-- System configuration will follow approved finance policies and access controls.
-- Entity codes and counterparty mappings are available for the pilot group.
+- Intercompany Settlements requirements for the agreed multi-entity group with shared service recharges process.
+- Workflow, data, controls, reporting, audit trail, and UAT requirements for Oracle NetSuite OneWorld.
+- Process pain points covering intercompany mismatch ageing, recharge rule ambiguity, and fX difference review gaps.
+- Reporting requirement: Entity-pair ageing, unmatched balances, recharge approvals, and FX difference summary.
+- Implementation window and readiness assumptions for the 10 weeks target window.
+
+## Out of Scope
+
+- Live system configuration, data migration execution, and production cutover.
+- Custom integration build or external workflow automation.
+- Legal, tax, HR, or statutory sign-off outside the finance process owner remit.
+- Direct processing of operational production data.
+- Process areas outside Intercompany Settlements unless approved as a separate phase.
+
+## Stakeholders and Roles
+
+- Finance Transformation Lead: accountable for business sign-off and prioritisation.
+- Intercompany Settlements process owner: validates workflow scope, controls, and exceptions.
+- Finance systems analyst: translates requirements into configuration and UAT coverage.
+- Preparer or operational user: confirms day-to-day inputs, handoffs, and evidence needs.
+- Reviewer or controller: approves control design, reporting outputs, and acceptance criteria.
 
 ## Functional Requirements
 
@@ -33,18 +50,6 @@ The future-state scope covers Intercompany recharge creation, counterparty confi
 - FR-06: Require counterparty confirmation before settlement readiness or elimination support sign-off.
 - FR-07: Produce intercompany ageing and mismatch reports by entity pair and transaction type.
 - FR-08: Export elimination support evidence for group reporting review.
-- FR-09: Provide reporting for Entity-pair ageing, unmatched balances, recharge approvals, and FX difference summary.
-- FR-10: Evidence Counterparty confirmation, recharge approval, settlement evidence, and elimination support for finance review.
-
-## Non-Functional Requirements
-
-- NFR-01: Intercompany status must be understandable to entity finance teams and group finance.
-- NFR-02: Reporting must support period-end review without manual consolidation of entity spreadsheets.
-- NFR-03: Access must separate recharge preparation, counterparty confirmation, approval, and settlement release.
-- NFR-04: Evidence must be retained by period for audit and group reporting review.
-- NFR-05: The workflow must support multi-currency balances and FX difference commentary.
-- NFR-06: Provide reporting for Entity-pair ageing, unmatched balances, recharge approvals, and FX difference summary.
-- NFR-07: Evidence Counterparty confirmation, recharge approval, settlement evidence, and elimination support for finance review.
 
 ## Data Requirements
 
@@ -56,8 +61,6 @@ The future-state scope covers Intercompany recharge creation, counterparty confi
 - DR-06: Settlement status
 - DR-07: FX difference
 - DR-08: Elimination support reference
-- DR-09: Provide reporting for Entity-pair ageing, unmatched balances, recharge approvals, and FX difference summary.
-- DR-10: Evidence Counterparty confirmation, recharge approval, settlement evidence, and elimination support for finance review.
 
 ## Controls
 
@@ -66,8 +69,14 @@ The future-state scope covers Intercompany recharge creation, counterparty confi
 - CTRL-03: Aged unmatched intercompany balances escalate to group finance.
 - CTRL-04: FX differences over materiality threshold require review and explanation.
 - CTRL-05: Elimination support cannot be marked complete until mismatches are resolved or approved.
-- CTRL-06: Provide reporting for Entity-pair ageing, unmatched balances, recharge approvals, and FX difference summary.
-- CTRL-07: Evidence Counterparty confirmation, recharge approval, settlement evidence, and elimination support for finance review.
+
+## Reporting Requirements
+
+- RPT-01: Provide Entity-pair ageing, unmatched balances, recharge approvals, and FX difference summary.
+- RPT-02: Show owner, status, ageing, exception reason, and next action where relevant to Intercompany Settlements.
+- RPT-03: Support finance manager review with exportable period-end evidence.
+- RPT-04: Separate open exceptions from completed, approved, or signed-off items.
+- RPT-05: Make reporting outputs readable by finance users without system administrator access.
 
 ## Audit Trail Requirements
 
@@ -76,8 +85,6 @@ The future-state scope covers Intercompany recharge creation, counterparty confi
 - AUD-03: Track unmatched balance owner/status history by entity pair.
 - AUD-04: Preserve FX difference explanations and reviewer decisions.
 - AUD-05: Keep counterparty confirmation evidence and settlement approval references.
-- AUD-06: Provide reporting for Entity-pair ageing, unmatched balances, recharge approvals, and FX difference summary.
-- AUD-07: Evidence Counterparty confirmation, recharge approval, settlement evidence, and elimination support for finance review.
 
 ## User Stories
 
@@ -116,5 +123,9 @@ The future-state scope covers Intercompany recharge creation, counterparty confi
 
 - Confirm Intercompany Settlements process owner and reviewer roles before design sign-off.
 - Validate the required data fields against Oracle NetSuite OneWorld configuration.
-- Run UAT with synthetic examples before loading production data.
+- Run UAT with approved sample scenarios before production data migration or cutover.
 - Keep any future AI-assisted drafting behind structured templates and human approval.
+
+## Public-Safe Sample Data Note
+
+This pack was generated from fictional, public-safe sample inputs. It does not contain real employer, client, supplier, bank, VAT, payroll, or operational data. Do not upload confidential business information into a public demo.

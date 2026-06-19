@@ -1,27 +1,44 @@
 # Accounts Receivable Requirements Pack
 
-**Synthetic company:** Harbour Lane Services Ltd
+**Prepared for:** Harbour Lane Services Ltd
 
-> Synthetic demo output only. Do not use this sample as client, employer, or operational data.
+**Purpose:** Translate finance process pain points into implementation-ready ERP requirements, controls, reporting needs, audit trail expectations, and UAT coverage.
 
 ## Executive Summary
 
-Harbour Lane Services Ltd needs a structured Accounts Receivable requirements pack for NetSuite. The MVP scope turns current finance pain points (Unallocated customer receipts, Disputed invoices, and Collections ageing visibility) into implementable requirements covering data capture, controls, audit trail, UAT, and reporting. The design is sized for 900 customer invoices and 700 receipts per month and prioritises Credit notes require approval based on amount, reason code, and customer risk. within a target delivery window of 9 weeks.
+Harbour Lane Services Ltd needs a structured Accounts Receivable requirements pack to reduce rework, clarify control ownership, and make NetSuite implementation decisions testable. The pack translates unallocated customer receipts, disputed invoices, and collections ageing visibility into requirements for workflow, data, controls, reporting, audit trail, and UAT. It is sized for 900 customer invoices and 700 receipts per month and frames the control design, reporting outputs, and acceptance criteria needed within a target delivery window of 9 weeks.
 
-## Current-State Problem Statement
+## Business Problem
 
-The current accounts receivable process relies on ERP sales ledger, customer remittance mailbox, and offline collections tracker. This creates avoidable risk around Unallocated customer receipts, Disputed invoices, and Collections ageing visibility and makes customer ageing, dispute status, unallocated cash, and collections owner summary harder to produce consistently. Finance needs clearer ownership, data standards, and review evidence before the process is ready for ERP optimisation or automation.
+The current Accounts Receivable process relies on ERP sales ledger, customer remittance mailbox, and offline collections tracker. That creates avoidable risk around unallocated customer receipts, disputed invoices, and collections ageing visibility and leaves finance without a consistent requirements baseline for process design, configuration, controls, reporting, and UAT. The implementation needs clearer ownership, defined data fields, control evidence, and acceptance criteria before ERP optimisation or automation can be delivered with confidence.
 
-## Future-State Process Scope
+## Process Scope
 
-The future-state scope covers Customer invoice generation, receipt matching, dispute tracking, collections ownership, and credit note approval. Clear customer account ageing with owner, status, and next action evidence. Controls over customer master data, credit limits, write-offs, and cash allocation. It will support professional services group users on NetSuite, with emphasis on credit note approval, write-off evidence, and customer master data controls.
+The future-state scope covers Customer invoice generation, receipt matching, dispute tracking, collections ownership, and credit note approval; Clear customer account ageing with owner, status, and next action evidence; and Controls over customer master data, credit limits, write-offs, and cash allocation. The design will support professional services group users on NetSuite, with emphasis on credit note approval, write-off evidence, and customer master data controls.
 
-## Assumptions
+## In Scope
 
-- All sample names and operating details in this pack are synthetic.
-- The pack is a requirements accelerator and does not replace finance owner sign-off.
-- System configuration will follow approved finance policies and access controls.
-- Customer account IDs are unique across the sales ledger.
+- Accounts Receivable requirements for the agreed professional services group process.
+- Workflow, data, controls, reporting, audit trail, and UAT requirements for NetSuite.
+- Process pain points covering unallocated customer receipts, disputed invoices, and collections ageing visibility.
+- Reporting requirement: Customer ageing, dispute status, unallocated cash, and collections owner summary.
+- Implementation window and readiness assumptions for the 9 weeks target window.
+
+## Out of Scope
+
+- Live system configuration, data migration execution, and production cutover.
+- Custom integration build or external workflow automation.
+- Legal, tax, HR, or statutory sign-off outside the finance process owner remit.
+- Direct processing of operational production data.
+- Process areas outside Accounts Receivable unless approved as a separate phase.
+
+## Stakeholders and Roles
+
+- Finance Transformation Lead: accountable for business sign-off and prioritisation.
+- Accounts Receivable process owner: validates workflow scope, controls, and exceptions.
+- Finance systems analyst: translates requirements into configuration and UAT coverage.
+- Preparer or operational user: confirms day-to-day inputs, handoffs, and evidence needs.
+- Reviewer or controller: approves control design, reporting outputs, and acceptance criteria.
 
 ## Functional Requirements
 
@@ -33,18 +50,6 @@ The future-state scope covers Customer invoice generation, receipt matching, dis
 - FR-06: Maintain customer master data changes for payment terms, credit limits, billing contacts, and tax identifiers.
 - FR-07: Produce collections ageing views by customer, region, owner, and risk category.
 - FR-08: Link dunning activity, customer responses, and promise-to-pay dates to the customer account.
-- FR-09: Provide reporting for Customer ageing, dispute status, unallocated cash, and collections owner summary.
-- FR-10: Evidence Credit note approval, write-off evidence, and customer master data controls for finance review.
-
-## Non-Functional Requirements
-
-- NFR-01: Collections status must be understandable to finance, sales, and credit control users.
-- NFR-02: The workflow must support daily cash allocation and formal month-end AR review.
-- NFR-03: Exported evidence must be readable by auditors without system administrator access.
-- NFR-04: Access must separate customer master maintenance, invoice posting, credit note approval, and write-off approval.
-- NFR-05: AR reporting must avoid manual spreadsheet consolidation for core ageing and dispute views.
-- NFR-06: Provide reporting for Customer ageing, dispute status, unallocated cash, and collections owner summary.
-- NFR-07: Evidence Credit note approval, write-off evidence, and customer master data controls for finance review.
 
 ## Data Requirements
 
@@ -56,8 +61,6 @@ The future-state scope covers Customer invoice generation, receipt matching, dis
 - DR-06: Collections owner
 - DR-07: Credit limit
 - DR-08: Write-off approval reference
-- DR-09: Provide reporting for Customer ageing, dispute status, unallocated cash, and collections owner summary.
-- DR-10: Evidence Credit note approval, write-off evidence, and customer master data controls for finance review.
 
 ## Controls
 
@@ -66,8 +69,14 @@ The future-state scope covers Customer invoice generation, receipt matching, dis
 - CTRL-03: Unallocated cash over the policy threshold escalates to the collections lead.
 - CTRL-04: Write-offs require supporting evidence and approval before posting.
 - CTRL-05: Receipts cannot be marked resolved without allocation or approved reason code.
-- CTRL-06: Provide reporting for Customer ageing, dispute status, unallocated cash, and collections owner summary.
-- CTRL-07: Evidence Credit note approval, write-off evidence, and customer master data controls for finance review.
+
+## Reporting Requirements
+
+- RPT-01: Provide Customer ageing, dispute status, unallocated cash, and collections owner summary.
+- RPT-02: Show owner, status, ageing, exception reason, and next action where relevant to Accounts Receivable.
+- RPT-03: Support finance manager review with exportable period-end evidence.
+- RPT-04: Separate open exceptions from completed, approved, or signed-off items.
+- RPT-05: Make reporting outputs readable by finance users without system administrator access.
 
 ## Audit Trail Requirements
 
@@ -76,8 +85,6 @@ The future-state scope covers Customer invoice generation, receipt matching, dis
 - AUD-03: Preserve collections notes, dunning actions, and promise-to-pay updates.
 - AUD-04: Track unallocated cash owner/status history.
 - AUD-05: Keep approval evidence for credit notes, write-offs, and credit limit changes.
-- AUD-06: Provide reporting for Customer ageing, dispute status, unallocated cash, and collections owner summary.
-- AUD-07: Evidence Credit note approval, write-off evidence, and customer master data controls for finance review.
 
 ## User Stories
 
@@ -116,5 +123,9 @@ The future-state scope covers Customer invoice generation, receipt matching, dis
 
 - Confirm Accounts Receivable process owner and reviewer roles before design sign-off.
 - Validate the required data fields against NetSuite configuration.
-- Run UAT with synthetic examples before loading production data.
+- Run UAT with approved sample scenarios before production data migration or cutover.
 - Keep any future AI-assisted drafting behind structured templates and human approval.
+
+## Public-Safe Sample Data Note
+
+This pack was generated from fictional, public-safe sample inputs. It does not contain real employer, client, supplier, bank, VAT, payroll, or operational data. Do not upload confidential business information into a public demo.
