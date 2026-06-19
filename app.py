@@ -148,16 +148,13 @@ def render_downloads(pack) -> None:
 
 def render_gallery() -> None:
     st.subheader("Example Gallery")
+    templates = load_all_templates()
     gallery_links = [
-        "[Accounts payable pack](examples/generated_packs/accounts_payable_requirements_pack.md)",
         (
-            "[Bank reconciliation pack]"
-            "(examples/generated_packs/bank_reconciliation_requirements_pack.md)"
-        ),
-        (
-            "[VAT reconciliation pack]"
-            "(examples/generated_packs/vat_reconciliation_requirements_pack.md)"
-        ),
+            f"[{templates[process_key]['name']} pack]"
+            f"(examples/generated_packs/{process_key}_requirements_pack.md)"
+        )
+        for process_key in SUPPORTED_PROCESSES
     ]
     st.markdown("\n".join(f"- {link}" for link in gallery_links))
     st.caption("Safety note: bundled examples use fictional, public-safe sample inputs.")

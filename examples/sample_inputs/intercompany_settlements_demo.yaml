@@ -1,0 +1,15 @@
+process_key: intercompany_settlements
+company_name: Summit Group Holdings Ltd
+entity_type: Multi-entity group with shared service recharges
+current_tools: Entity ERP ledgers, recharge spreadsheets, and group consolidation workbook
+erp_platform: Oracle NetSuite OneWorld
+monthly_volume: 14 entities, 320 intercompany lines, and 5 settlement currencies per month
+pain_points:
+  - Intercompany mismatch ageing
+  - Recharge rule ambiguity
+  - FX difference review gaps
+control_concerns:
+  - Counterparty confirmation is required before settlement readiness.
+reporting_needs: Entity-pair ageing, unmatched balances, recharge approvals, and FX difference summary
+compliance_focus: Counterparty confirmation, recharge approval, settlement evidence, and elimination support
+deadline: 10 weeks

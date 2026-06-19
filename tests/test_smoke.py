@@ -27,6 +27,17 @@ def test_sample_pain_point_defaults_are_streamlit_safe() -> None:
         assert set(defaults).issubset(options)
 
 
+def test_sample_control_defaults_are_streamlit_safe() -> None:
+    templates = load_all_templates()
+
+    for process_key, sample in DEFAULT_SAMPLE_INPUTS.items():
+        options = templates[process_key]["controls"]
+        defaults = app.safe_multiselect_defaults(sample.control_concerns, options)
+
+        assert defaults
+        assert set(defaults).issubset(options)
+
+
 def test_safe_multiselect_defaults_falls_back_to_first_two_options() -> None:
     defaults = app.safe_multiselect_defaults(
         ["Legacy label that is no longer an option"],

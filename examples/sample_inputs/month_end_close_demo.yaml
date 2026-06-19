@@ -1,0 +1,15 @@
+process_key: month_end_close
+company_name: Cedar Grove Retail Ltd
+entity_type: Multi-entity retail group
+current_tools: Close checklist spreadsheet, ERP journals, and shared evidence folders
+erp_platform: Microsoft Dynamics 365 Finance
+monthly_volume: 125 close tasks, 70 reconciliations, and 220 journals per period
+pain_points:
+  - Late close tasks
+  - Manual close status tracking
+  - Missing reconciliation evidence
+control_concerns:
+  - Reviewer sign-off required before high-risk reconciliations are marked complete.
+reporting_needs: Close task status, overdue items, reconciliation risk, and journal approval dashboard
+compliance_focus: Close evidence, journal approvals, reviewer sign-off, and period completion controls
+deadline: 12 weeks

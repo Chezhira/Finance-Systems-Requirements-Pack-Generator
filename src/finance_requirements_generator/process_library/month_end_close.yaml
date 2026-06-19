@@ -1,0 +1,79 @@
+key: month_end_close
+name: Month-end Close
+purpose: Strengthen close calendar ownership, reconciliation evidence, journal approval, task escalation, and reviewer sign-off.
+pain_point_prompts:
+  - Late close tasks
+  - Manual close status tracking
+  - Missing reconciliation evidence
+  - Journal approval delays
+baseline_scope:
+  - Close task calendar, preparer/reviewer ownership, journal approval, reconciliation completion, and close reporting.
+  - Daily close status visibility with overdue task escalation and dependency tracking.
+  - Evidence pack for finance leadership, internal controls, and audit review.
+functional_requirements:
+  - Maintain a close calendar with task owner, reviewer, due date, dependency, status, and completion evidence.
+  - Track balance sheet reconciliations by account, preparer, reviewer, risk rating, and sign-off status.
+  - Route manual journals for approval based on journal type, value, and account risk.
+  - Escalate overdue tasks to close lead and finance controller based on policy thresholds.
+  - Capture close commentary for material movements, open items, and unresolved exceptions.
+  - Lock completed tasks after reviewer sign-off unless reopened through controlled approval.
+  - Produce a close dashboard showing task completion, late items, high-risk reconciliations, and journal status.
+  - Export a month-end close evidence pack with task, reconciliation, journal, and sign-off details.
+non_functional_requirements:
+  - Close status must be visible without relying on offline spreadsheet trackers.
+  - Task and reconciliation evidence must be understandable to finance managers and auditors.
+  - The workflow must support daily close stand-up review and formal period completion.
+  - Access must separate preparer completion, reviewer approval, and close administrator changes.
+  - Close reporting must preserve historic period evidence for audit lookback.
+data_requirements:
+  - Close period
+  - Close task ID
+  - Task owner
+  - Reviewer
+  - Balance sheet account
+  - Journal batch reference
+  - Completion evidence link
+  - Sign-off timestamp
+controls:
+  - Reviewer sign-off required before high-risk reconciliations are marked complete.
+  - Manual journals require approval before posting to closed periods.
+  - Overdue close tasks escalate based on close calendar thresholds.
+  - Reopened tasks require reason, requester, approver, and timestamp.
+  - Period close completion requires all mandatory tasks and reconciliations to be signed off.
+audit_trail_requirements:
+  - Store task status changes, evidence uploads, preparer completion, and reviewer sign-off timestamps.
+  - Record journal submission, approval, rejection, posting, and reversal history.
+  - Preserve reopen reasons and approval decisions for closed tasks.
+  - Track reconciliation owner/status history for each close period.
+  - Keep close pack export timestamp, preparer, reviewer, and final approver evidence.
+user_stories:
+  - As a close lead, I want overdue tasks escalated so that blockers are visible before reporting deadlines.
+  - As a preparer, I want one place to attach reconciliation evidence so that reviewer sign-off is faster.
+  - As a reviewer, I want high-risk accounts highlighted so that review effort follows materiality.
+  - As a finance controller, I want journal approval status so that unposted adjustments do not surprise the close.
+  - As an auditor, I want close task and journal approval history by period so that evidence is traceable.
+uat_test_cases:
+  - scenario: A mandatory close task passes its due date without completion.
+    expected: The task is escalated and appears in the overdue close view.
+  - scenario: A high-risk reconciliation is submitted without evidence.
+    expected: Reviewer sign-off is blocked until evidence is attached.
+  - scenario: Manual journal exceeds the approval threshold.
+    expected: Posting is blocked until the correct approver signs off.
+  - scenario: A completed close task is reopened.
+    expected: Reopen reason, requester, approver, and timestamp are recorded.
+  - scenario: Period completion is attempted with open mandatory tasks.
+    expected: Completion is blocked and open tasks are listed.
+  - scenario: Month-end close pack is exported.
+    expected: The pack includes task completion, reconciliations, journals, overdue items, and sign-off evidence.
+acceptance_criteria:
+  - Close calendar shows owner, reviewer, due date, dependency, status, and evidence for each task.
+  - High-risk reconciliations require reviewer sign-off before period completion.
+  - Journal approvals are visible and traceable by journal batch.
+  - Overdue tasks escalate without manual tracker updates.
+  - Close evidence pack exports with task, reconciliation, journal, and sign-off details.
+risks_and_dependencies:
+  - Close task ownership must be agreed across finance teams.
+  - Balance sheet reconciliation risk ratings may need finance controller approval.
+  - Journal approval thresholds must align with delegation of authority.
+  - Legacy spreadsheet trackers may need migration or archive decisions.
+  - Users need discipline to attach evidence before sign-off.

@@ -1,0 +1,15 @@
+process_key: payroll_controls
+company_name: Riverstone Care Ltd
+entity_type: Multi-site care services provider
+current_tools: Payroll bureau portal, HR change forms, GL payroll journals, and bank approval workflow
+erp_platform: Sage Payroll and Xero Finance
+monthly_volume: 650 employees and monthly payroll control review
+pain_points:
+  - Starter and leaver control gaps
+  - Payroll change approval delays
+  - Manual payroll input checks
+control_concerns:
+  - Starter, leaver, salary, deduction, and bank detail changes require approval before payroll processing.
+reporting_needs: Payroll changes, exceptions, register-to-GL reconciliation, and payment approval summary
+compliance_focus: Payroll master data approval, exception review, payment file approval, and reconciliation
+deadline: 9 weeks

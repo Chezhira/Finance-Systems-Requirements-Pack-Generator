@@ -3,7 +3,7 @@
   <text x="72" y="82" font-family="Arial, sans-serif" font-size="32" font-weight="700" fill="#111827">Accounts Payable Pack Preview</text>
   <rect x="72" y="126" width="1136" height="104" rx="8" fill="#ffffff" stroke="#d1d5db"/>
   <text x="102" y="166" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#111827">Executive Summary</text>
-  <text x="102" y="202" font-family="Arial, sans-serif" font-size="17" fill="#334155">Northstar Trading Ltd needs structured AP requirements for duplicate invoice, approval, supplier master, and payment controls.</text>
+  <text x="102" y="202" font-family="Arial, sans-serif" font-size="17" fill="#334155">Northstar Trading Ltd needs structured finance requirements for controls, data, audit trail, UAT, and implementation readiness.</text>
   <rect x="72" y="262" width="548" height="296" rx="8" fill="#ffffff" stroke="#d1d5db"/>
   <text x="102" y="304" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#111827">Functional Requirements</text>
   <text x="102" y="346" font-family="Arial, sans-serif" font-size="17" fill="#334155">FR-01 Capture supplier invoice, PO, tax, approval, and payment fields.</text>

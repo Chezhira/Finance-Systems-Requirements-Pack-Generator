@@ -1,0 +1,79 @@
+key: inventory_costing
+name: Inventory Costing
+purpose: Improve inventory valuation, cost variance review, subledger-to-GL reconciliation, landed cost allocation, and stock adjustment controls.
+pain_point_prompts:
+  - Inventory valuation differences
+  - Cost variance review gaps
+  - Manual landed cost allocation
+  - Unapproved stock adjustments
+baseline_scope:
+  - Inventory valuation, cost updates, landed cost allocation, variance review, stock adjustments, and GL reconciliation.
+  - Visibility of standard cost, actual cost, purchase price variance, production variance, and inventory ageing.
+  - Controls over costing method changes, manual adjustments, and reconciliation sign-off.
+functional_requirements:
+  - Capture SKU, warehouse, quantity, unit cost, valuation method, cost version, and inventory value.
+  - Reconcile inventory subledger balances to GL inventory control accounts by period and location.
+  - Track standard cost updates with effective date, reason, requester, reviewer, and approval status.
+  - Allocate landed costs using approved allocation basis and link charges to receipt or shipment references.
+  - Identify purchase price variance, production variance, and manual cost adjustments by materiality threshold.
+  - Route stock adjustments and write-downs for approval before posting.
+  - Produce inventory valuation reports by SKU, warehouse, ageing bucket, cost method, and variance category.
+  - Preserve costing assumptions and supporting evidence for finance review.
+non_functional_requirements:
+  - Costing reports must be understandable to finance, operations, and inventory control users.
+  - The workflow must support period-end valuation review without offline spreadsheet rebuilds.
+  - Access must separate cost maintenance, stock adjustment entry, adjustment approval, and GL posting.
+  - Valuation evidence must be retained for audit and management review.
+  - The design must support location-level reporting without mixing warehouse responsibilities.
+data_requirements:
+  - SKU/item ID
+  - Warehouse/location
+  - Quantity on hand
+  - Unit cost
+  - Valuation method
+  - Landed cost reference
+  - Inventory control account
+  - Cost variance reason code
+controls:
+  - Standard cost changes require approval before effective date.
+  - Stock adjustments and write-downs require reason codes and reviewer sign-off.
+  - Inventory subledger-to-GL differences over threshold require owner assignment.
+  - Landed cost allocation basis must be approved and retained.
+  - Costing method changes require finance controller approval.
+audit_trail_requirements:
+  - Store cost version changes with old value, new value, requester, approver, and effective date.
+  - Record stock adjustment creation, approval, posting, and reversal history.
+  - Preserve landed cost allocation inputs, basis, reviewer, and timestamp.
+  - Track subledger-to-GL reconciliation owner/status history.
+  - Keep valuation report export and sign-off evidence by period.
+user_stories:
+  - As a cost accountant, I want cost variance exceptions by SKU so that material valuation issues are reviewed.
+  - As a finance manager, I want inventory subledger-to-GL reconciliation so that balance sheet inventory is supported.
+  - As an operations manager, I want stock adjustments routed for approval so that shrinkage and corrections are controlled.
+  - As a controller, I want standard cost change history so that margin movements can be explained.
+  - As an auditor, I want landed cost allocation evidence so that inventory valuation assumptions are traceable.
+uat_test_cases:
+  - scenario: Standard cost is changed for a material SKU.
+    expected: Old value, new value, reason, requester, approver, and effective date are recorded.
+  - scenario: Inventory subledger does not match the GL control account.
+    expected: A reconciliation difference is created with owner, amount, and reason fields.
+  - scenario: Landed cost allocation is posted.
+    expected: Allocation basis, source charge, receipt reference, and reviewer evidence are stored.
+  - scenario: Stock adjustment exceeds approval threshold.
+    expected: Posting is blocked until reviewer sign-off is captured.
+  - scenario: Cost variance exceeds materiality threshold.
+    expected: The variance appears in the costing exception report with owner and category.
+  - scenario: Inventory valuation pack is exported.
+    expected: The pack includes valuation, variances, adjustments, landed costs, and GL reconciliation status.
+acceptance_criteria:
+  - Inventory valuation reports show SKU, location, quantity, unit cost, value, and cost method.
+  - Standard cost changes and costing method changes are approved and auditable.
+  - Stock adjustments cannot post without reason code and approval where required.
+  - Subledger-to-GL differences are owner-assigned and visible by period.
+  - Landed cost allocation evidence is retained with basis and reviewer sign-off.
+risks_and_dependencies:
+  - Item master data and warehouse locations may need cleanup before reliable valuation reporting.
+  - Approved costing method and standard cost policy must be confirmed.
+  - Landed cost source data may depend on procurement and logistics integration.
+  - Historic stock adjustments may require review before migration.
+  - Operations and finance ownership of variance resolution must be agreed.

@@ -1,0 +1,79 @@
+key: intercompany_settlements
+name: Intercompany Settlements
+purpose: Improve intercompany recharge rules, counterparty matching, settlement ageing, FX difference review, and elimination evidence.
+pain_point_prompts:
+  - Intercompany mismatch ageing
+  - Recharge rule ambiguity
+  - FX difference review gaps
+  - Missing counterparty confirmation
+baseline_scope:
+  - Intercompany recharge creation, counterparty confirmation, matching, settlement tracking, FX difference review, and elimination support.
+  - Visibility of balances by entity, counterparty, transaction type, currency, owner, and ageing.
+  - Controls over recharge approval, settlement readiness, and period-end elimination evidence.
+functional_requirements:
+  - Capture originating entity, counterparty entity, recharge type, currency, amount, tax treatment, and settlement status.
+  - Match intercompany AR/AP balances by counterparty, invoice reference, amount, currency, and period.
+  - Track unmatched intercompany balances with owner, ageing, reason code, and expected settlement date.
+  - Store recharge rules, allocation basis, supporting calculation, requester, reviewer, and approval status.
+  - Identify FX differences by entity pair, currency, transaction reference, and materiality threshold.
+  - Require counterparty confirmation before settlement readiness or elimination support sign-off.
+  - Produce intercompany ageing and mismatch reports by entity pair and transaction type.
+  - Export elimination support evidence for group reporting review.
+non_functional_requirements:
+  - Intercompany status must be understandable to entity finance teams and group finance.
+  - Reporting must support period-end review without manual consolidation of entity spreadsheets.
+  - Access must separate recharge preparation, counterparty confirmation, approval, and settlement release.
+  - Evidence must be retained by period for audit and group reporting review.
+  - The workflow must support multi-currency balances and FX difference commentary.
+data_requirements:
+  - Originating entity
+  - Counterparty entity
+  - Recharge reference
+  - Counterparty invoice reference
+  - Transaction currency
+  - Settlement status
+  - FX difference
+  - Elimination support reference
+controls:
+  - Recharge rules and allocation basis require finance owner approval.
+  - Counterparty confirmation is required before settlement readiness.
+  - Aged unmatched intercompany balances escalate to group finance.
+  - FX differences over materiality threshold require review and explanation.
+  - Elimination support cannot be marked complete until mismatches are resolved or approved.
+audit_trail_requirements:
+  - Store recharge creation, approval, counterparty confirmation, settlement, and elimination sign-off timestamps.
+  - Record allocation basis changes with requester, reviewer, reason, and effective period.
+  - Track unmatched balance owner/status history by entity pair.
+  - Preserve FX difference explanations and reviewer decisions.
+  - Keep counterparty confirmation evidence and settlement approval references.
+user_stories:
+  - As an entity accountant, I want counterparty confirmation so that intercompany mismatches are resolved before close.
+  - As group finance, I want ageing by entity pair so that old balances are escalated quickly.
+  - As a recharge preparer, I want approved allocation rules so that recharge calculations are consistent.
+  - As a reviewer, I want FX differences explained so that group reporting variances are defensible.
+  - As an auditor, I want elimination support evidence so that consolidation adjustments are traceable.
+uat_test_cases:
+  - scenario: Intercompany AR balance does not match the counterparty AP balance.
+    expected: A mismatch is created with entity pair, owner, ageing, and reason fields.
+  - scenario: Recharge allocation basis is changed.
+    expected: The change requires approval and stores reason, requester, reviewer, and effective period.
+  - scenario: Counterparty confirmation is missing.
+    expected: Settlement readiness and elimination sign-off are blocked.
+  - scenario: FX difference exceeds materiality threshold.
+    expected: Review explanation and approval are required before completion.
+  - scenario: Aged unmatched balance passes escalation threshold.
+    expected: Group finance receives escalation and the item appears in the aged mismatch report.
+  - scenario: Intercompany settlement pack is exported.
+    expected: The pack includes balances, mismatches, confirmations, FX differences, settlement status, and elimination evidence.
+acceptance_criteria:
+  - Intercompany balances show entity pair, currency, reference, owner, status, and ageing.
+  - Recharge allocation rules are approved and versioned.
+  - Counterparty confirmation is required before settlement readiness.
+  - FX differences above threshold are explained and approved.
+  - Elimination support exports with mismatch and sign-off evidence.
+risks_and_dependencies:
+  - Entity chart-of-account mapping must be aligned for counterparty matching.
+  - Recharge policies and allocation methods require group finance approval.
+  - Multi-currency treatment must align with accounting policy.
+  - Historic unmatched balances may need remediation before rollout.
+  - Entity teams must agree ownership of mismatch resolution.

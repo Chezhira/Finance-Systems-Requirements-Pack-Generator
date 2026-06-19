@@ -1,0 +1,15 @@
+process_key: inventory_costing
+company_name: MapleWorks Components Ltd
+entity_type: Light manufacturing business
+current_tools: ERP inventory module, warehouse adjustment logs, and costing spreadsheets
+erp_platform: SAP Business One
+monthly_volume: 4 warehouses, 2,800 SKUs, and monthly standard cost review
+pain_points:
+  - Inventory valuation differences
+  - Cost variance review gaps
+  - Manual landed cost allocation
+control_concerns:
+  - Standard cost changes require approval before effective date.
+reporting_needs: Inventory valuation, cost variance, landed cost, and subledger-to-GL summary
+compliance_focus: Cost change approvals, stock adjustment controls, and valuation audit evidence
+deadline: 11 weeks

@@ -8,7 +8,16 @@ from typing import Any
 import yaml
 
 TEMPLATE_PACKAGE = "finance_requirements_generator.process_library"
-SUPPORTED_PROCESSES = ("accounts_payable", "bank_reconciliation", "vat_reconciliation")
+SUPPORTED_PROCESSES = (
+    "accounts_payable",
+    "bank_reconciliation",
+    "vat_reconciliation",
+    "accounts_receivable",
+    "month_end_close",
+    "inventory_costing",
+    "intercompany_settlements",
+    "payroll_controls",
+)
 REQUIRED_TEMPLATE_KEYS = {
     "key",
     "name",

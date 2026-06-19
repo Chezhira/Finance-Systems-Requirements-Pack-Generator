@@ -1,0 +1,15 @@
+process_key: accounts_receivable
+company_name: Harbour Lane Services Ltd
+entity_type: Professional services group
+current_tools: ERP sales ledger, customer remittance mailbox, and offline collections tracker
+erp_platform: NetSuite
+monthly_volume: 900 customer invoices and 700 receipts per month
+pain_points:
+  - Unallocated customer receipts
+  - Disputed invoices
+  - Collections ageing visibility
+control_concerns:
+  - Credit notes require approval based on amount, reason code, and customer risk.
+reporting_needs: Customer ageing, dispute status, unallocated cash, and collections owner summary
+compliance_focus: Credit note approval, write-off evidence, and customer master data controls
+deadline: 9 weeks

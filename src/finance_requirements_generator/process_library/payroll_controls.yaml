@@ -1,0 +1,79 @@
+key: payroll_controls
+name: Payroll Controls
+purpose: Strengthen starter, leaver, change, payroll input, exception review, payment approval, and payroll reconciliation controls.
+pain_point_prompts:
+  - Starter and leaver control gaps
+  - Payroll change approval delays
+  - Manual payroll input checks
+  - Payroll reconciliation evidence gaps
+baseline_scope:
+  - Payroll master changes, input approval, exception review, payroll reconciliation, payment approval, and evidence retention.
+  - Controls over starters, leavers, salary changes, bank detail changes, overtime, deductions, and payroll payment files.
+  - Period-end payroll sign-off evidence for finance, HR, and audit review.
+functional_requirements:
+  - Capture employee ID, payroll period, change type, effective date, requester, approver, and payroll status.
+  - Route starters, leavers, salary changes, bank detail changes, and deductions for approval before payroll processing.
+  - Track payroll input files with preparer, reviewer, version, cutoff date, and approval status.
+  - Identify payroll exceptions for duplicate employees, negative pay, unusual overtime, net pay variance, and missing approvals.
+  - Reconcile payroll register totals to GL payroll control accounts and payment file totals.
+  - Require payroll payment file approval before release to bank.
+  - Store leaver final pay checks, access removal confirmation, and termination effective date evidence.
+  - Produce payroll control pack with changes, exceptions, reconciliation, payment approval, and sign-off details.
+non_functional_requirements:
+  - Payroll control reporting must be clear to finance, HR, payroll, and audit reviewers.
+  - Sensitive payroll evidence must be access-controlled by role.
+  - The workflow must support payroll period cutoff discipline and controlled late changes.
+  - Audit evidence must preserve approvals without exposing unnecessary personal data in public examples.
+  - Reconciliation reporting must avoid manual spreadsheet rebuilds for core control totals.
+data_requirements:
+  - Employee ID
+  - Payroll period
+  - Payroll change type
+  - Effective date
+  - Approval reference
+  - Gross-to-net total
+  - Payroll control account
+  - Payment file reference
+controls:
+  - Starter, leaver, salary, deduction, and bank detail changes require approval before payroll processing.
+  - Payroll input files require preparer and reviewer sign-off before calculation.
+  - Payroll exceptions over threshold require investigation and approval.
+  - Payroll register must reconcile to GL control accounts and payment file totals.
+  - Payroll payment file release requires finance approval.
+audit_trail_requirements:
+  - Store payroll master change request, approval, processing, and effective date history.
+  - Record payroll input file version, preparer, reviewer, approval, and cutoff timestamp.
+  - Preserve exception review notes and approval decisions.
+  - Track payroll reconciliation owner/status history by period.
+  - Keep payment file approval evidence with approver, date, amount, and bank file reference.
+user_stories:
+  - As a payroll manager, I want approved starter and leaver changes so that payroll master data is controlled.
+  - As a finance reviewer, I want payroll register-to-GL reconciliation so that payroll costs are supported.
+  - As a payroll preparer, I want exception checks before payment so that unusual items are investigated.
+  - As an approver, I want payment file evidence so that bank release is controlled.
+  - As an auditor, I want payroll change approval history so that sensitive changes are traceable.
+uat_test_cases:
+  - scenario: Salary change is entered after payroll cutoff.
+    expected: The change requires late-change approval before processing.
+  - scenario: Employee bank details are changed before payroll run.
+    expected: Payroll processing is blocked until approval evidence is captured.
+  - scenario: Payroll register does not reconcile to the GL control account.
+    expected: A reconciliation difference is created with owner, amount, and reason fields.
+  - scenario: Net pay variance exceeds exception threshold.
+    expected: The exception appears in the payroll review queue and requires approval.
+  - scenario: Payment file is prepared for release.
+    expected: Finance approval is required before payment file status becomes released.
+  - scenario: Payroll control pack is exported.
+    expected: The pack includes changes, exceptions, reconciliation, payment approval, and sign-off evidence.
+acceptance_criteria:
+  - Payroll master changes require approval and retain requester, approver, and effective date.
+  - Payroll exceptions are visible with owner, status, reason, and approval evidence.
+  - Payroll register reconciles to GL control accounts and payment file totals.
+  - Payment file release cannot occur without finance approval.
+  - Payroll control pack exports with change, exception, reconciliation, and sign-off evidence.
+risks_and_dependencies:
+  - HR and payroll ownership of master data changes must be agreed.
+  - Payroll cutoff rules and approval thresholds require policy sign-off.
+  - Sensitive payroll access roles must be configured carefully.
+  - GL account mapping must be validated before reconciliation testing.
+  - Historic payroll exception categories may need standardisation before rollout.

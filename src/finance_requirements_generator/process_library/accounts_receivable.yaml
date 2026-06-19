@@ -1,0 +1,79 @@
+key: accounts_receivable
+name: Accounts Receivable
+purpose: Improve customer billing, cash allocation, collections visibility, dispute handling, and credit control evidence.
+pain_point_prompts:
+  - Unallocated customer receipts
+  - Disputed invoices
+  - Collections ageing visibility
+  - Credit note approval gaps
+baseline_scope:
+  - Customer invoice generation, receipt matching, dispute tracking, collections ownership, and credit note approval.
+  - Clear customer account ageing with owner, status, and next action evidence.
+  - Controls over customer master data, credit limits, write-offs, and cash allocation.
+functional_requirements:
+  - Capture customer invoice number, customer account, invoice date, due date, currency, tax amount, and payment status.
+  - Match customer receipts to open invoices using customer reference, amount, remittance advice, and bank receipt date.
+  - Track unallocated cash with owner, ageing, reason code, and expected resolution action.
+  - Record invoice disputes with dispute type, owner, status, value, and target resolution date.
+  - Route credit notes and write-offs through approval thresholds before posting.
+  - Maintain customer master data changes for payment terms, credit limits, billing contacts, and tax identifiers.
+  - Produce collections ageing views by customer, region, owner, and risk category.
+  - Link dunning activity, customer responses, and promise-to-pay dates to the customer account.
+non_functional_requirements:
+  - Collections status must be understandable to finance, sales, and credit control users.
+  - The workflow must support daily cash allocation and formal month-end AR review.
+  - Exported evidence must be readable by auditors without system administrator access.
+  - Access must separate customer master maintenance, invoice posting, credit note approval, and write-off approval.
+  - AR reporting must avoid manual spreadsheet consolidation for core ageing and dispute views.
+data_requirements:
+  - Customer account ID
+  - Customer invoice number
+  - Receipt reference
+  - Remittance advice reference
+  - Dispute status
+  - Collections owner
+  - Credit limit
+  - Write-off approval reference
+controls:
+  - Credit notes require approval based on amount, reason code, and customer risk.
+  - Customer credit limit changes require finance owner review.
+  - Unallocated cash over the policy threshold escalates to the collections lead.
+  - Write-offs require supporting evidence and approval before posting.
+  - Receipts cannot be marked resolved without allocation or approved reason code.
+audit_trail_requirements:
+  - Store invoice posting, receipt matching, dispute creation, credit note approval, and write-off timestamps.
+  - Record customer master data changes with old value, new value, requester, reviewer, and date.
+  - Preserve collections notes, dunning actions, and promise-to-pay updates.
+  - Track unallocated cash owner/status history.
+  - Keep approval evidence for credit notes, write-offs, and credit limit changes.
+user_stories:
+  - As a cash allocator, I want remittance-backed receipt matching so that unallocated cash is reduced quickly.
+  - As a collections analyst, I want aged disputed invoices by owner so that customer follow-up is prioritised.
+  - As a credit controller, I want customer credit limit changes reviewed so that exposure is controlled.
+  - As a finance manager, I want credit note approval evidence so that revenue adjustments are defensible.
+  - As an auditor, I want write-off approvals and customer master changes traceable by user and date.
+uat_test_cases:
+  - scenario: Customer receipt arrives without a matching invoice reference.
+    expected: The receipt is marked unallocated with owner, ageing, and reason fields required.
+  - scenario: Invoice is placed into dispute by the collections team.
+    expected: Dispute type, owner, value, status, and target resolution date are stored.
+  - scenario: Credit note exceeds the standard threshold.
+    expected: Posting is blocked until the correct approval is captured.
+  - scenario: Customer credit limit is increased.
+    expected: Old value, new value, requester, reviewer, and approval timestamp are retained.
+  - scenario: A write-off is requested for an aged balance.
+    expected: Supporting evidence and approval are required before write-off posting.
+  - scenario: Collections ageing report is exported.
+    expected: Report shows customer, invoice, ageing bucket, owner, dispute status, and next action.
+acceptance_criteria:
+  - Unallocated receipts show owner, ageing, reason code, and expected resolution action.
+  - Disputed invoices are visible in AR ageing and cannot be hidden from collections reporting.
+  - Credit notes and write-offs require approval evidence before posting.
+  - Customer master changes for credit limits and payment terms are auditable.
+  - Collections reporting shows ageing, risk, owner, and next action without manual rework.
+risks_and_dependencies:
+  - Customer remittance reference quality may limit automated matching rates.
+  - Historic unallocated cash may need cleanup before go-live.
+  - Credit policy thresholds must be approved by finance leadership.
+  - Sales and finance ownership of disputes must be agreed before workflow design.
+  - Customer master data may need cleansing before credit controls are reliable.
