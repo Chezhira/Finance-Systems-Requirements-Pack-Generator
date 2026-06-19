@@ -1,3 +1,5 @@
+import subprocess
+import sys
 from io import BytesIO
 from zipfile import ZipFile
 
@@ -123,6 +125,35 @@ def test_docx_download_bytes_open_as_word_document() -> None:
 
     assert content.startswith(b"PK")
     assert "Payroll Controls" in text
+
+
+def test_core_generator_import_does_not_require_openpyxl() -> None:
+    script = """
+import builtins
+
+original_import = builtins.__import__
+
+
+def block_openpyxl(name, *args, **kwargs):
+    if name == "openpyxl" or name.startswith("openpyxl."):
+        raise ModuleNotFoundError("blocked for import-safety test")
+    return original_import(name, *args, **kwargs)
+
+
+builtins.__import__ = block_openpyxl
+from finance_requirements_generator.template_engine import generate_pack
+from finance_requirements_generator.questionnaire import DEFAULT_SAMPLE_INPUTS
+
+generate_pack(DEFAULT_SAMPLE_INPUTS["accounts_payable"])
+"""
+    result = subprocess.run(
+        [sys.executable, "-c", script],
+        capture_output=True,
+        check=False,
+        text=True,
+    )
+
+    assert result.returncode == 0, result.stderr
 
 
 def _docx_text(document: Document) -> str:

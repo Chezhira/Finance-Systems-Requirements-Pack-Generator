@@ -5,10 +5,6 @@ from io import BytesIO, StringIO
 from itertools import cycle
 from pathlib import Path
 
-from openpyxl import Workbook
-from openpyxl.styles import Alignment, Font, PatternFill
-from openpyxl.utils import get_column_letter
-
 from finance_requirements_generator.schemas import ControlRiskRow, IntakeAnswers, UATTestCase
 from finance_requirements_generator.text_cleanup import clean_fragment, clean_sentence
 
@@ -111,6 +107,16 @@ def export_control_risk_csv(rows: list[ControlRiskRow], output_path: str | Path)
 
 
 def matrix_to_xlsx_bytes(rows: list[ControlRiskRow]) -> bytes:
+    try:
+        from openpyxl import Workbook
+        from openpyxl.styles import Alignment, Font, PatternFill
+        from openpyxl.utils import get_column_letter
+    except ModuleNotFoundError as exc:
+        raise RuntimeError(
+            "XLSX export requires the openpyxl runtime dependency. "
+            'Install the project with `python -m pip install -e ".[dev]"`.'
+        ) from exc
+
     workbook = Workbook()
     worksheet = workbook.active
     worksheet.title = "Control Risk Matrix"
