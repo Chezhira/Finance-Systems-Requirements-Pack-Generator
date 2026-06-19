@@ -107,7 +107,9 @@ docs/screenshots/
 
 - v0.1.0: AP, bank reconciliation, VAT reconciliation, Markdown and DOCX exports, tests, CI, screenshots, and generated sample packs.
 - v0.2.0: Accounts receivable, month-end close, inventory costing, intercompany settlements, payroll controls, updated sample packs, and expanded tests.
-- v0.3.0: Control-risk matrix export as CSV/XLSX.
-- v0.4.0: Mermaid process map generation.
-- v0.5.0: Odoo module mapping and implementation checklist by process.
-- Future only: AI-assisted drafting with strict schema validation, traceability, and user review.
+- v0.3.0: SOP-aware intake modes for users with or without existing SOPs, plus curated target-system fit-gap mapping.
+- v0.4.0: Control-risk matrix export as CSV/XLSX and Mermaid process map generation.
+- v0.5.0: Implementation checklist by process and target ERP/system.
+- Future only: AI-assisted drafting with strict schema validation, traceability, and user review. External AI/API calls and live web scraping are not planned for v0.3.0.
+
+See [v0.3.0 planning notes](docs/v0.3.0_intake_and_mapping_plan.md) for the proposed SOP upload, guided SOP build, manual intake, and curated target-system mapping approach.
