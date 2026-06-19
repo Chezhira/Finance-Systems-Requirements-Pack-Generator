@@ -93,6 +93,8 @@ def test_docx_export_matches_reference_cover_contents_and_pagination(tmp_path) -
     assert xml.count('w:type="page"') == 0
     assert "w:pageBreakBefore" in xml
     assert "{[object Object]-0}" not in xml
+    assert xml.count("<w:noWrap") >= 30
+    assert '<w:tcW w:type="dxa" w:w="1250"/>' in xml
     assert header_footer_parts
     assert document.tables[-1].cell(0, 0).text.endswith(
         "Do not upload confidential business information into a public demo."

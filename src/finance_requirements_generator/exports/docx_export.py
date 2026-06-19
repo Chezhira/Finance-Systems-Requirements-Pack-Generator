@@ -15,6 +15,13 @@ from docx.shared import Inches, Pt, RGBColor, Twips
 from finance_requirements_generator.schemas import RequirementsPack, UATTestCase
 
 CONTENT_DXA = 9360
+ID_COL_DXA = 1250
+TEXT_COL_DXA = CONTENT_DXA - ID_COL_DXA
+DATA_ID_COL_DXA = 1120
+DATA_TEXT_COL_DXA = 3560
+UAT_ID_COL_DXA = 1250
+UAT_TEXT_COL_DXA = (CONTENT_DXA - UAT_ID_COL_DXA) // 2
+UAT_RESULT_COL_DXA = CONTENT_DXA - UAT_ID_COL_DXA - UAT_TEXT_COL_DXA
 PAGE_WIDTH_DXA = 12240
 PAGE_HEIGHT_DXA = 15840
 MARGIN_TOP_DXA = 1180
@@ -351,7 +358,7 @@ def _add_scope_boundaries_table(document: Document, pack: RequirementsPack) -> N
 
 
 def _add_two_column_table(document: Document, headers: list[str], items: list[str]) -> None:
-    widths = [1080, 8280] if headers[0] == "ID" else [3000, 6360]
+    widths = [ID_COL_DXA, TEXT_COL_DXA] if headers[0] == "ID" else [3000, 6360]
     if headers == ["Role", "User Story"]:
         widths = [2500, 6860]
 
@@ -371,7 +378,8 @@ def _add_data_grid(document: Document, items: list[str]) -> None:
     table = document.add_table(rows=0, cols=4)
     _style_table(table)
     _set_table_width(table, CONTENT_DXA)
-    _set_grid_widths(table, [960, 3720, 960, 3720])
+    widths = [DATA_ID_COL_DXA, DATA_TEXT_COL_DXA, DATA_ID_COL_DXA, DATA_TEXT_COL_DXA]
+    _set_grid_widths(table, widths)
     pairs = [_split_identifier(item) for item in items]
     for row_number, index in enumerate(range(0, len(pairs), 2), start=1):
         row = table.add_row()
@@ -382,7 +390,7 @@ def _add_data_grid(document: Document, items: list[str]) -> None:
             _set_body_cell(
                 cell,
                 value,
-                width=[960, 3720, 960, 3720][col_index],
+                width=widths[col_index],
                 id_cell=col_index in (0, 2),
                 zebra=row_number % 2 == 0,
             )
@@ -405,13 +413,19 @@ def _add_uat_table(document: Document, cases: list[UATTestCase]) -> None:
     table = document.add_table(rows=1, cols=3)
     _style_table(table)
     _set_table_width(table, CONTENT_DXA)
-    _set_grid_widths(table, [880, 4240, 4240])
-    _set_header_row(table.rows[0], ["ID", "Test Scenario", "Expected Result"], [880, 4240, 4240])
+    widths = [UAT_ID_COL_DXA, UAT_TEXT_COL_DXA, UAT_RESULT_COL_DXA]
+    _set_grid_widths(table, widths)
+    _set_header_row(table.rows[0], ["ID", "Test Scenario", "Expected Result"], widths)
     for row_number, case in enumerate(cases, start=1):
         row = table.add_row()
-        _set_body_cell(row.cells[0], case.test_id, width=880, id_cell=True)
-        _set_body_cell(row.cells[1], case.scenario, width=4240, zebra=row_number % 2 == 0)
-        _set_body_cell(row.cells[2], case.expected_result, width=4240, zebra=row_number % 2 == 0)
+        _set_body_cell(row.cells[0], case.test_id, width=widths[0], id_cell=True)
+        _set_body_cell(row.cells[1], case.scenario, width=widths[1], zebra=row_number % 2 == 0)
+        _set_body_cell(
+            row.cells[2],
+            case.expected_result,
+            width=widths[2],
+            zebra=row_number % 2 == 0,
+        )
 
 
 def _add_bullet_list(document: Document, items: list[str], numbered: bool = False) -> None:
@@ -515,6 +529,8 @@ def _set_body_cell(
     _set_cell_width(cell, width)
     _shade_cell(cell, BLUE_LT if id_cell else ZEBRA if zebra else WHITE)
     _set_cell_margins(cell, top=80, bottom=80, left=140, right=140)
+    if id_cell:
+        _prevent_cell_wrapping(cell)
     cell.vertical_alignment = WD_CELL_VERTICAL_ALIGNMENT.CENTER
     cell.text = ""
     paragraph = cell.paragraphs[0]
@@ -592,6 +608,14 @@ def _set_cell_width(cell, width: int) -> None:
         tc_pr.append(tc_width)
     tc_width.set(qn("w:w"), str(width))
     tc_width.set(qn("w:type"), "dxa")
+
+
+def _prevent_cell_wrapping(cell) -> None:
+    tc_pr = cell._tc.get_or_add_tcPr()
+    no_wrap = tc_pr.find(qn("w:noWrap"))
+    if no_wrap is None:
+        no_wrap = OxmlElement("w:noWrap")
+        tc_pr.append(no_wrap)
 
 
 def _set_table_borders(
