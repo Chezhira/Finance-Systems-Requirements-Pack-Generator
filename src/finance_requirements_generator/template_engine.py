@@ -1,6 +1,11 @@
 from __future__ import annotations
 
+from finance_requirements_generator.control_risk import generate_control_risk_matrix
 from finance_requirements_generator.process_library import load_process_template
+from finance_requirements_generator.process_map import (
+    generate_mermaid_process_map,
+    generate_process_map_summary,
+)
 from finance_requirements_generator.questionnaire import validate_intake
 from finance_requirements_generator.schemas import IntakeAnswers, RequirementsPack, UATTestCase
 from finance_requirements_generator.system_mapping import get_fit_gap_mapping
@@ -21,6 +26,19 @@ def generate_pack(intake: IntakeAnswers) -> RequirementsPack:
         template["functional_requirements"],
         prefix="FR",
     )
+    controls = _personalise_requirements(template["controls"], prefix="CTRL")
+    audit_trail_requirements = _personalise_requirements(
+        template["audit_trail_requirements"],
+        prefix="AUD",
+    )
+    uat_test_cases = [
+        UATTestCase(
+            test_id=f"UAT-{index:02d}",
+            scenario=item["scenario"],
+            expected_result=item["expected"],
+        )
+        for index, item in enumerate(template["uat_test_cases"], start=1)
+    ]
 
     return RequirementsPack(
         process_key=intake.process_key,
@@ -42,24 +60,25 @@ def generate_pack(intake: IntakeAnswers) -> RequirementsPack:
             template["data_requirements"],
             prefix="DR",
         ),
-        controls=_personalise_requirements(template["controls"], prefix="CTRL"),
+        controls=controls,
         reporting_requirements=_reporting_requirements(intake, template),
-        audit_trail_requirements=_personalise_requirements(
-            template["audit_trail_requirements"],
-            prefix="AUD",
-        ),
+        audit_trail_requirements=audit_trail_requirements,
         user_stories=list(template["user_stories"]),
-        uat_test_cases=[
-            UATTestCase(
-                test_id=f"UAT-{index:02d}",
-                scenario=item["scenario"],
-                expected_result=item["expected"],
-            )
-            for index, item in enumerate(template["uat_test_cases"], start=1)
-        ],
+        uat_test_cases=uat_test_cases,
         acceptance_criteria=list(template["acceptance_criteria"]),
         risks_and_dependencies=list(template["risks_and_dependencies"]),
         implementation_notes=_implementation_notes(intake, template),
+        control_risk_matrix=generate_control_risk_matrix(
+            template["name"],
+            intake,
+            controls,
+            audit_trail_requirements,
+            uat_test_cases,
+            functional_requirements,
+            list(template["risks_and_dependencies"]),
+        ),
+        mermaid_process_map=generate_mermaid_process_map(template["name"], intake),
+        process_map_summary=generate_process_map_summary(template["name"], intake),
         target_system=intake.target_system,
         target_system_fit_gap_mapping=get_fit_gap_mapping(
             intake.process_key,

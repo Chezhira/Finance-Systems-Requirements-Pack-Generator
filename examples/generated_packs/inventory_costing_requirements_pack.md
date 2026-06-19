@@ -126,6 +126,42 @@ The future-state scope covers Inventory valuation, cost updates, landed cost all
 - Run UAT with approved sample scenarios before production data migration or cutover.
 - Keep any future AI-assisted drafting behind structured templates and human approval.
 
+## Visual Process Documentation
+
+The Mermaid diagram below can be copied into Mermaid-compatible tools for rendering.
+
+```mermaid
+flowchart TD
+    A[Inventory Costing trigger] --> B[ERP inventory module, warehouse adjustment logs, and costing spreadsheets]
+    B --> C[Validate data, ownership, and required evidence]
+    C --> D{Exception or control gap?}
+    D -- Yes --> E[Resolve exception and update evidence]
+    D -- No --> F[Inventory Costing approval / review]
+    E --> F[Inventory Costing approval / review]
+    F --> G[Inventory valuation, cost variance, landed cost, and subledger-to-GL summary]
+    G --> H[Inventory Costing sign-off / readiness]
+```
+
+### Process Map Summary
+
+- Trigger: Inventory Costing trigger.
+- Intake/source: ERP inventory module, warehouse adjustment logs, and costing spreadsheets.
+- Validation: confirm data completeness, ownership, control evidence, and exception status.
+- Exception handling: route exceptions to the process owner before approval or readiness.
+- Approval/review: Inventory Costing approval / review.
+- Reporting/evidence: Inventory valuation, cost variance, landed cost, and subledger-to-GL summary.
+- Sign-off/readiness: confirm Inventory Costing evidence and acceptance criteria before build.
+
+## Control-Risk Matrix
+
+| Process Area | Risk Area | Risk Description | Control Objective | Control Activity | Control Type | Frequency | Owner | Evidence Required | System/Data Dependency | Related Requirement ID | Related UAT Case | Residual Risk / Implementation Note |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Inventory Costing | Inventory valuation differences | Inventory Costing may experience inventory valuation differences if ownership, data, controls, and evidence are not defined before build. | Reduce risk from inventory valuation differences through clear ownership, evidence, and review criteria. | Standard cost changes require approval before effective date. | Preventive | Each transaction or batch | Inventory Costing Process Owner | Store cost version changes with old value, new value, requester, approver, and effective date. | SAP Business One data, required fields, owner status, and evidence references must be available for review. | FR-01 | UAT-01 | Item master data and warehouse locations may need cleanup before reliable valuation reporting. |
+| Inventory Costing | Cost variance review gaps | Inventory Costing may experience cost variance review gaps if ownership, data, controls, and evidence are not defined before build. | Reduce risk from cost variance review gaps through clear ownership, evidence, and review criteria. | Stock adjustments and write-downs require reason codes and reviewer sign-off. | Detective | Each transaction or batch | Inventory Costing Process Owner | Record stock adjustment creation, approval, posting, and reversal history. | SAP Business One data, required fields, owner status, and evidence references must be available for review. | FR-02 | UAT-02 | Approved costing method and standard cost policy must be confirmed. |
+| Inventory Costing | Manual landed cost allocation | Inventory Costing may experience manual landed cost allocation if ownership, data, controls, and evidence are not defined before build. | Reduce risk from manual landed cost allocation through clear ownership, evidence, and review criteria. | Inventory subledger-to-GL differences over threshold require owner assignment. | Corrective | Each transaction or batch | Inventory Costing Process Owner | Preserve landed cost allocation inputs, basis, reviewer, and timestamp. | SAP Business One data, required fields, owner status, and evidence references must be available for review. | FR-03 | UAT-03 | Landed cost source data may depend on procurement and logistics integration. |
+| Inventory Costing | Inventory valuation differences | Inventory Costing may experience inventory valuation differences if ownership, data, controls, and evidence are not defined before build. | Reduce risk from inventory valuation differences through clear ownership, evidence, and review criteria. | Landed cost allocation basis must be approved and retained. | Manual | Each transaction or batch | Inventory Costing Process Owner | Track subledger-to-GL reconciliation owner/status history. | SAP Business One data, required fields, owner status, and evidence references must be available for review. | FR-04 | UAT-04 | Historic stock adjustments may require review before migration. |
+| Inventory Costing | Cost variance review gaps | Inventory Costing may experience cost variance review gaps if ownership, data, controls, and evidence are not defined before build. | Reduce risk from cost variance review gaps through clear ownership, evidence, and review criteria. | Costing method changes require finance controller approval. | Automated | Each transaction or batch | Inventory Costing Process Owner | Keep valuation report export and sign-off evidence by period. | SAP Business One data, required fields, owner status, and evidence references must be available for review. | FR-05 | UAT-05 | Operations and finance ownership of variance resolution must be agreed. |
+
 ## Public-Safe Sample Data Note
 
 This pack was generated from fictional, public-safe sample inputs. It does not contain real employer, client, supplier, bank, VAT, payroll, or operational data. Do not upload confidential business information into a public demo.

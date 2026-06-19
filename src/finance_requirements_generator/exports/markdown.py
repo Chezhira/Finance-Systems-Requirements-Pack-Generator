@@ -2,7 +2,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from finance_requirements_generator.control_risk import CONTROL_RISK_HEADERS
 from finance_requirements_generator.schemas import (
+    ControlRiskRow,
     FitGapMappingRow,
     RequirementsPack,
     SOPDraft,
@@ -75,6 +77,32 @@ def pack_to_markdown(pack: RequirementsPack) -> str:
             )
         lines.append("")
 
+    lines.extend(["## Visual Process Documentation", ""])
+    lines.append(
+        "The Mermaid diagram below can be copied into Mermaid-compatible tools for rendering."
+    )
+    lines.append("")
+    lines.extend(["```mermaid", pack.mermaid_process_map, "```", ""])
+    lines.append("### Process Map Summary")
+    lines.append("")
+    lines.extend(f"- {item}" for item in pack.process_map_summary)
+    lines.append("")
+
+    lines.extend(["## Control-Risk Matrix", ""])
+    lines.append(
+        "| "
+        + " | ".join(CONTROL_RISK_HEADERS)
+        + " |"
+    )
+    lines.append("| " + " | ".join("---" for _ in CONTROL_RISK_HEADERS) + " |")
+    for row in pack.control_risk_matrix:
+        lines.append(
+            "| "
+            + " | ".join(_escape_table(value) for value in _control_risk_values(row))
+            + " |"
+        )
+    lines.append("")
+
     lines.extend(["## Public-Safe Sample Data Note", ""])
     lines.extend(_render_value(pack.public_safe_sample_data_note))
 
@@ -103,6 +131,11 @@ def _render_value(value: object) -> list[str]:
                     f"- **{row.current_state_area}:** {row.candidate_fit_gap_view} "
                     f"Impact: {row.requirement_impact} Validation: {row.validation_note}"
                 )
+                for row in value
+            ]
+        if value and isinstance(value[0], ControlRiskRow):
+            return [
+                f"- **{row.risk_area}:** {row.control_activity} Evidence: {row.evidence_required}"
                 for row in value
             ]
         return [f"- {item}" for item in value]
@@ -135,3 +168,21 @@ def _render_sop(sop: SOPDraft) -> list[str]:
 
 def _escape_table(value: str) -> str:
     return value.replace("|", "\\|").replace("\n", " ")
+
+
+def _control_risk_values(row: ControlRiskRow) -> list[str]:
+    return [
+        row.process_area,
+        row.risk_area,
+        row.risk_description,
+        row.control_objective,
+        row.control_activity,
+        row.control_type,
+        row.frequency,
+        row.owner,
+        row.evidence_required,
+        row.system_data_dependency,
+        row.related_requirement_id,
+        row.related_uat_case,
+        row.residual_risk_implementation_note,
+    ]

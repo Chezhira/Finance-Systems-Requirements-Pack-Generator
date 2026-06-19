@@ -10,7 +10,8 @@ This repository demonstrates how structured finance intake can become implementa
 4. Select a target ERP/system if candidate fit-gap mapping is useful.
 5. Review the editable intake fields before generating the pack.
 6. Generate the pack and inspect the expandable sections.
-7. Download Markdown or DOCX.
+7. Preview the Mermaid process map and control-risk matrix.
+8. Download Markdown, DOCX, CSV, or XLSX outputs.
 
 ## What to look for
 
@@ -20,11 +21,13 @@ This repository demonstrates how structured finance intake can become implementa
 - SOP upload support for TXT, Markdown, and DOCX workflow notes.
 - Guided SOP builder support for teams that do not have a documented SOP yet.
 - Curated target-system mapping notes that use repository data only.
+- Mermaid process map output for process documentation.
+- Control-risk matrix export as CSV and XLSX.
 - Deterministic output from bundled templates, with no external AI/API calls, no web scraping, and no live web RAG.
 - Sample outputs under `examples/generated_packs`.
 - Public-safe examples that use fictional company names and no operational business data.
 
-## v0.3.0 planning direction
+## v0.4.0 review direction
 
 The v0.3.0 flow supports users with SOPs and users without SOPs. The intake does not assume a workflow document already exists.
 
@@ -33,3 +36,5 @@ The v0.3.0 flow supports users with SOPs and users without SOPs. The intake does
 - Continue using manual requirements intake: preserve the current structured intake path for users who already know the fields they want to provide.
 
 Target-system mapping should ask the user to select the ERP or finance system, use curated capability mappings stored in the repository, and generate candidate fit-gap notes for review. The app should not use live web RAG, scrape ERP vendor websites, call external AI/APIs, or claim that any ERP capability is guaranteed.
+
+The v0.4.0 outputs add visual process documentation and control-risk exports without changing that deterministic posture. Review the Mermaid text, Word-friendly process-map summary, CSV matrix, and XLSX matrix as implementation-preparation artefacts.

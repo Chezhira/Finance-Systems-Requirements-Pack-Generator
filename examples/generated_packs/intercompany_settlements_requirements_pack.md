@@ -126,6 +126,42 @@ The future-state scope covers Intercompany recharge creation, counterparty confi
 - Run UAT with approved sample scenarios before production data migration or cutover.
 - Keep any future AI-assisted drafting behind structured templates and human approval.
 
+## Visual Process Documentation
+
+The Mermaid diagram below can be copied into Mermaid-compatible tools for rendering.
+
+```mermaid
+flowchart TD
+    A[Intercompany Settlements trigger] --> B[Entity ERP ledgers, recharge spreadsheets, and group consolidation workbook]
+    B --> C[Validate data, ownership, and required evidence]
+    C --> D{Exception or control gap?}
+    D -- Yes --> E[Resolve exception and update evidence]
+    D -- No --> F[Intercompany Settlements approval / review]
+    E --> F[Intercompany Settlements approval / review]
+    F --> G[Entity-pair ageing, unmatched balances, recharge approvals, and FX difference summary]
+    G --> H[Intercompany Settlements sign-off / readiness]
+```
+
+### Process Map Summary
+
+- Trigger: Intercompany Settlements trigger.
+- Intake/source: Entity ERP ledgers, recharge spreadsheets, and group consolidation workbook.
+- Validation: confirm data completeness, ownership, control evidence, and exception status.
+- Exception handling: route exceptions to the process owner before approval or readiness.
+- Approval/review: Intercompany Settlements approval / review.
+- Reporting/evidence: Entity-pair ageing, unmatched balances, recharge approvals, and FX difference summary.
+- Sign-off/readiness: confirm Intercompany Settlements evidence and acceptance criteria before build.
+
+## Control-Risk Matrix
+
+| Process Area | Risk Area | Risk Description | Control Objective | Control Activity | Control Type | Frequency | Owner | Evidence Required | System/Data Dependency | Related Requirement ID | Related UAT Case | Residual Risk / Implementation Note |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Intercompany Settlements | Intercompany mismatch ageing | Intercompany Settlements may experience intercompany mismatch ageing if ownership, data, controls, and evidence are not defined before build. | Reduce risk from intercompany mismatch ageing through clear ownership, evidence, and review criteria. | Recharge rules and allocation basis require finance owner approval. | Preventive | Each transaction or batch | Intercompany Settlements Process Owner | Store recharge creation, approval, counterparty confirmation, settlement, and elimination sign-off timestamps. | Oracle NetSuite OneWorld data, required fields, owner status, and evidence references must be available for review. | FR-01 | UAT-01 | Entity chart-of-account mapping must be aligned for counterparty matching. |
+| Intercompany Settlements | Recharge rule ambiguity | Intercompany Settlements may experience recharge rule ambiguity if ownership, data, controls, and evidence are not defined before build. | Reduce risk from recharge rule ambiguity through clear ownership, evidence, and review criteria. | Counterparty confirmation is required before settlement readiness. | Detective | Each transaction or batch | Intercompany Settlements Process Owner | Record allocation basis changes with requester, reviewer, reason, and effective period. | Oracle NetSuite OneWorld data, required fields, owner status, and evidence references must be available for review. | FR-02 | UAT-02 | Recharge policies and allocation methods require group finance approval. |
+| Intercompany Settlements | FX difference review gaps | Intercompany Settlements may experience fx difference review gaps if ownership, data, controls, and evidence are not defined before build. | Reduce risk from fx difference review gaps through clear ownership, evidence, and review criteria. | Aged unmatched intercompany balances escalate to group finance. | Corrective | Each transaction or batch | Intercompany Settlements Process Owner | Track unmatched balance owner/status history by entity pair. | Oracle NetSuite OneWorld data, required fields, owner status, and evidence references must be available for review. | FR-03 | UAT-03 | Multi-currency treatment must align with accounting policy. |
+| Intercompany Settlements | Intercompany mismatch ageing | Intercompany Settlements may experience intercompany mismatch ageing if ownership, data, controls, and evidence are not defined before build. | Reduce risk from intercompany mismatch ageing through clear ownership, evidence, and review criteria. | FX differences over materiality threshold require review and explanation. | Manual | Each transaction or batch | Intercompany Settlements Process Owner | Preserve FX difference explanations and reviewer decisions. | Oracle NetSuite OneWorld data, required fields, owner status, and evidence references must be available for review. | FR-04 | UAT-04 | Historic unmatched balances may need remediation before rollout. |
+| Intercompany Settlements | Recharge rule ambiguity | Intercompany Settlements may experience recharge rule ambiguity if ownership, data, controls, and evidence are not defined before build. | Reduce risk from recharge rule ambiguity through clear ownership, evidence, and review criteria. | Elimination support cannot be marked complete until mismatches are resolved or approved. | Automated | Each transaction or batch | Intercompany Settlements Process Owner | Keep counterparty confirmation evidence and settlement approval references. | Oracle NetSuite OneWorld data, required fields, owner status, and evidence references must be available for review. | FR-05 | UAT-05 | Entity teams must agree ownership of mismatch resolution. |
+
 ## Public-Safe Sample Data Note
 
 This pack was generated from fictional, public-safe sample inputs. It does not contain real employer, client, supplier, bank, VAT, payroll, or operational data. Do not upload confidential business information into a public demo.

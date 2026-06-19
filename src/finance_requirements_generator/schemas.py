@@ -59,6 +59,23 @@ class FitGapMappingRow:
 
 
 @dataclass(frozen=True)
+class ControlRiskRow:
+    process_area: str
+    risk_area: str
+    risk_description: str
+    control_objective: str
+    control_activity: str
+    control_type: str
+    frequency: str
+    owner: str
+    evidence_required: str
+    system_data_dependency: str
+    related_requirement_id: str
+    related_uat_case: str
+    residual_risk_implementation_note: str
+
+
+@dataclass(frozen=True)
 class SOPDraft:
     purpose: str
     scope: str
@@ -95,6 +112,9 @@ class RequirementsPack:
     acceptance_criteria: list[str]
     risks_and_dependencies: list[str]
     implementation_notes: list[str]
+    control_risk_matrix: list[ControlRiskRow] = field(default_factory=list)
+    mermaid_process_map: str = ""
+    process_map_summary: list[str] = field(default_factory=list)
     target_system: str = ""
     target_system_fit_gap_mapping: list[FitGapMappingRow] = field(default_factory=list)
     current_state_sop_draft: SOPDraft | None = None
@@ -126,6 +146,8 @@ class RequirementsPack:
             "acceptance_criteria": self.acceptance_criteria,
             "risks_and_dependencies": self.risks_and_dependencies,
             "implementation_notes": self.implementation_notes,
+            "visual_process_documentation": self.process_map_summary,
+            "control_risk_matrix": self.control_risk_matrix,
             "target_system_fit_gap_mapping": self.target_system_fit_gap_mapping,
             "public_safe_sample_data_note": self.public_safe_sample_data_note,
         }

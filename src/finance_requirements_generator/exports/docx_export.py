@@ -278,6 +278,8 @@ def _contents_sections(pack: RequirementsPack) -> list[tuple[str, str]]:
         sections.append(("current_state_sop_draft", "Current-State SOP Draft"))
     if pack.target_system_fit_gap_mapping:
         sections.append(("target_system_fit_gap_mapping", "Target-System Fit-Gap Mapping"))
+    sections.append(("visual_process_documentation", "Visual Process Documentation"))
+    sections.append(("control_risk_matrix", "Control-Risk Matrix"))
     return sections
 
 
@@ -350,6 +352,22 @@ def _add_pack_sections(document: Document, pack: RequirementsPack) -> None:
             "requires implementation validation before design sign-off."
         )
         _add_fit_gap_table(document, pack)
+        section_number += 1
+
+    _add_numbered_heading(document, section_number, "Visual Process Documentation")
+    document.add_paragraph(
+        "The Mermaid process map can be copied into Mermaid-compatible tools for rendering. "
+        "The plain-language summary below is included for Word review."
+    )
+    _add_bullet_list(document, pack.process_map_summary)
+    section_number += 1
+
+    _add_numbered_heading(document, section_number, "Control-Risk Matrix")
+    document.add_paragraph(
+        "A compact control-risk summary is shown below. Full CSV and XLSX matrix exports "
+        "are available from the Streamlit export controls."
+    )
+    _add_control_risk_summary_table(document, pack)
 
 
 def _add_public_safe_note(document: Document, note: str) -> None:
@@ -422,6 +440,26 @@ def _add_fit_gap_table(document: Document, pack: RequirementsPack) -> None:
             item.candidate_fit_gap_view,
             item.requirement_impact,
             item.validation_note,
+        ]
+        for cell, value, width in zip(row.cells, values, widths, strict=True):
+            _set_body_cell(cell, value, width=width, zebra=row_number % 2 == 0, font_size=8.5)
+
+
+def _add_control_risk_summary_table(document: Document, pack: RequirementsPack) -> None:
+    widths = [1800, 2500, 2500, 2560]
+    headers = ["Risk Area", "Control Activity", "Evidence Required", "Related UAT / Note"]
+    table = document.add_table(rows=1, cols=4)
+    _style_table(table)
+    _set_table_width(table, CONTENT_DXA)
+    _set_grid_widths(table, widths)
+    _set_header_row(table.rows[0], headers, widths)
+    for row_number, item in enumerate(pack.control_risk_matrix[:6], start=1):
+        row = table.add_row()
+        values = [
+            item.risk_area,
+            item.control_activity,
+            item.evidence_required,
+            f"{item.related_uat_case}: {item.residual_risk_implementation_note}",
         ]
         for cell, value, width in zip(row.cells, values, widths, strict=True):
             _set_body_cell(cell, value, width=width, zebra=row_number % 2 == 0, font_size=8.5)

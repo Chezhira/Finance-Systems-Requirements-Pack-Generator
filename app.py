@@ -10,7 +10,12 @@ if str(SRC) not in sys.path:
 
 import streamlit as st
 
-from finance_requirements_generator.exports import pack_to_docx_bytes, pack_to_markdown
+from finance_requirements_generator.exports import (
+    pack_control_risk_csv_bytes,
+    pack_control_risk_xlsx_bytes,
+    pack_to_docx_bytes,
+    pack_to_markdown,
+)
 from finance_requirements_generator.process_library import SUPPORTED_PROCESSES, load_all_templates
 from finance_requirements_generator.questionnaire import DEFAULT_SAMPLE_INPUTS
 from finance_requirements_generator.schemas import IntakeAnswers
@@ -191,6 +196,7 @@ def main() -> None:
         st.success("Requirements pack generated.")
 
     render_pack(pack)
+    render_visual_outputs(pack)
     render_downloads(pack)
     render_gallery()
 
@@ -314,7 +320,7 @@ def split_lines(value: str) -> list[str]:
 
 def render_downloads(pack) -> None:
     st.subheader("Export")
-    col_a, col_b = st.columns(2)
+    col_a, col_b, col_c, col_d = st.columns(4)
     filename_base = pack.process_key.replace("_", "-")
     with col_a:
         st.download_button(
@@ -329,6 +335,47 @@ def render_downloads(pack) -> None:
             data=pack_to_docx_bytes(pack),
             file_name=f"{filename_base}-requirements-pack.docx",
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        )
+    with col_c:
+        st.download_button(
+            "Download Control-Risk CSV",
+            data=pack_control_risk_csv_bytes(pack),
+            file_name=f"{filename_base}-control-risk-matrix.csv",
+            mime="text/csv",
+        )
+    with col_d:
+        st.download_button(
+            "Download Control-Risk XLSX",
+            data=pack_control_risk_xlsx_bytes(pack),
+            file_name=f"{filename_base}-control-risk-matrix.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        )
+
+
+def render_visual_outputs(pack) -> None:
+    st.subheader("Visual Process Documentation")
+    with st.expander("Mermaid process map", expanded=False):
+        st.code(pack.mermaid_process_map, language="mermaid")
+        st.caption("Copy this Mermaid text into Mermaid-compatible tools for rendering.")
+        st.download_button(
+            "Download Mermaid",
+            data=pack.mermaid_process_map,
+            file_name=f"{pack.process_key.replace('_', '-')}-process-map.mmd",
+            mime="text/plain",
+        )
+    with st.expander("Control-risk matrix preview", expanded=False):
+        st.dataframe(
+            [
+                {
+                    "Risk Area": row.risk_area,
+                    "Control Activity": row.control_activity,
+                    "Control Type": row.control_type,
+                    "Evidence Required": row.evidence_required,
+                    "Related UAT Case": row.related_uat_case,
+                }
+                for row in pack.control_risk_matrix
+            ],
+            use_container_width=True,
         )
 
 

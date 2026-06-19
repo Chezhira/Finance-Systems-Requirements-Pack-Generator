@@ -126,6 +126,42 @@ The future-state scope covers Customer invoice generation, receipt matching, dis
 - Run UAT with approved sample scenarios before production data migration or cutover.
 - Keep any future AI-assisted drafting behind structured templates and human approval.
 
+## Visual Process Documentation
+
+The Mermaid diagram below can be copied into Mermaid-compatible tools for rendering.
+
+```mermaid
+flowchart TD
+    A[Accounts Receivable trigger] --> B[ERP sales ledger, customer remittance mailbox, and offline collections tracker]
+    B --> C[Validate data, ownership, and required evidence]
+    C --> D{Exception or control gap?}
+    D -- Yes --> E[Resolve exception and update evidence]
+    D -- No --> F[Accounts Receivable approval / review]
+    E --> F[Accounts Receivable approval / review]
+    F --> G[Customer ageing, dispute status, unallocated cash, and collections owner summary]
+    G --> H[Accounts Receivable sign-off / readiness]
+```
+
+### Process Map Summary
+
+- Trigger: Accounts Receivable trigger.
+- Intake/source: ERP sales ledger, customer remittance mailbox, and offline collections tracker.
+- Validation: confirm data completeness, ownership, control evidence, and exception status.
+- Exception handling: route exceptions to the process owner before approval or readiness.
+- Approval/review: Accounts Receivable approval / review.
+- Reporting/evidence: Customer ageing, dispute status, unallocated cash, and collections owner summary.
+- Sign-off/readiness: confirm Accounts Receivable evidence and acceptance criteria before build.
+
+## Control-Risk Matrix
+
+| Process Area | Risk Area | Risk Description | Control Objective | Control Activity | Control Type | Frequency | Owner | Evidence Required | System/Data Dependency | Related Requirement ID | Related UAT Case | Residual Risk / Implementation Note |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Accounts Receivable | Unallocated customer receipts | Accounts Receivable may experience unallocated customer receipts if ownership, data, controls, and evidence are not defined before build. | Reduce risk from unallocated customer receipts through clear ownership, evidence, and review criteria. | Credit notes require approval based on amount, reason code, and customer risk. | Preventive | Each transaction or batch | Accounts Receivable Process Owner | Store invoice posting, receipt matching, dispute creation, credit note approval, and write-off timestamps. | NetSuite data, required fields, owner status, and evidence references must be available for review. | FR-01 | UAT-01 | Customer remittance reference quality may limit automated matching rates. |
+| Accounts Receivable | Disputed invoices | Accounts Receivable may experience disputed invoices if ownership, data, controls, and evidence are not defined before build. | Reduce risk from disputed invoices through clear ownership, evidence, and review criteria. | Customer credit limit changes require finance owner review. | Detective | Each transaction or batch | Accounts Receivable Process Owner | Record customer master data changes with old value, new value, requester, reviewer, and date. | NetSuite data, required fields, owner status, and evidence references must be available for review. | FR-02 | UAT-02 | Historic unallocated cash may need cleanup before go-live. |
+| Accounts Receivable | Collections ageing visibility | Accounts Receivable may experience collections ageing visibility if ownership, data, controls, and evidence are not defined before build. | Reduce risk from collections ageing visibility through clear ownership, evidence, and review criteria. | Unallocated cash over the policy threshold escalates to the collections lead. | Corrective | Each transaction or batch | Accounts Receivable Process Owner | Preserve collections notes, dunning actions, and promise-to-pay updates. | NetSuite data, required fields, owner status, and evidence references must be available for review. | FR-03 | UAT-03 | Credit policy thresholds must be approved by finance leadership. |
+| Accounts Receivable | Unallocated customer receipts | Accounts Receivable may experience unallocated customer receipts if ownership, data, controls, and evidence are not defined before build. | Reduce risk from unallocated customer receipts through clear ownership, evidence, and review criteria. | Write-offs require supporting evidence and approval before posting. | Manual | Each transaction or batch | Accounts Receivable Process Owner | Track unallocated cash owner/status history. | NetSuite data, required fields, owner status, and evidence references must be available for review. | FR-04 | UAT-04 | Sales and finance ownership of disputes must be agreed before workflow design. |
+| Accounts Receivable | Disputed invoices | Accounts Receivable may experience disputed invoices if ownership, data, controls, and evidence are not defined before build. | Reduce risk from disputed invoices through clear ownership, evidence, and review criteria. | Receipts cannot be marked resolved without allocation or approved reason code. | Automated | Each transaction or batch | Accounts Receivable Process Owner | Keep approval evidence for credit notes, write-offs, and credit limit changes. | NetSuite data, required fields, owner status, and evidence references must be available for review. | FR-05 | UAT-05 | Customer master data may need cleansing before credit controls are reliable. |
+
 ## Public-Safe Sample Data Note
 
 This pack was generated from fictional, public-safe sample inputs. It does not contain real employer, client, supplier, bank, VAT, payroll, or operational data. Do not upload confidential business information into a public demo.

@@ -37,7 +37,7 @@ The project is designed as a public portfolio asset for roles such as:
 
 ## Supported Finance Processes
 
-The v0.3.0 build supports eight finance processes.
+The v0.4.0 build supports eight finance processes.
 
 | Process | Coverage |
 | --- | --- |
@@ -72,6 +72,9 @@ Each generated requirements pack can include:
 * Implementation notes
 * Optional current-state SOP draft
 * Optional target-system fit-gap mapping
+* Visual process documentation
+* Mermaid process map
+* Control-risk matrix
 * Public-safe sample data note
 
 DOCX packs include a polished cover page, contents page, headers, footers, structured tables, and client-style formatting for review.
@@ -163,6 +166,43 @@ The target-system fit-gap section can include:
 | Candidate Fit-Gap View | Initial view of likely fit, gap, configuration need, or validation concern |
 | Requirement Impact | What the implementation team should clarify, configure, document, or test |
 | Validation Note | Cautious reminder to validate against edition, modules, localisation, and implementation scope |
+
+## Visual Process Documentation
+
+v0.4.0 adds deterministic process-map output for implementation review.
+
+Each pack includes:
+
+* Mermaid process map text
+* Plain-language process-map summary
+* Trigger, intake, validation, exception, approval, reporting, evidence, and sign-off flow
+
+The Mermaid output is editable and can be copied into Mermaid-compatible tools for rendering.
+
+## Control-Risk Matrix Export
+
+v0.4.0 also adds a generated control-risk matrix derived from the selected process, pain points, controls, audit trail needs, UAT cases, and implementation risks.
+
+The matrix includes:
+
+* Process area
+* Risk area and risk description
+* Control objective and control activity
+* Control type
+* Frequency
+* Owner
+* Evidence required
+* System/data dependency
+* Related requirement ID
+* Related UAT case
+* Residual risk or implementation note
+
+Control type uses practical finance systems labels such as Preventive, Detective, Corrective, Manual, Automated, and Semi-automated.
+
+The matrix can be downloaded as:
+
+* CSV
+* XLSX with styled headers, frozen top row, text wrapping, and usable column widths
 
 ## Example Outputs
 
@@ -256,7 +296,9 @@ The application is built with:
 * Deterministic template generation
 * Markdown export
 * DOCX export
+* CSV/XLSX control-risk matrix export
 * Curated target-system mapping data
+* Mermaid process map generation
 * Pytest test suite
 * Ruff linting
 * GitHub Actions CI
@@ -304,6 +346,8 @@ src/finance_requirements_generator/
   sop_intake.py
   template_engine.py
   text_cleanup.py
+  control_risk.py
+  process_map.py
   exports/
   process_library/
   system_mapping/
@@ -348,15 +392,13 @@ The app now supports manual requirements intake, SOP/workflow upload, guided SOP
 
 This release moves the project from a requirements pack generator into a broader finance systems discovery and implementation-preparation tool.
 
+### v0.4.0 - Visual Process Documentation and Control-Risk Exports
+
+Added deterministic visual process documentation and control-risk export outputs.
+
+The app now generates Mermaid process maps, Word-friendly process-map summaries, control-risk matrix sections, and downloadable CSV/XLSX control-risk matrices for finance systems implementation review.
+
 ## Roadmap
-
-### v0.4.0
-
-Planned features:
-
-* Control-risk matrix export as CSV/XLSX
-* Mermaid process map generation
-* Additional visual process documentation outputs
 
 ### v0.5.0
 

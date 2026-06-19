@@ -126,6 +126,42 @@ The future-state scope covers Bank statement ingestion, matching status, excepti
 - Run UAT with approved sample scenarios before production data migration or cutover.
 - Keep any future AI-assisted drafting behind structured templates and human approval.
 
+## Visual Process Documentation
+
+The Mermaid diagram below can be copied into Mermaid-compatible tools for rendering.
+
+```mermaid
+flowchart TD
+    A[Bank Reconciliation trigger] --> B[Bank portal exports, ERP cashbook, and month-end spreadsheet reconciliation]
+    B --> C[Validate data, ownership, and required evidence]
+    C --> D{Exception or control gap?}
+    D -- Yes --> E[Resolve exception and update evidence]
+    D -- No --> F[Bank Reconciliation approval / review]
+    E --> F[Bank Reconciliation approval / review]
+    F --> G[Daily unmatched item ageing and month-end reconciliation evidence pack]
+    G --> H[Bank Reconciliation sign-off / readiness]
+```
+
+### Process Map Summary
+
+- Trigger: Bank Reconciliation trigger.
+- Intake/source: Bank portal exports, ERP cashbook, and month-end spreadsheet reconciliation.
+- Validation: confirm data completeness, ownership, control evidence, and exception status.
+- Exception handling: route exceptions to the process owner before approval or readiness.
+- Approval/review: Bank Reconciliation approval / review.
+- Reporting/evidence: Daily unmatched item ageing and month-end reconciliation evidence pack.
+- Sign-off/readiness: confirm Bank Reconciliation evidence and acceptance criteria before build.
+
+## Control-Risk Matrix
+
+| Process Area | Risk Area | Risk Description | Control Objective | Control Activity | Control Type | Frequency | Owner | Evidence Required | System/Data Dependency | Related Requirement ID | Related UAT Case | Residual Risk / Implementation Note |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Bank Reconciliation | Unmatched bank statement lines | Bank Reconciliation may experience unmatched bank statement lines if ownership, data, controls, and evidence are not defined before build. | Reduce risk from unmatched bank statement lines through clear ownership, evidence, and review criteria. | Reviewer sign-off required before a reconciliation period is marked complete. | Preventive | Each period close | Bank Reconciliation Process Owner | Store all matching, unmatching, manual override, and suspense clearing actions. | Microsoft Dynamics 365 Business Central data, required fields, owner status, and evidence references must be available for review. | FR-01 | UAT-01 | Bank statement formats must be standardised across accounts. |
+| Bank Reconciliation | Suspense account ageing | Bank Reconciliation may experience suspense account ageing if ownership, data, controls, and evidence are not defined before build. | Reduce risk from suspense account ageing through clear ownership, evidence, and review criteria. | Aged unmatched lines escalate after the policy threshold. | Detective | Each period close | Bank Reconciliation Process Owner | Record preparer completion and reviewer sign-off timestamps. | Microsoft Dynamics 365 Business Central data, required fields, owner status, and evidence references must be available for review. | FR-02 | UAT-02 | Ledger reference quality may limit automated matching rates. |
+| Bank Reconciliation | Manual owner/status tracking | Bank Reconciliation may experience manual owner/status tracking if ownership, data, controls, and evidence are not defined before build. | Reduce risk from manual owner/status tracking through clear ownership, evidence, and review criteria. | Suspense clearing entries require reason codes and supporting notes. | Corrective | Each period close | Bank Reconciliation Process Owner | Keep owner/status history for aged unmatched lines. | Microsoft Dynamics 365 Business Central data, required fields, owner status, and evidence references must be available for review. | FR-03 | UAT-03 | Finance policy thresholds for ageing and escalation must be approved. |
+| Bank Reconciliation | Unmatched bank statement lines | Bank Reconciliation may experience unmatched bank statement lines if ownership, data, controls, and evidence are not defined before build. | Reduce risk from unmatched bank statement lines through clear ownership, evidence, and review criteria. | Manual match overrides require reviewer approval. | Manual | Each period close | Bank Reconciliation Process Owner | Preserve supporting notes and evidence links for unresolved differences. | Microsoft Dynamics 365 Business Central data, required fields, owner status, and evidence references must be available for review. | FR-04 | UAT-04 | Reviewer roles must be configured before go-live. |
+| Bank Reconciliation | Suspense account ageing | Bank Reconciliation may experience suspense account ageing if ownership, data, controls, and evidence are not defined before build. | Reduce risk from suspense account ageing through clear ownership, evidence, and review criteria. | Reconciliation status is locked after period close except through controlled reopen. | Automated | Each period close | Bank Reconciliation Process Owner | Record period reopen requests with reason, requester, approver, and date. | Microsoft Dynamics 365 Business Central data, required fields, owner status, and evidence references must be available for review. | FR-05 | UAT-05 | Historic suspense items may need cleanup before migration. |
+
 ## Public-Safe Sample Data Note
 
 This pack was generated from fictional, public-safe sample inputs. It does not contain real employer, client, supplier, bank, VAT, payroll, or operational data. Do not upload confidential business information into a public demo.

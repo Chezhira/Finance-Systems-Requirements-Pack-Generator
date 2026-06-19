@@ -126,6 +126,42 @@ The future-state scope covers VAT source register extraction, VAT return box map
 - Run UAT with approved sample scenarios before production data migration or cutover.
 - Keep any future AI-assisted drafting behind structured templates and human approval.
 
+## Visual Process Documentation
+
+The Mermaid diagram below can be copied into Mermaid-compatible tools for rendering.
+
+```mermaid
+flowchart TD
+    A[VAT Reconciliation trigger] --> B[ERP tax reports, GL trial balance extracts, and offline VAT working papers]
+    B --> C[Validate data, ownership, and required evidence]
+    C --> D{Exception or control gap?}
+    D -- Yes --> E[Resolve exception and update evidence]
+    D -- No --> F[VAT Reconciliation approval / review]
+    E --> F[VAT Reconciliation approval / review]
+    F --> G[VAT source-to-return-to-GL reconciliation with difference owner status]
+    G --> H[VAT Reconciliation sign-off / readiness]
+```
+
+### Process Map Summary
+
+- Trigger: VAT Reconciliation trigger.
+- Intake/source: ERP tax reports, GL trial balance extracts, and offline VAT working papers.
+- Validation: confirm data completeness, ownership, control evidence, and exception status.
+- Exception handling: route exceptions to the process owner before approval or readiness.
+- Approval/review: VAT Reconciliation approval / review.
+- Reporting/evidence: VAT source-to-return-to-GL reconciliation with difference owner status.
+- Sign-off/readiness: confirm VAT Reconciliation evidence and acceptance criteria before build.
+
+## Control-Risk Matrix
+
+| Process Area | Risk Area | Risk Description | Control Objective | Control Activity | Control Type | Frequency | Owner | Evidence Required | System/Data Dependency | Related Requirement ID | Related UAT Case | Residual Risk / Implementation Note |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| VAT Reconciliation | VAT return differences | VAT Reconciliation may experience vat return differences if ownership, data, controls, and evidence are not defined before build. | Reduce risk from vat return differences through clear ownership, evidence, and review criteria. | VAT return cannot be marked ready where material differences are unresolved. | Preventive | Each period close | VAT Reconciliation Process Owner | Store source register extraction date, preparer, and data source. | SAP Business One data, required fields, owner status, and evidence references must be available for review. | FR-01 | UAT-01 | Tax code mapping must be agreed before configuration. |
+| VAT Reconciliation | Manual source register checks | VAT Reconciliation may experience manual source register checks if ownership, data, controls, and evidence are not defined before build. | Reduce risk from manual source register checks through clear ownership, evidence, and review criteria. | Adjustments require reason code, supporting note, and reviewer approval. | Detective | Each period close | VAT Reconciliation Process Owner | Record VAT box mapping versions and change approvals. | SAP Business One data, required fields, owner status, and evidence references must be available for review. | FR-02 | UAT-02 | GL VAT control accounts may require cleanup before reliable reconciliation. |
+| VAT Reconciliation | Missing filing evidence | VAT Reconciliation may experience missing filing evidence if ownership, data, controls, and evidence are not defined before build. | Reduce risk from missing filing evidence through clear ownership, evidence, and review criteria. | VAT return box mapping changes require finance owner sign-off. | Corrective | Each period close | VAT Reconciliation Process Owner | Preserve reconciling difference owner/status history. | SAP Business One data, required fields, owner status, and evidence references must be available for review. | FR-03 | UAT-03 | Filing approval roles must match the finance governance model. |
+| VAT Reconciliation | VAT return differences | VAT Reconciliation may experience vat return differences if ownership, data, controls, and evidence are not defined before build. | Reduce risk from vat return differences through clear ownership, evidence, and review criteria. | GL VAT control account reconciliation must be completed before filing approval. | Manual | Each period close | VAT Reconciliation Process Owner | Keep adjustment journal references and review decisions. | SAP Business One data, required fields, owner status, and evidence references must be available for review. | FR-04 | UAT-04 | External tax advisor review may be required for complex adjustments. |
+| VAT Reconciliation | Manual source register checks | VAT Reconciliation may experience manual source register checks if ownership, data, controls, and evidence are not defined before build. | Reduce risk from manual source register checks through clear ownership, evidence, and review criteria. | Filing evidence must include approver, date, and submission reference. | Automated | Each period close | VAT Reconciliation Process Owner | Record filing approval and submission evidence. | SAP Business One data, required fields, owner status, and evidence references must be available for review. | FR-05 | UAT-05 | Multi-entity VAT registrations need clear scope before rollout. |
+
 ## Public-Safe Sample Data Note
 
 This pack was generated from fictional, public-safe sample inputs. It does not contain real employer, client, supplier, bank, VAT, payroll, or operational data. Do not upload confidential business information into a public demo.

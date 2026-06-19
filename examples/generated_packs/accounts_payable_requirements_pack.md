@@ -126,6 +126,42 @@ The future-state scope covers Supplier invoice intake, validation, coding, appro
 - Run UAT with approved sample scenarios before production data migration or cutover.
 - Keep any future AI-assisted drafting behind structured templates and human approval.
 
+## Visual Process Documentation
+
+The Mermaid diagram below can be copied into Mermaid-compatible tools for rendering.
+
+```mermaid
+flowchart TD
+    A[Accounts Payable trigger] --> B[Email approvals, shared AP tracker, and ERP purchase ledger]
+    B --> C[Validate data, ownership, and required evidence]
+    C --> D{Exception or control gap?}
+    D -- Yes --> E[Resolve exception and update evidence]
+    D -- No --> F[Accounts Payable approval / review]
+    E --> F[Accounts Payable approval / review]
+    F --> G[Aged approval backlog, blocked invoices, and payment readiness summary]
+    G --> H[Accounts Payable sign-off / readiness]
+```
+
+### Process Map Summary
+
+- Trigger: Accounts Payable trigger.
+- Intake/source: Email approvals, shared AP tracker, and ERP purchase ledger.
+- Validation: confirm data completeness, ownership, control evidence, and exception status.
+- Exception handling: route exceptions to the process owner before approval or readiness.
+- Approval/review: Accounts Payable approval / review.
+- Reporting/evidence: Aged approval backlog, blocked invoices, and payment readiness summary.
+- Sign-off/readiness: confirm Accounts Payable evidence and acceptance criteria before build.
+
+## Control-Risk Matrix
+
+| Process Area | Risk Area | Risk Description | Control Objective | Control Activity | Control Type | Frequency | Owner | Evidence Required | System/Data Dependency | Related Requirement ID | Related UAT Case | Residual Risk / Implementation Note |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Accounts Payable | Duplicate invoices | Accounts Payable may experience duplicate invoices if ownership, data, controls, and evidence are not defined before build. | Reduce risk from duplicate invoices through clear ownership, evidence, and review criteria. | Duplicate invoice warning before approval or payment release. | Preventive | Each transaction or batch | Accounts Payable Process Owner | Store invoice creation, coding, approval, rejection, and payment readiness timestamps. | Odoo Finance data, required fields, owner status, and evidence references must be available for review. | FR-01 | UAT-01 | Supplier master data may require cleansing before controls can operate reliably. |
+| Accounts Payable | Manual approval chasing | Accounts Payable may experience manual approval chasing if ownership, data, controls, and evidence are not defined before build. | Reduce risk from manual approval chasing through clear ownership, evidence, and review criteria. | Approval threshold control by amount and cost centre. | Detective | Each transaction or batch | Accounts Payable Process Owner | Record every approval decision with approver, date, amount, and delegation status. | Odoo Finance data, required fields, owner status, and evidence references must be available for review. | FR-02 | UAT-02 | Purchase order and goods receipt data must be available for three-way match readiness. |
+| Accounts Payable | Weak supplier master controls | Accounts Payable may experience weak supplier master controls if ownership, data, controls, and evidence are not defined before build. | Reduce risk from weak supplier master controls through clear ownership, evidence, and review criteria. | Supplier bank detail change review before first payment after change. | Corrective | Each transaction or batch | Accounts Payable Process Owner | Keep before-and-after supplier master data values for sensitive changes. | Odoo Finance data, required fields, owner status, and evidence references must be available for review. | FR-03 | UAT-03 | Delegated approval rules must be signed off by finance leadership. |
+| Accounts Payable | Duplicate invoices | Accounts Payable may experience duplicate invoices if ownership, data, controls, and evidence are not defined before build. | Reduce risk from duplicate invoices through clear ownership, evidence, and review criteria. | Three-way match exception review for PO-backed purchases. | Manual | Each transaction or batch | Accounts Payable Process Owner | Preserve evidence links for invoice image, purchase order, goods receipt, and payment batch. | Odoo Finance data, required fields, owner status, and evidence references must be available for review. | FR-04 | UAT-04 | Payment platform integration scope must be confirmed before build. |
+| Accounts Payable | Manual approval chasing | Accounts Payable may experience manual approval chasing if ownership, data, controls, and evidence are not defined before build. | Reduce risk from manual approval chasing through clear ownership, evidence, and review criteria. | Segregation of duties control between supplier maintenance and payment approval. | Automated | Each transaction or batch | Accounts Payable Process Owner | Track exception resolution notes and reviewer sign-off. | Odoo Finance data, required fields, owner status, and evidence references must be available for review. | FR-05 | UAT-05 | Users need training on exception reason codes to avoid inconsistent reporting. |
+
 ## Public-Safe Sample Data Note
 
 This pack was generated from fictional, public-safe sample inputs. It does not contain real employer, client, supplier, bank, VAT, payroll, or operational data. Do not upload confidential business information into a public demo.

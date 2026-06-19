@@ -126,6 +126,42 @@ The future-state scope covers Close task calendar, preparer/reviewer ownership, 
 - Run UAT with approved sample scenarios before production data migration or cutover.
 - Keep any future AI-assisted drafting behind structured templates and human approval.
 
+## Visual Process Documentation
+
+The Mermaid diagram below can be copied into Mermaid-compatible tools for rendering.
+
+```mermaid
+flowchart TD
+    A[Month-end Close trigger] --> B[Close checklist spreadsheet, ERP journals, and shared evidence folders]
+    B --> C[Validate data, ownership, and required evidence]
+    C --> D{Exception or control gap?}
+    D -- Yes --> E[Resolve exception and update evidence]
+    D -- No --> F[Month-end Close approval / review]
+    E --> F[Month-end Close approval / review]
+    F --> G[Close task status, overdue items, reconciliation risk, and journal approval dashboard]
+    G --> H[Month-end Close sign-off / readiness]
+```
+
+### Process Map Summary
+
+- Trigger: Month-end Close trigger.
+- Intake/source: Close checklist spreadsheet, ERP journals, and shared evidence folders.
+- Validation: confirm data completeness, ownership, control evidence, and exception status.
+- Exception handling: route exceptions to the process owner before approval or readiness.
+- Approval/review: Month-end Close approval / review.
+- Reporting/evidence: Close task status, overdue items, reconciliation risk, and journal approval dashboard.
+- Sign-off/readiness: confirm Month-end Close evidence and acceptance criteria before build.
+
+## Control-Risk Matrix
+
+| Process Area | Risk Area | Risk Description | Control Objective | Control Activity | Control Type | Frequency | Owner | Evidence Required | System/Data Dependency | Related Requirement ID | Related UAT Case | Residual Risk / Implementation Note |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Month-end Close | Late close tasks | Month-end Close may experience late close tasks if ownership, data, controls, and evidence are not defined before build. | Reduce risk from late close tasks through clear ownership, evidence, and review criteria. | Reviewer sign-off required before high-risk reconciliations are marked complete. | Preventive | Each period close | Financial Controller | Store task status changes, evidence uploads, preparer completion, and reviewer sign-off timestamps. | Microsoft Dynamics 365 Finance data, required fields, owner status, and evidence references must be available for review. | FR-01 | UAT-01 | Close task ownership must be agreed across finance teams. |
+| Month-end Close | Manual close status tracking | Month-end Close may experience manual close status tracking if ownership, data, controls, and evidence are not defined before build. | Reduce risk from manual close status tracking through clear ownership, evidence, and review criteria. | Manual journals require approval before posting to closed periods. | Detective | Each period close | Financial Controller | Record journal submission, approval, rejection, posting, and reversal history. | Microsoft Dynamics 365 Finance data, required fields, owner status, and evidence references must be available for review. | FR-02 | UAT-02 | Balance sheet reconciliation risk ratings may need finance controller approval. |
+| Month-end Close | Missing reconciliation evidence | Month-end Close may experience missing reconciliation evidence if ownership, data, controls, and evidence are not defined before build. | Reduce risk from missing reconciliation evidence through clear ownership, evidence, and review criteria. | Overdue close tasks escalate based on close calendar thresholds. | Corrective | Each period close | Financial Controller | Preserve reopen reasons and approval decisions for closed tasks. | Microsoft Dynamics 365 Finance data, required fields, owner status, and evidence references must be available for review. | FR-03 | UAT-03 | Journal approval thresholds must align with delegation of authority. |
+| Month-end Close | Late close tasks | Month-end Close may experience late close tasks if ownership, data, controls, and evidence are not defined before build. | Reduce risk from late close tasks through clear ownership, evidence, and review criteria. | Reopened tasks require reason, requester, approver, and timestamp. | Manual | Each period close | Financial Controller | Track reconciliation owner/status history for each close period. | Microsoft Dynamics 365 Finance data, required fields, owner status, and evidence references must be available for review. | FR-04 | UAT-04 | Legacy spreadsheet trackers may need migration or archive decisions. |
+| Month-end Close | Manual close status tracking | Month-end Close may experience manual close status tracking if ownership, data, controls, and evidence are not defined before build. | Reduce risk from manual close status tracking through clear ownership, evidence, and review criteria. | Period close completion requires all mandatory tasks and reconciliations to be signed off. | Automated | Each period close | Financial Controller | Keep close pack export timestamp, preparer, reviewer, and final approver evidence. | Microsoft Dynamics 365 Finance data, required fields, owner status, and evidence references must be available for review. | FR-05 | UAT-05 | Users need discipline to attach evidence before sign-off. |
+
 ## Public-Safe Sample Data Note
 
 This pack was generated from fictional, public-safe sample inputs. It does not contain real employer, client, supplier, bank, VAT, payroll, or operational data. Do not upload confidential business information into a public demo.

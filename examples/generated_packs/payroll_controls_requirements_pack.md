@@ -126,6 +126,42 @@ The future-state scope covers Payroll master changes, input approval, exception 
 - Run UAT with approved sample scenarios before production data migration or cutover.
 - Keep any future AI-assisted drafting behind structured templates and human approval.
 
+## Visual Process Documentation
+
+The Mermaid diagram below can be copied into Mermaid-compatible tools for rendering.
+
+```mermaid
+flowchart TD
+    A[Payroll Controls trigger] --> B[Payroll bureau portal, HR change forms, GL payroll journals, and bank approval workflow]
+    B --> C[Validate data, ownership, and required evidence]
+    C --> D{Exception or control gap?}
+    D -- Yes --> E[Resolve exception and update evidence]
+    D -- No --> F[Payroll Controls approval / review]
+    E --> F[Payroll Controls approval / review]
+    F --> G[Payroll changes, exceptions, register-to-GL reconciliation, and payment approval summary]
+    G --> H[Payroll Controls sign-off / readiness]
+```
+
+### Process Map Summary
+
+- Trigger: Payroll Controls trigger.
+- Intake/source: Payroll bureau portal, HR change forms, GL payroll journals, and bank approval workflow.
+- Validation: confirm data completeness, ownership, control evidence, and exception status.
+- Exception handling: route exceptions to the process owner before approval or readiness.
+- Approval/review: Payroll Controls approval / review.
+- Reporting/evidence: Payroll changes, exceptions, register-to-GL reconciliation, and payment approval summary.
+- Sign-off/readiness: confirm Payroll Controls evidence and acceptance criteria before build.
+
+## Control-Risk Matrix
+
+| Process Area | Risk Area | Risk Description | Control Objective | Control Activity | Control Type | Frequency | Owner | Evidence Required | System/Data Dependency | Related Requirement ID | Related UAT Case | Residual Risk / Implementation Note |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Payroll Controls | Starter and leaver control gaps | Payroll Controls may experience starter and leaver control gaps if ownership, data, controls, and evidence are not defined before build. | Reduce risk from starter and leaver control gaps through clear ownership, evidence, and review criteria. | Starter, leaver, salary, deduction, and bank detail changes require approval before payroll processing. | Preventive | Each payroll cycle | Payroll Controls Owner | Store payroll master change request, approval, processing, and effective date history. | Sage Payroll and Xero Finance data, required fields, owner status, and evidence references must be available for review. | FR-01 | UAT-01 | HR and payroll ownership of master data changes must be agreed. |
+| Payroll Controls | Payroll change approval delays | Payroll Controls may experience payroll change approval delays if ownership, data, controls, and evidence are not defined before build. | Reduce risk from payroll change approval delays through clear ownership, evidence, and review criteria. | Payroll input files require preparer and reviewer sign-off before calculation. | Detective | Each payroll cycle | Payroll Controls Owner | Record payroll input file version, preparer, reviewer, approval, and cutoff timestamp. | Sage Payroll and Xero Finance data, required fields, owner status, and evidence references must be available for review. | FR-02 | UAT-02 | Payroll cutoff rules and approval thresholds require policy sign-off. |
+| Payroll Controls | Manual payroll input checks | Payroll Controls may experience manual payroll input checks if ownership, data, controls, and evidence are not defined before build. | Reduce risk from manual payroll input checks through clear ownership, evidence, and review criteria. | Payroll exceptions over threshold require investigation and approval. | Corrective | Each payroll cycle | Payroll Controls Owner | Preserve exception review notes and approval decisions. | Sage Payroll and Xero Finance data, required fields, owner status, and evidence references must be available for review. | FR-03 | UAT-03 | Sensitive payroll access roles must be configured carefully. |
+| Payroll Controls | Starter and leaver control gaps | Payroll Controls may experience starter and leaver control gaps if ownership, data, controls, and evidence are not defined before build. | Reduce risk from starter and leaver control gaps through clear ownership, evidence, and review criteria. | Payroll register must reconcile to GL control accounts and payment file totals. | Manual | Each payroll cycle | Payroll Controls Owner | Track payroll reconciliation owner/status history by period. | Sage Payroll and Xero Finance data, required fields, owner status, and evidence references must be available for review. | FR-04 | UAT-04 | GL account mapping must be validated before reconciliation testing. |
+| Payroll Controls | Payroll change approval delays | Payroll Controls may experience payroll change approval delays if ownership, data, controls, and evidence are not defined before build. | Reduce risk from payroll change approval delays through clear ownership, evidence, and review criteria. | Payroll payment file release requires finance approval. | Automated | Each payroll cycle | Payroll Controls Owner | Keep payment file approval evidence with approver, date, amount, and bank file reference. | Sage Payroll and Xero Finance data, required fields, owner status, and evidence references must be available for review. | FR-05 | UAT-05 | Historic payroll exception categories may need standardisation before rollout. |
+
 ## Public-Safe Sample Data Note
 
 This pack was generated from fictional, public-safe sample inputs. It does not contain real employer, client, supplier, bank, VAT, payroll, or operational data. Do not upload confidential business information into a public demo.
