@@ -3,6 +3,7 @@ from __future__ import annotations
 from finance_requirements_generator.process_library import load_process_template
 from finance_requirements_generator.questionnaire import validate_intake
 from finance_requirements_generator.schemas import IntakeAnswers, RequirementsPack, UATTestCase
+from finance_requirements_generator.system_mapping import get_fit_gap_mapping
 
 
 def generate_pack(intake: IntakeAnswers) -> RequirementsPack:
@@ -54,6 +55,12 @@ def generate_pack(intake: IntakeAnswers) -> RequirementsPack:
         acceptance_criteria=list(template["acceptance_criteria"]),
         risks_and_dependencies=list(template["risks_and_dependencies"]),
         implementation_notes=_implementation_notes(intake, template),
+        target_system=intake.target_system,
+        target_system_fit_gap_mapping=get_fit_gap_mapping(
+            intake.process_key,
+            intake.target_system,
+        ),
+        current_state_sop_draft=intake.current_state_sop_draft,
         public_safe_sample_data_note=_public_safe_sample_data_note(),
     )
 

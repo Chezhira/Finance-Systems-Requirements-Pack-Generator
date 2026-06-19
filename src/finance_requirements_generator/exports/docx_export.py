@@ -103,7 +103,7 @@ def _build_document(pack: RequirementsPack) -> Document:
     _add_header_footer(document, pack)
     _add_cover(document, pack)
     _add_purpose(document)
-    _add_contents(document)
+    _add_contents(document, pack)
     _add_pack_sections(document, pack)
     _add_public_safe_note(document, pack.public_safe_sample_data_note)
     return document
@@ -242,7 +242,7 @@ def _add_purpose(document: Document) -> None:
     _set_paragraph_font(purpose, size=11, italic=True, color=_rgb(SUBINK))
 
 
-def _add_contents(document: Document) -> None:
+def _add_contents(document: Document, pack: RequirementsPack) -> None:
     heading = document.add_paragraph("Contents")
     heading.paragraph_format.page_break_before = True
     heading.paragraph_format.space_after = Pt(3)
@@ -252,22 +252,32 @@ def _add_contents(document: Document) -> None:
     rule.paragraph_format.space_after = Pt(13)
     _set_paragraph_border(rule, "bottom", GOLD, "12")
 
-    table = document.add_table(rows=len(CONTENTS_SECTIONS), cols=3)
+    contents_sections = _contents_sections(pack)
+    table = document.add_table(rows=len(contents_sections), cols=3)
     _clear_table_borders(table)
     _set_table_width(table, CONTENT_DXA)
     _set_grid_widths(table, [720, 7880, 760])
-    for index, (_field_name, title) in enumerate(CONTENTS_SECTIONS, start=1):
+    for index, (_field_name, title) in enumerate(contents_sections, start=1):
         row = table.rows[index - 1]
         _set_toc_cell(row.cells[0], f"{index:02d}", width=720, color=GOLD, bold=True)
         _set_toc_cell(row.cells[1], title, width=7880, color=NAVY, bold=True)
         _set_toc_cell(
             row.cells[2],
-            f"p. {TOC_PAGES[title]}",
+            f"p. {TOC_PAGES.get(title, '8')}",
             width=760,
             color=BLUE,
             bold=True,
             align=WD_ALIGN_PARAGRAPH.RIGHT,
         )
+
+
+def _contents_sections(pack: RequirementsPack) -> list[tuple[str, str]]:
+    sections = list(CONTENTS_SECTIONS)
+    if pack.current_state_sop_draft:
+        sections.append(("current_state_sop_draft", "Current-State SOP Draft"))
+    if pack.target_system_fit_gap_mapping:
+        sections.append(("target_system_fit_gap_mapping", "Target-System Fit-Gap Mapping"))
+    return sections
 
 
 def _add_pack_sections(document: Document, pack: RequirementsPack) -> None:
@@ -326,6 +336,20 @@ def _add_pack_sections(document: Document, pack: RequirementsPack) -> None:
     _add_numbered_heading(document, 15, "Implementation Notes")
     _add_bullet_list(document, pack.implementation_notes)
 
+    section_number = 16
+    if pack.current_state_sop_draft:
+        _add_numbered_heading(document, section_number, "Current-State SOP Draft")
+        _add_sop_draft(document, pack)
+        section_number += 1
+
+    if pack.target_system_fit_gap_mapping:
+        _add_numbered_heading(document, section_number, "Target-System Fit-Gap Mapping")
+        document.add_paragraph(
+            f"Target system selected: {pack.target_system}. Candidate mapping only; "
+            "requires implementation validation before design sign-off."
+        )
+        _add_fit_gap_table(document, pack)
+
 
 def _add_public_safe_note(document: Document, note: str) -> None:
     _add_spacer(document, after=11)
@@ -346,6 +370,60 @@ def _add_public_safe_note(document: Document, note: str) -> None:
     paragraph = cell.add_paragraph(note)
     paragraph.paragraph_format.space_after = Pt(0)
     _set_paragraph_font(paragraph, size=9.5, color=_rgb(SUBINK))
+
+
+def _add_sop_draft(document: Document, pack: RequirementsPack) -> None:
+    sop = pack.current_state_sop_draft
+    if not sop:
+        return
+    sections: list[tuple[str, str | list[str]]] = [
+        ("Purpose", sop.purpose),
+        ("Scope", sop.scope),
+        ("Trigger", sop.trigger),
+        ("Roles and Responsibilities", sop.roles_and_responsibilities),
+        ("Step-by-Step Procedure", sop.step_by_step_procedure),
+        ("Controls and Approvals", sop.controls_and_approvals),
+        ("Exceptions and Escalations", sop.exceptions_and_escalations),
+        ("Reports and Evidence", sop.reports_and_evidence),
+        ("Systems and Data Used", sop.systems_and_data_used),
+        ("Review and Sign-off", sop.review_and_sign_off),
+    ]
+    for title, value in sections:
+        label = document.add_paragraph()
+        label.paragraph_format.space_after = Pt(2)
+        run = label.add_run(title)
+        _style_run(run, size=10, bold=True, color=NAVY)
+        if isinstance(value, list):
+            _add_bullet_list(document, value)
+        else:
+            document.add_paragraph(value)
+
+
+def _add_fit_gap_table(document: Document, pack: RequirementsPack) -> None:
+    widths = [1700, 1900, 2000, 1800, 1960]
+    headers = [
+        "Current-State Area",
+        "Target-System Capability Area",
+        "Candidate Fit-Gap View",
+        "Requirement Impact",
+        "Validation Note",
+    ]
+    table = document.add_table(rows=1, cols=5)
+    _style_table(table)
+    _set_table_width(table, CONTENT_DXA)
+    _set_grid_widths(table, widths)
+    _set_header_row(table.rows[0], headers, widths)
+    for row_number, item in enumerate(pack.target_system_fit_gap_mapping, start=1):
+        row = table.add_row()
+        values = [
+            item.current_state_area,
+            item.target_system_capability_area,
+            item.candidate_fit_gap_view,
+            item.requirement_impact,
+            item.validation_note,
+        ]
+        for cell, value, width in zip(row.cells, values, widths, strict=True):
+            _set_body_cell(cell, value, width=width, zebra=row_number % 2 == 0, font_size=8.5)
 
 
 def _add_scope_boundaries_table(document: Document, pack: RequirementsPack) -> None:
@@ -525,6 +603,7 @@ def _set_body_cell(
     id_cell: bool = False,
     zebra: bool = False,
     bold: bool = False,
+    font_size: float | None = None,
 ) -> None:
     _set_cell_width(cell, width)
     _shade_cell(cell, BLUE_LT if id_cell else ZEBRA if zebra else WHITE)
@@ -539,7 +618,7 @@ def _set_body_cell(
     run = paragraph.add_run(text)
     _style_run(
         run,
-        size=9.5 if id_cell else 10,
+        size=font_size or (9.5 if id_cell else 10),
         bold=id_cell or bold,
         color=BLUE if id_cell else INK,
     )

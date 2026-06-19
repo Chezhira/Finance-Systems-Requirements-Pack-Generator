@@ -31,9 +31,11 @@ def test_streamlit_preview_fields_exist_on_generated_packs() -> None:
         preview = app.preview_sections(pack)
 
         assert preview
-        assert [title for title, _value in preview] == [
-            title for title, _field in app.PACK_PREVIEW_FIELDS
-        ]
+        preview_titles = [title for title, _value in preview]
+        configured_titles = [title for title, _field in app.PACK_PREVIEW_FIELDS]
+        assert set(preview_titles).issubset(configured_titles)
+        assert "Current-State SOP Draft" not in preview_titles
+        assert "Target-System Fit-Gap Mapping" not in preview_titles
         assert all(value for _title, value in preview)
 
 

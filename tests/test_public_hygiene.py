@@ -34,3 +34,24 @@ def test_public_tree_uses_synthetic_positioning() -> None:
     assert "do not upload confidential business information into a public demo" in lowered
     for term in PRIVATE_TERMS:
         assert term not in lowered
+
+
+def test_v030_has_no_external_web_or_api_dependency() -> None:
+    root = Path(__file__).resolve().parents[1]
+    source_files = [
+        path
+        for path in (root / "src").rglob("*.py")
+        if path.is_file()
+    ] + [root / "app.py"]
+    content = "\n".join(path.read_text(encoding="utf-8") for path in source_files)
+
+    forbidden_imports = [
+        "import requests",
+        "from requests",
+        "import httpx",
+        "from httpx",
+        "openai",
+        "anthropic",
+    ]
+    for forbidden in forbidden_imports:
+        assert forbidden not in content

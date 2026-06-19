@@ -25,7 +25,7 @@ dev = [
 where = ["src"]
 
 [tool.setuptools.package-data]
-finance_requirements_generator = ["process_library/*.yaml"]
+finance_requirements_generator = ["process_library/*.yaml", "system_mapping/*.yaml"]
 
 [tool.ruff]
 line-length = 100

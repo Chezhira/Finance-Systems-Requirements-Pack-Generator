@@ -38,6 +38,8 @@ class IntakeAnswers:
     deadline: str
     sponsor: str = "Finance Transformation Lead"
     assumptions: list[str] = field(default_factory=list)
+    target_system: str = ""
+    current_state_sop_draft: SOPDraft | None = None
 
 
 @dataclass(frozen=True)
@@ -45,6 +47,29 @@ class UATTestCase:
     test_id: str
     scenario: str
     expected_result: str
+
+
+@dataclass(frozen=True)
+class FitGapMappingRow:
+    current_state_area: str
+    target_system_capability_area: str
+    candidate_fit_gap_view: str
+    requirement_impact: str
+    validation_note: str
+
+
+@dataclass(frozen=True)
+class SOPDraft:
+    purpose: str
+    scope: str
+    trigger: str
+    roles_and_responsibilities: str
+    step_by_step_procedure: list[str]
+    controls_and_approvals: list[str]
+    exceptions_and_escalations: list[str]
+    reports_and_evidence: list[str]
+    systems_and_data_used: list[str]
+    review_and_sign_off: str
 
 
 @dataclass(frozen=True)
@@ -70,7 +95,10 @@ class RequirementsPack:
     acceptance_criteria: list[str]
     risks_and_dependencies: list[str]
     implementation_notes: list[str]
-    public_safe_sample_data_note: str
+    target_system: str = ""
+    target_system_fit_gap_mapping: list[FitGapMappingRow] = field(default_factory=list)
+    current_state_sop_draft: SOPDraft | None = None
+    public_safe_sample_data_note: str = ""
 
     @property
     def current_state_problem(self) -> str:
@@ -98,5 +126,6 @@ class RequirementsPack:
             "acceptance_criteria": self.acceptance_criteria,
             "risks_and_dependencies": self.risks_and_dependencies,
             "implementation_notes": self.implementation_notes,
+            "target_system_fit_gap_mapping": self.target_system_fit_gap_mapping,
             "public_safe_sample_data_note": self.public_safe_sample_data_note,
         }

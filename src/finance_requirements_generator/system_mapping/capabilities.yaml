@@ -1,0 +1,94 @@
+processes:
+  accounts_payable:
+    - current_state_area: Supplier invoice intake and approval
+      capability_area: AP invoice capture, coding, approval workflow, and payment readiness
+      default_fit_gap_view: Configuration dependent
+      requirement_impact: Confirm invoice routing, approval thresholds, exception queues, and payment hold logic.
+      validation_note: Candidate mapping only; verify against selected edition, modules, localisation, configuration, and integration scope.
+      systems:
+        Odoo:
+          candidate_fit_gap_view: Likely configurable with AP bills, vendor records, approvals, and payment status controls; workflow depth may require configuration or add-ons.
+        NetSuite:
+          candidate_fit_gap_view: Likely configurable through vendor bills, approval workflows, roles, and saved searches; validate workflow and approval module scope.
+        Microsoft Dynamics 365 Business Central:
+          candidate_fit_gap_view: Likely configurable for purchase invoices and approval workflows; validate dimensions, document approvals, and payment controls.
+        Microsoft Dynamics 365 Finance:
+          candidate_fit_gap_view: Likely fit for structured AP workflow, vendor invoice processing, and controls; validate licensing, workflow setup, and localisation.
+        SAP Business One:
+          candidate_fit_gap_view: Potential fit with purchasing/AP documents and approvals; validate workflow depth and add-on requirements.
+        Xero:
+          candidate_fit_gap_view: Potential partial fit for smaller AP processes; approval and control depth may require connected apps or manual review.
+        QuickBooks Online:
+          candidate_fit_gap_view: Potential partial fit for bill capture and payment tracking; validate approval workflow and evidence requirements.
+        Generic ERP / Not decided yet:
+          candidate_fit_gap_view: Requires implementation validation once target system, edition, and modules are confirmed.
+    - current_state_area: Supplier master and bank detail changes
+      capability_area: Supplier master data governance and sensitive-field audit trail
+      default_fit_gap_view: Requires SME validation
+      requirement_impact: Define requester, reviewer, before-and-after evidence, and first-payment-after-change controls.
+      validation_note: Verify sensitive-field auditability, role segregation, and bank-detail validation against configuration.
+      systems:
+        Generic ERP / Not decided yet:
+          candidate_fit_gap_view: Requires implementation validation and control design confirmation.
+  month_end_close:
+    - current_state_area: Close task ownership and status tracking
+      capability_area: Close checklist, task workflow, ownership, and escalation reporting
+      default_fit_gap_view: Configuration dependent
+      requirement_impact: Confirm close calendar, task owners, evidence attachments, escalation rules, and sign-off states.
+      validation_note: Candidate mapping only; verify close-management capability against selected modules and implementation design.
+      systems:
+        NetSuite:
+          candidate_fit_gap_view: Potential fit through period close checklist, tasks, workflows, and reporting; validate module scope and customisation.
+        Microsoft Dynamics 365 Finance:
+          candidate_fit_gap_view: Potential fit with financial period close workspace and workflow; validate task templates, security, and evidence handling.
+        Microsoft Dynamics 365 Business Central:
+          candidate_fit_gap_view: May require configuration, workflow, or companion tooling for formal close-task management.
+        Odoo:
+          candidate_fit_gap_view: Core accounting supports period activity, but formal close checklist depth requires validation and possible configuration.
+        SAP Business One:
+          candidate_fit_gap_view: May require procedures, approvals, or add-ons for structured close task workflow.
+        Xero:
+          candidate_fit_gap_view: Likely partial fit for close reporting; formal workflow may require connected apps or manual controls.
+        QuickBooks Online:
+          candidate_fit_gap_view: Likely partial fit for close reporting; formal workflow may require connected apps or manual controls.
+        Generic ERP / Not decided yet:
+          candidate_fit_gap_view: Requires implementation validation once target system, edition, and modules are confirmed.
+    - current_state_area: Journal approval and reconciliation evidence
+      capability_area: Journal workflow, reconciliation sign-off, and evidence retention
+      default_fit_gap_view: Configuration dependent
+      requirement_impact: Define journal types, approval thresholds, reconciliation owners, evidence links, and audit trail needs.
+      validation_note: Verify workflow, attachment, and audit-reporting capability before confirming fit.
+      systems:
+        Generic ERP / Not decided yet:
+          candidate_fit_gap_view: Requires implementation validation and close-control design confirmation.
+  payroll_controls:
+    - current_state_area: Starter, leaver, and payroll change approvals
+      capability_area: Payroll change control, HR/payroll handoff, and approval evidence
+      default_fit_gap_view: Integration dependent
+      requirement_impact: Confirm HR source, payroll system handoff, approval owner, cutoff dates, and change evidence.
+      validation_note: Payroll capability varies significantly by edition, geography, and connected payroll provider; validate locally.
+      systems:
+        Xero:
+          candidate_fit_gap_view: Potential fit depends on payroll geography, edition, and connected HR/payroll workflow.
+        QuickBooks Online:
+          candidate_fit_gap_view: Potential fit depends on payroll region, plan, and approval workflow design.
+        Odoo:
+          candidate_fit_gap_view: Potential fit where payroll/HR apps are in scope; validate localisation and payroll rules.
+        Microsoft Dynamics 365 Finance:
+          candidate_fit_gap_view: Requires validation of payroll architecture, HR integration, and localisation.
+        NetSuite:
+          candidate_fit_gap_view: Requires validation of payroll provider, SuitePeople scope, and integration design.
+        SAP Business One:
+          candidate_fit_gap_view: Likely integration dependent; validate payroll add-on/provider and control evidence flow.
+        Microsoft Dynamics 365 Business Central:
+          candidate_fit_gap_view: Likely integration dependent; validate payroll provider and posting controls.
+        Generic ERP / Not decided yet:
+          candidate_fit_gap_view: Requires implementation validation once payroll system, region, provider, and controls are confirmed.
+    - current_state_area: Payroll-to-GL reconciliation and payment file approval
+      capability_area: Payroll journal posting, reconciliation reporting, and payment approval evidence
+      default_fit_gap_view: Data dependent
+      requirement_impact: Define payroll register, GL posting file, variance checks, payment approval evidence, and sign-off reporting.
+      validation_note: Verify data extracts, journal posting method, bank approval workflow, and audit evidence before confirming fit.
+      systems:
+        Generic ERP / Not decided yet:
+          candidate_fit_gap_view: Requires implementation validation and reconciliation control design confirmation.

@@ -6,22 +6,27 @@ This repository demonstrates how structured finance intake can become implementa
 
 1. Open the Streamlit app.
 2. Select one of the eight supported finance processes.
-3. Review the pre-filled public-safe sample intake.
-4. Generate the pack and inspect the expandable sections.
-5. Download Markdown or DOCX.
+3. Choose an intake mode: manual intake, SOP upload, or guided SOP builder.
+4. Select a target ERP/system if candidate fit-gap mapping is useful.
+5. Review the editable intake fields before generating the pack.
+6. Generate the pack and inspect the expandable sections.
+7. Download Markdown or DOCX.
 
 ## What to look for
 
 - Finance-specific requirements rather than generic project wording.
 - Controls, audit trail needs, user stories, UAT cases, and acceptance criteria in every pack.
 - Process coverage across AP, AR, bank reconciliation, VAT, close, inventory costing, intercompany, and payroll controls.
-- Deterministic output from bundled templates, with no AI/API call in the MVP.
+- SOP upload support for TXT, Markdown, and DOCX workflow notes.
+- Guided SOP builder support for teams that do not have a documented SOP yet.
+- Curated target-system mapping notes that use repository data only.
+- Deterministic output from bundled templates, with no external AI/API calls, no web scraping, and no live web RAG.
 - Sample outputs under `examples/generated_packs`.
 - Public-safe examples that use fictional company names and no operational business data.
 
 ## v0.3.0 planning direction
 
-The next planned release should support users with SOPs and users without SOPs. The intake should not assume a workflow document already exists.
+The v0.3.0 flow supports users with SOPs and users without SOPs. The intake does not assume a workflow document already exists.
 
 - Upload SOP / workflow document: extract current-state process details into editable intake fields before pack generation.
 - Build SOP from guided finance process questions: generate a reviewable current-state SOP draft, then use that approved draft to generate the requirements pack.

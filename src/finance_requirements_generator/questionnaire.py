@@ -189,8 +189,9 @@ DEFAULT_SAMPLE_INPUTS = {
 
 def validate_intake(intake: IntakeAnswers) -> None:
     missing_fields = []
+    optional_fields = {"assumptions", "target_system", "current_state_sop_draft"}
     for field_name, value in intake.__dict__.items():
-        if field_name == "assumptions":
+        if field_name in optional_fields:
             continue
         if isinstance(value, str) and not value.strip():
             missing_fields.append(field_name)
