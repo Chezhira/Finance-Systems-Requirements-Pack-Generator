@@ -2,11 +2,11 @@
   <rect width="1280" height="760" fill="#f8fafc"/>
   <rect x="52" y="42" width="1176" height="676" rx="8" fill="#ffffff" stroke="#d1d5db"/>
   <text x="86" y="98" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#111827">Finance Systems Requirements Pack Generator</text>
-  <text x="86" y="134" font-family="Arial, sans-serif" font-size="18" fill="#475569">Synthetic BRD, controls, and UAT accelerator for ERP finance transformation.</text>
+  <text x="86" y="134" font-family="Arial, sans-serif" font-size="18" fill="#475569">BRD, controls, and UAT accelerator for ERP finance transformation.</text>
   <rect x="86" y="176" width="334" height="46" rx="6" fill="#eff6ff" stroke="#bfdbfe"/>
   <text x="106" y="205" font-family="Arial, sans-serif" font-size="17" font-weight="700" fill="#1d4ed8">Accounts Payable</text>
   <rect x="86" y="256" width="520" height="68" rx="6" fill="#f9fafb" stroke="#d1d5db"/>
-  <text x="108" y="284" font-family="Arial, sans-serif" font-size="15" fill="#374151">Synthetic company name</text>
+  <text x="108" y="284" font-family="Arial, sans-serif" font-size="15" fill="#374151">Fictional company name</text>
   <text x="108" y="308" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#111827">Northstar Trading Ltd</text>
   <rect x="86" y="346" width="520" height="68" rx="6" fill="#f9fafb" stroke="#d1d5db"/>
   <text x="108" y="374" font-family="Arial, sans-serif" font-size="15" fill="#374151">ERP/current platform</text>

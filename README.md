@@ -2,9 +2,9 @@
 
 [![CI](https://github.com/Chezhira/Finance-Systems-Requirements-Pack-Generator/actions/workflows/ci.yml/badge.svg)](https://github.com/Chezhira/Finance-Systems-Requirements-Pack-Generator/actions/workflows/ci.yml)
 
-A synthetic Streamlit application that turns structured finance process intake into implementation-ready requirements packs for ERP and finance transformation work.
+Finance systems projects often fail because finance requirements are vague, controls are undocumented, data needs are unclear, and UAT expectations are not defined early enough.
 
-Weak finance requirements can turn ERP, automation, and reporting projects into rework. This project shows how finance pain points can be translated into BRD-style scope, functional requirements, controls, audit trail needs, user stories, UAT test cases, acceptance criteria, and implementation risks.
+This Streamlit application converts structured finance process intake into implementation-ready requirements packs for ERP and finance transformation work. It produces BRD-style scope, functional requirements, control requirements, audit trail needs, user stories, UAT test cases, acceptance criteria, and implementation risks for common finance processes.
 
 ![Streamlit intake preview](docs/screenshots/app-intake-preview.svg)
 
@@ -33,7 +33,7 @@ Each generated pack includes:
 
 ## Example Outputs
 
-The repository includes generated synthetic sample packs:
+The repository includes generated sample packs:
 
 - [Accounts Payable requirements pack](examples/generated_packs/accounts_payable_requirements_pack.md)
 - [Bank Reconciliation requirements pack](examples/generated_packs/bank_reconciliation_requirements_pack.md)
@@ -47,9 +47,9 @@ Finance systems projects rarely fail because people cannot imagine a dashboard. 
 
 The MVP is intentionally deterministic. It does not use LLM calls, databases, authentication, or external integrations. The goal is a stable first release that proves the requirements-generation workflow before adding wider process coverage.
 
-## Synthetic Data Only
+## Public-Safe Sample Data
 
-All company names, process details, and sample outputs are synthetic. Do not upload or paste real employer, client, supplier, bank, VAT, payroll, or operational information into the public demo.
+The bundled examples use fictional company names and public-safe sample inputs. The repository does not contain real employer, client, supplier, bank, VAT, payroll, or operational data. Do not upload confidential business information into a public demo.
 
 ## Run Locally
 

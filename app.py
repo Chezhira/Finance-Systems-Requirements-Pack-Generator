@@ -25,7 +25,7 @@ def main() -> None:
     templates = load_all_templates()
 
     st.title("Finance Systems Requirements Pack Generator")
-    st.caption("Synthetic BRD, controls, and UAT accelerator for ERP finance transformation.")
+    st.caption("BRD, controls, and UAT accelerator for ERP finance transformation.")
 
     st.markdown(
         "Weak finance requirements can turn ERP and automation projects into rework. "
@@ -43,7 +43,7 @@ def main() -> None:
     with st.form("intake_form"):
         left, right = st.columns(2)
         with left:
-            company_name = st.text_input("Synthetic company name", sample.company_name)
+            company_name = st.text_input("Fictional company name", sample.company_name)
             entity_type = st.text_input("Entity type", sample.entity_type)
             erp_platform = st.text_input("ERP/current platform", sample.erp_platform)
             monthly_volume = st.text_input("Monthly/period volume", sample.monthly_volume)
@@ -153,7 +153,7 @@ def render_gallery() -> None:
         ),
     ]
     st.markdown("\n".join(f"- {link}" for link in gallery_links))
-    st.caption("All bundled examples are synthetic and safe for public portfolio use.")
+    st.caption("Safety note: bundled examples use fictional, public-safe sample inputs.")
 
 
 if __name__ == "__main__":

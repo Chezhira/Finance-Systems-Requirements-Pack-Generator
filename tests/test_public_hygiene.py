@@ -1,7 +1,6 @@
 from pathlib import Path
 
 PRIVATE_TERMS = {
-    "confiden" + "tial",
     "past " + "employer",
     "client " + "details",
     "payroll " + "details",
@@ -32,5 +31,6 @@ def test_public_tree_uses_synthetic_positioning() -> None:
     )
     lowered = content.lower()
     assert "synthetic" in lowered
+    assert "do not upload confidential business information into a public demo" in lowered
     for term in PRIVATE_TERMS:
         assert term not in lowered

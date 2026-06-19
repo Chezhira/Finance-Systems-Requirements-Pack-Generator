@@ -1,12 +1,12 @@
 # Demo Notes
 
-This repository is built as a synthetic public portfolio project for finance systems analysis.
+This repository demonstrates how structured finance intake can become implementation-ready requirements for ERP and finance transformation work.
 
 ## Demo flow
 
 1. Open the Streamlit app.
 2. Select Accounts Payable, Bank Reconciliation, or VAT Reconciliation.
-3. Review the pre-filled synthetic intake.
+3. Review the pre-filled public-safe sample intake.
 4. Generate the pack and inspect the expandable sections.
 5. Download Markdown or DOCX.
 
@@ -16,3 +16,4 @@ This repository is built as a synthetic public portfolio project for finance sys
 - Controls, audit trail needs, user stories, UAT cases, and acceptance criteria in every pack.
 - Deterministic output from bundled templates, with no AI/API call in the MVP.
 - Sample outputs under `examples/generated_packs`.
+- Public-safe examples that use fictional company names and no operational business data.
