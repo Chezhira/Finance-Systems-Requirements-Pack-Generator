@@ -42,55 +42,49 @@
       color:var(--muted); font-family:var(--mono); font-size:11px; letter-spacing:.06em;
     }
     .flow-scroll { padding:34px 22px; overflow-x:auto; background:#fff; }
-    .flow-track {
-      display:flex; min-width:1680px; align-items:center; justify-content:flex-start;
-    }
+    .flow-track { position:relative; width:1652px; height:300px; }
     .flow-node {
-      display:flex; width:180px; min-height:94px; flex:0 0 180px; flex-direction:column;
-      align-items:center; justify-content:center; padding:14px 13px; border:2px solid var(--step);
+      position:absolute; z-index:2; top:22px; display:flex; width:180px; height:124px;
+      flex-direction:column;
+      align-items:center; justify-content:center; padding:12px 13px; border:2px solid var(--step);
       border-radius:6px; background:#fff; color:var(--ink); text-align:center;
     }
     .flow-node.gate {
-      width:158px; flex-basis:158px; border-color:var(--gate); background:var(--gate); color:#fff;
+      width:158px; border-color:var(--gate); background:var(--gate); color:#fff;
     }
     .flow-node.decide {
-      width:170px; flex-basis:170px; border-color:var(--decide); background:#fef3c7;
+      width:170px; border-color:var(--decide); background:#fef3c7;
       color:#7c2d12;
     }
     .flow-node.fix {
-      width:178px; min-height:78px; flex-basis:178px; border-color:var(--fix);
+      width:178px; height:88px; border-color:var(--fix);
       background:#fee2e2; color:#7f1d1d;
     }
+    .start-node { left:0; }
+    .source-node { left:200px; }
+    .validation-node { left:422px; }
+    .decision-node { left:644px; }
+    .approval-node { left:1050px; }
+    .reporting-node { left:1272px; }
+    .signoff-node { left:1494px; }
+    .exception-node { top:190px; left:840px; }
     .node-kind {
       margin-bottom:6px; font-family:var(--mono); font-size:9px; font-weight:700;
       letter-spacing:.12em; text-transform:uppercase; opacity:.72;
     }
     .node-label { font-size:13px; font-weight:600; line-height:1.35; }
-    .connector {
-      position:relative; width:32px; height:2px; flex:0 0 32px; background:var(--connector);
+    .flow-connectors {
+      position:absolute; z-index:1; inset:0; width:1652px; height:300px; overflow:visible;
     }
-    .connector::after {
-      content:""; position:absolute; top:-4px; right:-1px; border-width:5px 0 5px 7px;
-      border-style:solid; border-color:transparent transparent transparent var(--connector);
-    }
-    .branch-stage {
-      position:relative; width:290px; height:180px; flex:0 0 290px;
-    }
-    .branch-connectors {
-      position:absolute; inset:0; width:290px; height:180px; overflow:visible;
-    }
-    .branch-connectors > path {
+    .flow-connectors > path {
       fill:none; stroke:var(--connector); stroke-width:2; vector-effect:non-scaling-stroke;
     }
     .branch-label {
       position:absolute; z-index:2; padding:2px 5px; background:#fff; color:var(--muted);
       font-family:var(--mono); font-size:10px; font-weight:700; text-transform:uppercase;
     }
-    .branch-label.no { top:18px; left:132px; }
-    .branch-label.yes { top:69px; left:12px; }
-    .branch-stage .flow-node.fix {
-      position:absolute; z-index:3; top:51px; left:55px; width:178px; min-height:78px;
-    }
+    .branch-label.no { top:63px; left:911px; }
+    .branch-label.yes { top:174px; left:739px; }
     .legend {
       display:flex; flex-wrap:wrap; gap:10px 26px; padding:18px 22px;
       border-top:1px solid var(--line); background:#fbfcfe;
@@ -131,7 +125,7 @@
       .card { box-shadow:none; }
       .toolbar, .source { display:none; }
       .flow-scroll { overflow:visible; padding:22px 12px; }
-      .flow-track { min-width:1680px; zoom:.62; }
+      .flow-track { zoom:.62; }
       footer { margin-top:12px; }
     }
   </style>
@@ -149,34 +143,32 @@
       </div>
       <div class="flow-scroll">
         <div class="flow-track" role="img" aria-label="Accounts Payable - Process Map">
-          <div class="flow-node gate"><span class="node-kind">Start</span><span class="node-label">Accounts Payable trigger</span></div>
-          <span class="connector" aria-hidden="true"></span>
-          <div class="flow-node step"><span class="node-kind">Intake</span><span class="node-label">Email approvals, shared AP tracker, and ERP purchase ledger</span></div>
-          <span class="connector" aria-hidden="true"></span>
-          <div class="flow-node step"><span class="node-kind">Validate</span><span class="node-label">Validate data, ownership, and required evidence</span></div>
-          <span class="connector" aria-hidden="true"></span>
-          <div class="flow-node decide"><span class="node-kind">Decision</span><span class="node-label">Exception or control gap?</span></div>
-          <div class="branch-stage" aria-label="Exception decision routes">
-            <svg class="branch-connectors" viewBox="0 0 290 180" aria-hidden="true">
-              <defs>
-                <marker id="branch-arrow" viewBox="0 0 10 10" refX="9" refY="5"
-                  markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#a9b6c8" stroke="none"></path>
-                </marker>
-              </defs>
-              <path d="M 0 90 H 32 V 30 H 270 V 90 H 290" marker-end="url(#branch-arrow)"></path>
-              <path d="M 0 90 H 55" marker-end="url(#branch-arrow)"></path>
-              <path d="M 233 90 H 290" marker-end="url(#branch-arrow)"></path>
-            </svg>
-            <span class="branch-label no">No &middot; continue</span>
-            <span class="branch-label yes">Yes</span>
-            <div class="flow-node fix"><span class="node-kind">Remediate</span><span class="node-label">Resolve exception and update evidence</span></div>
-          </div>
-          <div class="flow-node step"><span class="node-kind">Approve</span><span class="node-label">Accounts Payable approval / review</span></div>
-          <span class="connector" aria-hidden="true"></span>
-          <div class="flow-node step"><span class="node-kind">Evidence</span><span class="node-label">Aged approval backlog, blocked invoices, and payment readiness summary</span></div>
-          <span class="connector" aria-hidden="true"></span>
-          <div class="flow-node gate"><span class="node-kind">Sign-off</span><span class="node-label">Accounts Payable sign-off / readiness</span></div>
+          <svg class="flow-connectors" viewBox="0 0 1652 300" aria-hidden="true">
+            <defs>
+              <marker id="flow-arrow" viewBox="0 0 10 10" refX="9" refY="5"
+                markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#a9b6c8" stroke="none"></path>
+              </marker>
+            </defs>
+            <path d="M 158 84 H 200" marker-end="url(#flow-arrow)"></path>
+            <path d="M 380 84 H 422" marker-end="url(#flow-arrow)"></path>
+            <path d="M 602 84 H 644" marker-end="url(#flow-arrow)"></path>
+            <path d="M 814 84 H 1050" marker-end="url(#flow-arrow)"></path>
+            <path d="M 1230 84 H 1272" marker-end="url(#flow-arrow)"></path>
+            <path d="M 1452 84 H 1494" marker-end="url(#flow-arrow)"></path>
+            <path d="M 729 146 V 234 H 840" marker-end="url(#flow-arrow)"></path>
+            <path d="M 1018 234 H 1140 V 146" marker-end="url(#flow-arrow)"></path>
+          </svg>
+          <div class="flow-node gate start-node"><span class="node-kind">Start</span><span class="node-label">Accounts Payable trigger</span></div>
+          <div class="flow-node step source-node"><span class="node-kind">Intake</span><span class="node-label">Email approvals, shared AP tracker, and ERP purchase ledger</span></div>
+          <div class="flow-node step validation-node"><span class="node-kind">Validate</span><span class="node-label">Validate data, ownership, and required evidence</span></div>
+          <div class="flow-node decide decision-node"><span class="node-kind">Decision</span><span class="node-label">Exception or control gap?</span></div>
+          <div class="flow-node fix exception-node"><span class="node-kind">Remediate</span><span class="node-label">Resolve exception and update evidence</span></div>
+          <div class="flow-node step approval-node"><span class="node-kind">Approve</span><span class="node-label">Accounts Payable approval / review</span></div>
+          <div class="flow-node step reporting-node"><span class="node-kind">Evidence</span><span class="node-label">Aged approval backlog, blocked invoices, and payment readiness summary</span></div>
+          <div class="flow-node gate signoff-node"><span class="node-kind">Sign-off</span><span class="node-label">Accounts Payable sign-off / readiness</span></div>
+          <span class="branch-label no">No &middot; continue</span>
+          <span class="branch-label yes">Yes &middot; remediate</span>
         </div>
       </div>
       <div class="legend" aria-label="Process map legend">

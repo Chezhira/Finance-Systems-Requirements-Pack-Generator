@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from streamlit.testing.v1 import AppTest
 
 import app
@@ -9,6 +11,17 @@ from finance_requirements_generator.questionnaire import DEFAULT_SAMPLE_INPUTS
 def test_app_and_core_imports() -> None:
     assert callable(app.main)
     assert callable(generate_pack)
+
+
+def test_streamlit_theme_matches_the_reviewed_finance_palette() -> None:
+    config = Path(".streamlit/config.toml").read_text(encoding="utf-8")
+
+    assert 'base = "light"' in config
+    assert 'primaryColor = "#0e7c66"' in config
+    assert 'backgroundColor = "#f4f6f8"' in config
+    assert 'textColor = "#142238"' in config
+    assert "borderRadius = 8" in config
+    assert "gatherUsageStats = false" in config
 
 
 def test_process_option_label_handles_keys_and_display_labels() -> None:

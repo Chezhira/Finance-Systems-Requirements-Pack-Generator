@@ -112,6 +112,21 @@ APP_STYLES = """
   }
   .download-group-copy { margin:0 0 .75rem; color:var(--finance-muted); font-size:.8rem; }
   .public-safe-note { color:var(--finance-muted); font-size:.8rem; }
+  [data-testid="stMetric"] {
+    background:var(--finance-surface); border:1px solid var(--finance-line);
+    border-radius:8px; padding:1rem 1.15rem;
+  }
+  [data-testid="stMetricLabel"] {
+    color:var(--finance-muted); text-transform:uppercase;
+    font-size:.7rem; letter-spacing:.08em;
+  }
+  [data-testid="stMetricValue"] { color:var(--finance-ink); font-weight:700; }
+  .empty-state {
+    padding:1.3rem 1.4rem; background:var(--finance-surface);
+    border:1px dashed var(--finance-line); border-radius:8px;
+  }
+  .empty-state p { margin:0; color:var(--finance-muted); font-size:.92rem; line-height:1.55; }
+  hr { border-color:var(--finance-line); opacity:.55; margin:1.6rem 0; }
 </style>
 """
 
@@ -258,19 +273,28 @@ def main() -> None:
         target_system="" if target_system == "No target-system mapping" else target_system,
         current_state_sop_draft=mapped_fields.sop_draft if mapped_fields else None,
     )
+    if submitted:
+        st.session_state["pack_generated"] = True
+
+    if not st.session_state.get("pack_generated"):
+        render_empty_state()
+        render_gallery()
+        return
+
     pack = generate_pack(intake)
+    readiness_pack = generate_implementation_readiness_pack(pack)
+    process_map_html = pack_process_map_html_bytes(pack)
 
     if submitted:
         st.success("Finance systems requirements and readiness outputs generated.")
 
-    readiness_pack = generate_implementation_readiness_pack(pack)
-    process_map_html = pack_process_map_html_bytes(pack)
     st.divider()
     render_section_header(
         "02",
         "Requirements Pack",
         "Review scope, requirements, controls, UAT coverage, and implementation dependencies.",
     )
+    render_pack_summary(pack, readiness_pack)
     render_pack(pack)
     st.divider()
     render_section_header(
@@ -328,6 +352,24 @@ def render_section_header(index: str, title: str, description: str) -> None:
         </div>""",
         unsafe_allow_html=True,
     )
+
+
+def render_empty_state() -> None:
+    st.markdown(
+        '<div class="empty-state"><p>Configure the intake above, then select '
+        "<strong>Generate finance systems pack</strong> to produce the requirements, controls, "
+        "UAT coverage, process map, and implementation-readiness outputs.</p></div>",
+        unsafe_allow_html=True,
+    )
+
+
+def render_pack_summary(pack, readiness_pack) -> None:
+    col_a, col_b, col_c, col_d, col_e = st.columns(5)
+    col_a.metric("Functional requirements", len(pack.functional_requirements))
+    col_b.metric("Controls", len(pack.controls) + len(pack.audit_trail_requirements))
+    col_c.metric("UAT cases", len(pack.uat_test_cases))
+    col_d.metric("Risk areas", len(pack.control_risk_matrix))
+    col_e.metric("Open decisions", len(readiness_pack.open_decisions_and_dependencies))
 
 
 def select_intake_mode() -> str:
