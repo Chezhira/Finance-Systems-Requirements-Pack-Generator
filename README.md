@@ -1,12 +1,30 @@
 # Finance Systems Requirements Pack Generator
 
-![CI](https://github.com/Chezhira/Finance-Systems-Requirements-Pack-Generator/actions/workflows/ci.yml/badge.svg)
+[![CI](https://github.com/Chezhira/Finance-Systems-Requirements-Pack-Generator/actions/workflows/ci.yml/badge.svg)](https://github.com/Chezhira/Finance-Systems-Requirements-Pack-Generator/actions/workflows/ci.yml)
+![Release](https://img.shields.io/github/v/release/Chezhira/Finance-Systems-Requirements-Pack-Generator?label=release)
+![Python](https://img.shields.io/badge/python-3.11%2B-blue)
+![Streamlit](https://img.shields.io/badge/streamlit-app-ff4b4b)
+![Ruff](https://img.shields.io/badge/lint-ruff-46a2f1)
+![Pytest](https://img.shields.io/badge/tests-pytest-0a7f3f)
+![Deterministic](https://img.shields.io/badge/design-deterministic-0e7c66)
+![No External AI/API](https://img.shields.io/badge/external_AI%2FAPI-none-142238)
 
-A Streamlit application that turns finance process knowledge into implementation-ready requirements packs for ERP, finance systems, and finance transformation work.
+A Streamlit application that turns finance process knowledge into implementation-ready ERP and finance transformation artefacts.
 
-Finance systems projects often fail because requirements are vague, controls are undocumented, data needs are unclear, process ownership is not agreed, and UAT expectations are defined too late. This project addresses that gap by converting structured finance intake, SOP/workflow documentation, and guided process discovery into practical requirements packs that finance and systems teams can review before configuration, automation, reporting, migration, or implementation work begins.
+Finance systems projects often fail because requirements are vague, controls are undocumented, data needs are unclear, process ownership is not agreed, and UAT expectations are defined too late. This project addresses that gap by converting structured finance intake, SOP/workflow documentation, and guided process discovery into reviewable requirements packs, control-risk matrices, process-flow documentation, and implementation-readiness packs.
 
-The app generates BRD-style outputs covering current-state problems, future-state scope, functional requirements, controls, audit trail needs, reporting requirements, user stories, UAT test cases, acceptance criteria, implementation risks, current-state SOP drafts, and optional target-system fit-gap mapping.
+The v0.5.0 build supports the full implementation-preparation flow:
+
+```text
+finance process knowledge
+-> structured intake
+-> requirements pack
+-> SOP draft
+-> target-system fit-gap mapping
+-> control-risk matrix
+-> visual process flow
+-> implementation readiness pack
+```
 
 ![Streamlit intake preview](docs/screenshots/app-intake-preview.svg)
 
@@ -23,7 +41,10 @@ It shows how finance process knowledge can be converted into:
 * UAT scenarios tied to finance risks and process outcomes
 * Current-state SOP drafts for process review
 * Candidate target-system fit-gap notes for ERP planning
-* Polished Markdown and DOCX requirements packs
+* Deterministic browser-viewable finance process flows
+* Traceable CSV/XLSX control-risk matrices
+* Finance-process-specific implementation readiness checks
+* Polished Markdown and DOCX requirements and readiness packs
 
 The project is designed as a public portfolio asset for roles such as:
 
@@ -50,7 +71,21 @@ The v0.5.0 build supports eight finance processes.
 | Intercompany Settlements | Recharge rules, counterparty confirmation, mismatch ageing, FX differences, settlement readiness, elimination support, and intercompany evidence |
 | Payroll Controls | Starter, leaver and change approvals, payroll input review, exception handling, payroll register reconciliation, and payment file approval |
 
-## Generated Pack Contents
+## Generated Artefacts
+
+The app produces a coordinated set of reviewable finance systems artefacts:
+
+| Artefact | Format and purpose |
+| --- | --- |
+| Requirements Pack | Markdown and professionally formatted DOCX covering scope, requirements, controls, reporting, audit trail, UAT, acceptance criteria, and implementation dependencies |
+| Current-State SOP Draft | Editable process draft generated from uploaded workflow content or guided finance process discovery |
+| Target-System Fit-Gap Mapping | Candidate capability mapping with requirement impacts and explicit implementation-validation notes |
+| Browser-Viewable Process Flow | Deterministic HTML/CSS control flow that opens directly in a browser for finance and implementation review |
+| Mermaid Source | Secondary technical output for users who need the process-map source |
+| Control-Risk Matrix | CSV and styled XLSX with requirement and UAT traceability |
+| Implementation Readiness Pack | Separate Markdown and DOCX pack covering evidence checks, workshop questions, cutover considerations, and open decisions |
+
+### Requirements Pack Contents
 
 Each generated requirements pack can include:
 
@@ -72,10 +107,6 @@ Each generated requirements pack can include:
 * Implementation notes
 * Optional current-state SOP draft
 * Optional target-system fit-gap mapping
-* Visual process documentation
-* Mermaid process map
-* Browser-viewable finance control-flow process map
-* Control-risk matrix
 * Public-safe sample data note
 
 DOCX packs include a polished cover page, contents page, headers, footers, structured tables, and client-style formatting for review.
@@ -170,22 +201,22 @@ The target-system fit-gap section can include:
 
 ## Visual Process Documentation
 
-v0.4.0 adds deterministic process-map output for implementation review.
+The primary process-map output is a deterministic HTML/CSS finance control flow designed for implementation review by technical and non-technical stakeholders.
 
 Each pack includes:
 
-* Mermaid process map text
 * Browser-viewable HTML process map for non-technical reviewers
 * Plain-language process-map summary
 * Trigger, intake, validation, exception, approval, reporting, evidence, and sign-off flow
+* Mermaid source as a secondary technical output
 
-The HTML process map follows the finance control-flow design, opens directly in a browser, and uses deterministic HTML/CSS nodes and connectors. Mermaid source remains available as a secondary technical download and inside a closed advanced section.
+The HTML process map opens directly in a browser and does not depend on Mermaid runtime rendering for the primary visual. It uses deterministic HTML/CSS nodes and connectors, supports print review, and keeps Mermaid source secondary inside a closed advanced section and a separate technical download.
 
 The app does not call external APIs, scrape the web, or use live web RAG during export generation.
 
 ## Control-Risk Matrix Export
 
-v0.4.0 also adds a generated control-risk matrix derived from the selected process, pain points, controls, audit trail needs, UAT cases, and implementation risks.
+The generated control-risk matrix is derived from the selected process, pain points, controls, audit trail needs, UAT cases, and implementation risks.
 
 The matrix includes:
 
@@ -208,9 +239,11 @@ The matrix can be downloaded as:
 * CSV
 * XLSX with styled headers, frozen top row, text wrapping, and usable column widths
 
+This keeps risks and controls editable while preserving traceability to the requirements and UAT coverage that support implementation review.
+
 ## Finance Systems Implementation Readiness Pack
 
-v0.5.0 adds a separate implementation-readiness layer after requirements, process discovery, controls, fit-gap mapping, and visual process documentation.
+v0.5.0 adds a separate implementation-readiness layer after requirements, process discovery, controls, fit-gap mapping, and visual process documentation. Keeping readiness separate avoids bloating the core requirements pack with project-management content.
 
 The readiness pack helps finance and implementation teams review whether a process is ready to configure, test, migrate, and implement. It includes:
 
@@ -256,6 +289,15 @@ examples/generated_packs/
 * [Month-end Close readiness pack](examples/generated_packs/month_end_close_implementation_readiness_pack.md)
 * [Payroll Controls readiness pack](examples/generated_packs/payroll_controls_implementation_readiness_pack.md)
 
+### Representative Process Maps And Control-Risk Matrices
+
+* [Accounts Payable browser-viewable process map](examples/generated_packs/accounts_payable_process_map.html)
+* [Month-end Close browser-viewable process map](examples/generated_packs/month_end_close_process_map.html)
+* [Payroll Controls browser-viewable process map](examples/generated_packs/payroll_controls_process_map.html)
+* [Accounts Payable control-risk matrix](examples/generated_packs/accounts_payable_control_risk_matrix.csv)
+* [Month-end Close control-risk matrix](examples/generated_packs/month_end_close_control_risk_matrix.xlsx)
+* [Payroll Controls control-risk matrix](examples/generated_packs/payroll_controls_control_risk_matrix.xlsx)
+
 ### Sample SOPs
 
 Public-safe sample SOPs are included for:
@@ -279,12 +321,12 @@ This project focuses on the implementation layer that often gets rushed:
 ```text
 finance process knowledge
 -> structured intake
--> clear requirements
--> controls and evidence
--> reporting needs
--> UAT coverage
--> implementation-ready pack
--> implementation readiness review
+-> requirements pack
+-> SOP draft
+-> target-system fit-gap mapping
+-> controls, evidence, and UAT coverage
+-> visual process documentation
+-> implementation readiness pack
 ```
 
 The result is a practical bridge between finance operations and finance systems delivery.
@@ -374,6 +416,7 @@ GitHub Actions runs ruff, pytest, and a sample generation smoke step on push and
 app.py
 src/finance_requirements_generator/
   questionnaire.py
+  readiness_engine.py
   schemas.py
   sop_intake.py
   template_engine.py
@@ -440,8 +483,10 @@ The release adds finance-process-specific implementation, target-system, data, c
 
 ### Future Considerations
 
+Streamlit Cloud deployment will be added after final deployment verification.
+
 Potential future work may include AI-assisted drafting, but only with strict schema validation, traceability, and user review.
 
-External AI/API calls, live web scraping, and uncontrolled web RAG are intentionally excluded from the current build.
+External AI/API calls, live web scraping, and uncontrolled web RAG are intentionally excluded from the current build and are not part of the deployment plan.
 
 See [v0.3.0 planning notes](docs/v0.3.0_intake_and_mapping_plan.md) for the SOP upload, guided SOP build, manual intake, and curated target-system mapping approach.
