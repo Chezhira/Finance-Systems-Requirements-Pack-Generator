@@ -77,3 +77,32 @@ risks_and_dependencies:
   - Filing approval roles must match the finance governance model.
   - External tax advisor review may be required for complex adjustments.
   - Multi-entity VAT registrations need clear scope before rollout.
+implementation_readiness:
+  process_checks:
+    - check: Confirm source registers, VAT return boxes, and GL VAT control accounts reconcile through one reviewable process.
+      evidence: Approved VAT reconciliation design with mappings and sign-off points.
+      owner_role: Tax or VAT Process Owner
+      source_references: [FR-01, FR-02, FR-04, CTRL-01]
+    - check: Confirm VAT code and return-box mapping changes are versioned and independently approved.
+      evidence: Mapping governance procedure and change-evidence specification.
+      owner_role: Tax Controller
+      source_references: [FR-06, CTRL-03, AUD-03]
+  configuration_workshop_questions:
+    - question: Which tax codes, transaction types, and entities feed each VAT return box?
+      relevance: Establishes the controlled return mapping before configuration.
+      source_references: [FR-02, DR-04, UAT-02]
+    - question: What materiality thresholds require investigation or approval before filing?
+      relevance: Defines exception routing and filing-readiness controls.
+      source_references: [FR-04, CTRL-02, UAT-03]
+    - question: How should adjustments, prior-period corrections, and advisor-reviewed items be evidenced?
+      relevance: Preserves tax adjustment traceability and reviewer accountability.
+      source_references: [FR-05, AUD-05, UAT-04]
+  cutover_considerations:
+    - check: Validate tax-code mappings against current legislation, entity registrations, and filing design.
+      evidence: Tax-owner mapping sign-off and localisation validation record.
+      owner_role: Tax Controller
+      source_references: [DR-04, RISK-01, RISK-05]
+    - check: Reconcile and document treatment of legacy VAT control-account differences before go-live.
+      evidence: Signed VAT control-account reconciliation and transition journal plan.
+      owner_role: Financial Controller
+      source_references: [DR-06, RISK-02]

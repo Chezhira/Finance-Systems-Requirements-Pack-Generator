@@ -155,3 +155,7 @@ def test_generate_examples_creates_representative_matrix_samples(tmp_path: Path)
     assert "accounts_payable_process_map.html" in names
     assert "month_end_close_process_map.html" in names
     assert "payroll_controls_process_map.html" in names
+    assert "accounts_payable_implementation_readiness_pack.md" in names
+    assert "accounts_payable_implementation_readiness_pack.docx" in names
+    assert "month_end_close_implementation_readiness_pack.md" in names
+    assert "payroll_controls_implementation_readiness_pack.docx" in names

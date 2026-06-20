@@ -77,3 +77,32 @@ risks_and_dependencies:
   - Multi-currency treatment must align with accounting policy.
   - Historic unmatched balances may need remediation before rollout.
   - Entity teams must agree ownership of mismatch resolution.
+implementation_readiness:
+  process_checks:
+    - check: Confirm entity-pair matching, counterparty confirmation, settlement, and elimination responsibilities are agreed.
+      evidence: Approved intercompany operating model and entity responsibility matrix.
+      owner_role: Group Finance Intercompany Lead
+      source_references: [FR-01, FR-04, FR-06, CTRL-01]
+    - check: Confirm recharge rules, FX treatment, and settlement approvals align with group accounting policy.
+      evidence: Approved recharge, currency, and settlement policy mapping.
+      owner_role: Group Financial Controller
+      source_references: [FR-03, FR-05, CTRL-03]
+  configuration_workshop_questions:
+    - question: Which entity, counterparty, account, currency, and reference fields drive intercompany matching?
+      relevance: Establishes deterministic matching and mismatch classification.
+      source_references: [FR-01, DR-01, UAT-01]
+    - question: How should recharge allocations and markup rules vary by service and entity pair?
+      relevance: Defines controlled recharge configuration and versioning.
+      source_references: [FR-03, CTRL-02, UAT-03]
+    - question: Which FX differences require explanation, approval, or separate posting treatment?
+      relevance: Aligns settlement and elimination treatment with accounting policy.
+      source_references: [FR-05, CTRL-04, UAT-04]
+  cutover_considerations:
+    - check: Align entity charts and counterparty mappings before loading open balances.
+      evidence: Signed entity-pair account mapping and rejected-record log.
+      owner_role: Group Finance Data Lead
+      source_references: [DR-02, RISK-01]
+    - check: Confirm treatment of historic mismatches, confirmations, and FX differences at transition.
+      evidence: Approved opening intercompany reconciliation and remediation list.
+      owner_role: Group Financial Controller
+      source_references: [DR-06, RISK-04]

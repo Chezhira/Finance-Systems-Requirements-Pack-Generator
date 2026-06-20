@@ -77,3 +77,32 @@ risks_and_dependencies:
   - Credit policy thresholds must be approved by finance leadership.
   - Sales and finance ownership of disputes must be agreed before workflow design.
   - Customer master data may need cleansing before credit controls are reliable.
+implementation_readiness:
+  process_checks:
+    - check: Confirm billing, receipt allocation, dispute, credit-note, write-off, and collections states have agreed owners.
+      evidence: Approved AR workflow with escalation and posting authorities.
+      owner_role: AR Process Owner
+      source_references: [FR-01, FR-04, FR-06, CTRL-03]
+    - check: Confirm customer credit-limit and payment-term changes require review before becoming effective.
+      evidence: Customer master governance matrix and approval evidence design.
+      owner_role: Credit Controller
+      source_references: [FR-07, CTRL-04, AUD-03]
+  configuration_workshop_questions:
+    - question: Which remittance references and matching tolerances should automate cash allocation?
+      relevance: Defines allocation rules while preserving review of uncertain matches.
+      source_references: [FR-03, DR-05, UAT-01]
+    - question: How should disputes affect ageing, collections ownership, and customer statements?
+      relevance: Prevents disputed balances from disappearing from working-capital reporting.
+      source_references: [FR-04, RPT-02, UAT-03]
+    - question: Which approval thresholds apply to credit notes, refunds, and write-offs?
+      relevance: Establishes controlled value adjustments before configuration.
+      source_references: [FR-06, CTRL-03, UAT-05]
+  cutover_considerations:
+    - check: Cleanse customer masters, credit limits, payment terms, and duplicate customer records.
+      evidence: Signed customer cleansing results and approved exceptions.
+      owner_role: Customer Master Data Owner
+      source_references: [DR-01, RISK-05]
+    - check: Reconcile and classify historic unallocated receipts before opening-balance migration.
+      evidence: Approved unallocated-cash reconciliation and migration treatment.
+      owner_role: AR Controller
+      source_references: [DR-05, RISK-02]

@@ -32,6 +32,13 @@ REQUIRED_TEMPLATE_KEYS = {
     "uat_test_cases",
     "acceptance_criteria",
     "risks_and_dependencies",
+    "implementation_readiness",
+}
+
+READINESS_TEMPLATE_KEYS = {
+    "process_checks",
+    "configuration_workshop_questions",
+    "cutover_considerations",
 }
 
 
@@ -47,6 +54,12 @@ def load_process_template(process_key: str) -> dict[str, Any]:
     if missing:
         missing_keys = ", ".join(sorted(missing))
         raise ValueError(f"Template {process_key} is missing required keys: {missing_keys}")
+    readiness_missing = READINESS_TEMPLATE_KEYS.difference(template["implementation_readiness"])
+    if readiness_missing:
+        missing_keys = ", ".join(sorted(readiness_missing))
+        raise ValueError(
+            f"Template {process_key} readiness configuration is missing keys: {missing_keys}"
+        )
     return template
 
 

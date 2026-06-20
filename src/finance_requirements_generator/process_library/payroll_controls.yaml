@@ -77,3 +77,32 @@ risks_and_dependencies:
   - Sensitive payroll access roles must be configured carefully.
   - GL account mapping must be validated before reconciliation testing.
   - Historic payroll exception categories may need standardisation before rollout.
+implementation_readiness:
+  process_checks:
+    - check: Confirm starter, leaver, pay-change, payroll-run, and payment-file approvals have segregated owners.
+      evidence: Approved payroll control matrix and system access design.
+      owner_role: Payroll Controls Owner
+      source_references: [FR-01, FR-03, FR-06, CTRL-01]
+    - check: Confirm payroll register, GL posting, and payment-file totals reconcile before release.
+      evidence: Approved payroll-to-GL and payment reconciliation procedure.
+      owner_role: Payroll Finance Controller
+      source_references: [FR-05, CTRL-04, AUD-04]
+  configuration_workshop_questions:
+    - question: Which HR and payroll changes require dual approval, effective dating, and cutoff enforcement?
+      relevance: Defines sensitive payroll change controls and late-change treatment.
+      source_references: [FR-01, CTRL-01, UAT-01]
+    - question: Which exception categories and thresholds must stop payroll or payment-file release?
+      relevance: Establishes controlled payroll exception handling before configuration.
+      source_references: [FR-03, CTRL-03, UAT-03]
+    - question: How should payroll results map to GL accounts, dimensions, entities, and payment totals?
+      relevance: Defines reconciliation and posting design across payroll and finance systems.
+      source_references: [FR-05, DR-07, UAT-04]
+  cutover_considerations:
+    - check: Validate employee payroll masters, effective-dated changes, access roles, and statutory fields.
+      evidence: Signed payroll data and access validation with protected exception handling.
+      owner_role: Payroll Controls Owner
+      source_references: [DR-01, RISK-01, RISK-03]
+    - check: Complete parallel payroll, GL reconciliation, and payment-file control testing before cutover.
+      evidence: Approved parallel-run reconciliation and unresolved variance log.
+      owner_role: Payroll Finance Controller
+      source_references: [UAT-04, UAT-05, RISK-04]

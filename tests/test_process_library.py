@@ -1,4 +1,5 @@
 from finance_requirements_generator.process_library import (
+    READINESS_TEMPLATE_KEYS,
     REQUIRED_TEMPLATE_KEYS,
     SUPPORTED_PROCESSES,
     load_all_templates,
@@ -21,3 +22,4 @@ def test_all_process_templates_have_required_keys() -> None:
         assert len(template["uat_test_cases"]) >= 6
         assert len(template["acceptance_criteria"]) >= 5
         assert len(template["risks_and_dependencies"]) >= 5
+        assert READINESS_TEMPLATE_KEYS.issubset(template["implementation_readiness"])

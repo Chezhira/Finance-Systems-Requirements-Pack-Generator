@@ -88,6 +88,52 @@ class ProcessMapFlow:
 
 
 @dataclass(frozen=True)
+class ReadinessCheck:
+    check_id: str
+    checklist_area: str
+    finance_specific_check: str
+    evidence_required: str
+    suggested_owner_role: str
+    source_references: list[str]
+    review_status: str = "Not assessed"
+    validation_note: str = "Requires finance and implementation team review."
+
+
+@dataclass(frozen=True)
+class WorkshopQuestion:
+    question_id: str
+    question: str
+    implementation_relevance: str
+    source_references: list[str]
+
+
+@dataclass(frozen=True)
+class OpenDecision:
+    decision_id: str
+    decision_required: str
+    dependency_or_impact: str
+    suggested_decision_owner: str
+    source_references: list[str]
+
+
+@dataclass(frozen=True)
+class ImplementationReadinessPack:
+    process_key: str
+    process_name: str
+    company_name: str
+    target_system: str
+    readiness_summary: str
+    process_implementation_checklist: list[ReadinessCheck]
+    target_system_readiness_checklist: list[ReadinessCheck]
+    data_readiness_checklist: list[ReadinessCheck]
+    controls_and_uat_readiness_checklist: list[ReadinessCheck]
+    configuration_workshop_questions: list[WorkshopQuestion]
+    cutover_readiness_notes: list[ReadinessCheck]
+    open_decisions_and_dependencies: list[OpenDecision]
+    public_safe_sample_data_note: str
+
+
+@dataclass(frozen=True)
 class SOPDraft:
     purpose: str
     scope: str

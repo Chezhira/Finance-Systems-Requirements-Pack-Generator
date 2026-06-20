@@ -77,3 +77,32 @@ risks_and_dependencies:
   - Journal approval thresholds must align with delegation of authority.
   - Legacy spreadsheet trackers may need migration or archive decisions.
   - Users need discipline to attach evidence before sign-off.
+implementation_readiness:
+  process_checks:
+    - check: Confirm the close calendar defines every task owner, reviewer, dependency, due point, and evidence requirement.
+      evidence: Approved close calendar and responsibility matrix.
+      owner_role: Financial Controller
+      source_references: [FR-01, FR-02, CTRL-01]
+    - check: Confirm journals and high-risk reconciliations cannot reach completion without required approval and sign-off.
+      evidence: Approved journal and reconciliation control workflow.
+      owner_role: Close Process Owner
+      source_references: [FR-04, FR-05, CTRL-03, CTRL-04]
+  configuration_workshop_questions:
+    - question: Which close tasks are entity-specific, group-wide, dependent, recurring, or conditional?
+      relevance: Defines reusable close templates and dependency sequencing.
+      source_references: [FR-01, DR-01, UAT-01]
+    - question: Which reconciliation risk ratings require additional review or evidence?
+      relevance: Aligns reconciliation workflow with finance risk policy.
+      source_references: [FR-04, CTRL-03, UAT-03]
+    - question: Which journal types and thresholds require preparer, reviewer, and final approver separation?
+      relevance: Establishes journal workflow and segregation before configuration.
+      source_references: [FR-05, CTRL-04, UAT-04]
+  cutover_considerations:
+    - check: Approve migration or archive treatment for legacy close trackers and evidence links.
+      evidence: Signed tracker transition plan and retained-evidence inventory.
+      owner_role: Close Process Owner
+      source_references: [DR-08, RISK-04]
+    - check: Load and dry-run the first close calendar with owners, dependencies, and reviewer capacity confirmed.
+      evidence: Completed mock close with documented timing and unresolved gaps.
+      owner_role: Financial Controller
+      source_references: [FR-01, RISK-01]

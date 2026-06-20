@@ -77,3 +77,32 @@ risks_and_dependencies:
   - Delegated approval rules must be signed off by finance leadership.
   - Payment platform integration scope must be confirmed before build.
   - Users need training on exception reason codes to avoid inconsistent reporting.
+implementation_readiness:
+  process_checks:
+    - check: Confirm invoice intake, matching, approval, and payment-readiness states are signed off end to end.
+      evidence: Approved AP workflow showing owners, thresholds, exception routes, and payment holds.
+      owner_role: AP Process Owner
+      source_references: [FR-03, FR-04, FR-05, CTRL-02]
+    - check: Confirm supplier master and bank-detail changes are segregated from invoice and payment approval.
+      evidence: Approved role matrix and sensitive supplier-field change procedure.
+      owner_role: AP Controller
+      source_references: [FR-06, CTRL-03, AUD-03]
+  configuration_workshop_questions:
+    - question: Which supplier, invoice, currency, amount, and date combinations should trigger duplicate-invoice review?
+      relevance: Defines duplicate detection configuration without blocking legitimate recurring invoices.
+      source_references: [FR-02, CTRL-01, UAT-01]
+    - question: How should approval thresholds vary by cost centre, amount, supplier category, and delegation status?
+      relevance: Establishes AP routing and delegation rules before workflow configuration.
+      source_references: [FR-04, CTRL-02, UAT-03]
+    - question: Which exceptions can proceed without purchase-order or goods-receipt evidence, and who approves them?
+      relevance: Defines controlled non-PO and match-exception treatment.
+      source_references: [FR-03, CTRL-04, UAT-02]
+  cutover_considerations:
+    - check: Cleanse supplier masters, duplicate suppliers, bank details, tax identifiers, and payment terms before migration.
+      evidence: Signed supplier cleansing results and unresolved-exception log.
+      owner_role: Supplier Master Data Owner
+      source_references: [DR-01, RISK-01]
+    - check: Resolve or explicitly migrate blocked invoices and unmatched purchase-order or receipt exceptions.
+      evidence: Approved open-item migration treatment and reconciliation totals.
+      owner_role: AP Controller
+      source_references: [DR-03, DR-04, RISK-02]

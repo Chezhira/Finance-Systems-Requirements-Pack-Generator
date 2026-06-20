@@ -77,3 +77,32 @@ risks_and_dependencies:
   - Finance policy thresholds for ageing and escalation must be approved.
   - Reviewer roles must be configured before go-live.
   - Historic suspense items may need cleanup before migration.
+implementation_readiness:
+  process_checks:
+    - check: Confirm bank statement ingestion, matching, exception ownership, review, and sign-off operate as one controlled flow.
+      evidence: Approved reconciliation workflow and reviewer responsibility matrix.
+      owner_role: Treasury or Reconciliation Lead
+      source_references: [FR-01, FR-03, FR-06, CTRL-03]
+    - check: Confirm manual matches, overrides, and reopened reconciliations retain reason and approval evidence.
+      evidence: Approved override and reopen control design.
+      owner_role: Financial Controller
+      source_references: [FR-05, CTRL-04, AUD-04]
+  configuration_workshop_questions:
+    - question: Which bank references, dates, amounts, and tolerances should drive automatic matching?
+      relevance: Sets matching rules without concealing uncertain or duplicate matches.
+      source_references: [FR-02, DR-04, UAT-01]
+    - question: How should unmatched and suspense items age, escalate, and carry ownership?
+      relevance: Defines period-end exception governance and reporting.
+      source_references: [FR-03, RPT-02, UAT-03]
+    - question: Under what conditions may a signed-off reconciliation be reopened?
+      relevance: Protects review evidence while allowing controlled corrections.
+      source_references: [FR-06, CTRL-05, UAT-05]
+  cutover_considerations:
+    - check: Standardise and test statement formats for every in-scope bank account.
+      evidence: Successful ingestion test and field-mapping sign-off by account.
+      owner_role: Treasury Systems Owner
+      source_references: [DR-01, RISK-01]
+    - check: Resolve or approve migration treatment for historic suspense and unmatched items.
+      evidence: Reconciled suspense opening balance and aged-item migration log.
+      owner_role: Financial Controller
+      source_references: [DR-06, RISK-05]

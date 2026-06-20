@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import inspect
 import sys
 from pathlib import Path
 
@@ -17,9 +18,12 @@ from finance_requirements_generator.exports import (
     pack_process_map_html_bytes,
     pack_to_docx_bytes,
     pack_to_markdown,
+    pack_to_readiness_docx_bytes,
+    pack_to_readiness_markdown,
 )
 from finance_requirements_generator.process_library import SUPPORTED_PROCESSES, load_all_templates
 from finance_requirements_generator.questionnaire import DEFAULT_SAMPLE_INPUTS
+from finance_requirements_generator.readiness_engine import generate_implementation_readiness_pack
 from finance_requirements_generator.schemas import IntakeAnswers
 from finance_requirements_generator.sop_intake import (
     GuidedSOPAnswers,
@@ -199,6 +203,7 @@ def main() -> None:
 
     render_pack(pack)
     render_visual_outputs(pack)
+    render_implementation_readiness(generate_implementation_readiness_pack(pack))
     render_downloads(pack)
     render_gallery()
 
@@ -380,7 +385,7 @@ def render_visual_outputs(pack) -> None:
     with st.expander("Advanced: Mermaid source", expanded=False):
         st.code(pack.mermaid_process_map, language="mermaid")
     with st.expander("Control-risk matrix preview", expanded=False):
-        st.dataframe(
+        render_dataframe(
             [
                 {
                     "Risk Area": row.risk_area,
@@ -390,9 +395,102 @@ def render_visual_outputs(pack) -> None:
                     "Related UAT Case": row.related_uat_case,
                 }
                 for row in pack.control_risk_matrix
-            ],
-            use_container_width=True,
+            ]
         )
+
+
+def render_implementation_readiness(readiness_pack) -> None:
+    st.subheader("Implementation Readiness")
+    st.write(readiness_pack.readiness_summary)
+    tabs = st.tabs(
+        [
+            "Process",
+            "Target system",
+            "Data",
+            "Controls & UAT",
+            "Workshop questions",
+            "Cutover",
+            "Open decisions",
+        ]
+    )
+    check_sections = [
+        readiness_pack.process_implementation_checklist,
+        readiness_pack.target_system_readiness_checklist,
+        readiness_pack.data_readiness_checklist,
+        readiness_pack.controls_and_uat_readiness_checklist,
+    ]
+    for tab, checks in zip(tabs[:4], check_sections, strict=True):
+        with tab:
+            render_dataframe(_readiness_check_rows(checks))
+    with tabs[4]:
+        render_dataframe(
+            [
+                {
+                    "ID": item.question_id,
+                    "Question": item.question,
+                    "Implementation relevance": item.implementation_relevance,
+                    "Sources": ", ".join(item.source_references),
+                }
+                for item in readiness_pack.configuration_workshop_questions
+            ]
+        )
+    with tabs[5]:
+        render_dataframe(_readiness_check_rows(readiness_pack.cutover_readiness_notes))
+    with tabs[6]:
+        render_dataframe(
+            [
+                {
+                    "ID": item.decision_id,
+                    "Decision required": item.decision_required,
+                    "Dependency / impact": item.dependency_or_impact,
+                    "Suggested owner": item.suggested_decision_owner,
+                    "Sources": ", ".join(item.source_references),
+                }
+                for item in readiness_pack.open_decisions_and_dependencies
+            ]
+        )
+    st.caption(
+        "All checks start as Not assessed. Review evidence and decisions with finance and the "
+        "implementation team before configuration or cutover sign-off."
+    )
+    filename_base = readiness_pack.process_key.replace("_", "-")
+    markdown_col, docx_col = st.columns(2)
+    with markdown_col:
+        st.download_button(
+            "Download readiness Markdown",
+            data=pack_to_readiness_markdown(readiness_pack),
+            file_name=f"{filename_base}-implementation-readiness-pack.md",
+            mime="text/markdown",
+        )
+    with docx_col:
+        st.download_button(
+            "Download readiness DOCX",
+            data=pack_to_readiness_docx_bytes(readiness_pack),
+            file_name=f"{filename_base}-implementation-readiness-pack.docx",
+            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        )
+
+
+def _readiness_check_rows(checks) -> list[dict[str, str]]:
+    return [
+        {
+            "ID": item.check_id,
+            "Finance-specific check": item.finance_specific_check,
+            "Evidence required": item.evidence_required,
+            "Suggested owner": item.suggested_owner_role,
+            "Status": item.review_status,
+            "Sources": ", ".join(item.source_references),
+            "Validation note": item.validation_note,
+        }
+        for item in checks
+    ]
+
+
+def render_dataframe(data) -> None:
+    if "width" in inspect.signature(st.dataframe).parameters:
+        st.dataframe(data, width="stretch")
+    else:
+        st.dataframe(data, use_container_width=True)
 
 
 def render_gallery() -> None:

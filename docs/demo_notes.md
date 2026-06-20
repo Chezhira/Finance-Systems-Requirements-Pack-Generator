@@ -11,7 +11,8 @@ This repository demonstrates how structured finance intake can become implementa
 5. Review the editable intake fields before generating the pack.
 6. Generate the pack and inspect the expandable sections.
 7. Preview the finance control-flow process map and control-risk matrix.
-8. Download Markdown, DOCX, CSV, XLSX, Mermaid source, or browser-viewable HTML outputs.
+8. Review the seven Implementation Readiness tabs and source references.
+9. Download requirements, readiness, matrix, Mermaid, or browser-viewable HTML outputs.
 
 ## What to look for
 
@@ -24,11 +25,13 @@ This repository demonstrates how structured finance intake can become implementa
 - Browser-viewable HTML process maps for non-technical reviewers, using the finance control-flow design.
 - Editable Mermaid source for technical users and downstream documentation tools.
 - Control-risk matrix export as CSV and XLSX.
+- Separate Implementation Readiness Pack with process, target-system, data, controls/UAT, workshop, cutover, and open-decision sections.
+- Readiness Markdown and DOCX exports with `Not assessed` status and source traceability.
 - Deterministic output from bundled templates, with no external AI/API calls, no web scraping, and no live web RAG.
 - Sample outputs under `examples/generated_packs`.
 - Public-safe examples that use fictional company names and no operational business data.
 
-## v0.4.0 review direction
+## v0.5.0 review direction
 
 The v0.3.0 flow supports users with SOPs and users without SOPs. The intake does not assume a workflow document already exists.
 
@@ -41,3 +44,5 @@ Target-system mapping should ask the user to select the ERP or finance system, u
 The v0.4.0 outputs add visual process documentation and control-risk exports without changing that deterministic posture. Review the browser-viewable HTML map, Mermaid source, Word-friendly process-map summary, CSV matrix, and XLSX matrix as implementation-preparation artefacts.
 
 The HTML process map opens directly in a browser and renders with deterministic HTML/CSS nodes and connectors. Mermaid source remains available as a secondary technical download and inside a closed advanced section. Export generation does not call external APIs, scrape the web, or use live web RAG.
+
+The v0.5.0 readiness pack is a separate review artefact derived from the approved requirements pack. It does not calculate readiness scores or add project-management workflows. Review the process-specific checks, evidence expectations, target-system validation notes, workshop questions, cutover considerations, open decisions, and source references before configuration or cutover sign-off.

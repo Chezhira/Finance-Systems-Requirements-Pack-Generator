@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "finance-requirements-generator"
-version = "0.1.0"
-description = "Synthetic finance systems requirements pack generator for ERP and transformation analysis."
+version = "0.5.0"
+description = "Finance systems requirements and implementation readiness pack generator."
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [{ name = "Zahidah Murira / Chez Solutions" }]

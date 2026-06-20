@@ -77,3 +77,32 @@ risks_and_dependencies:
   - Landed cost source data may depend on procurement and logistics integration.
   - Historic stock adjustments may require review before migration.
   - Operations and finance ownership of variance resolution must be agreed.
+implementation_readiness:
+  process_checks:
+    - check: Confirm costing method, valuation rules, landed-cost allocation, and adjustment approvals are signed off.
+      evidence: Approved costing policy mapped to system configuration decisions.
+      owner_role: Inventory Accounting Lead
+      source_references: [FR-01, FR-03, FR-05, CTRL-02]
+    - check: Confirm inventory subledger-to-GL differences have owners, reason categories, and period-end sign-off.
+      evidence: Approved reconciliation workflow and exception reporting design.
+      owner_role: Inventory Controller
+      source_references: [FR-06, CTRL-04, AUD-04]
+  configuration_workshop_questions:
+    - question: Which costing method applies by item, category, location, and legal entity?
+      relevance: Defines valuation configuration and prevents inconsistent costing treatment.
+      source_references: [FR-01, DR-04, UAT-01]
+    - question: Which landed-cost components and allocation bases apply to each inventory flow?
+      relevance: Establishes repeatable freight, duty, and handling allocation.
+      source_references: [FR-03, DR-07, UAT-03]
+    - question: Which stock adjustments and variances require approval or finance investigation?
+      relevance: Defines materiality, ownership, and evidence for inventory exceptions.
+      source_references: [FR-05, CTRL-03, UAT-04]
+  cutover_considerations:
+    - check: Cleanse item masters, units, warehouse locations, and costing attributes before migration.
+      evidence: Signed item and location data-quality results.
+      owner_role: Inventory Master Data Owner
+      source_references: [DR-01, DR-02, RISK-01]
+    - check: Reconcile migrated quantities and values to the opening inventory control accounts.
+      evidence: Signed opening valuation and subledger-to-GL reconciliation.
+      owner_role: Inventory Controller
+      source_references: [DR-06, RISK-04]

@@ -43,6 +43,8 @@ def test_streamlit_process_map_source_is_secondary_and_collapsed() -> None:
     assert not advanced[0].proto.expanded
     assert "Download process map as HTML" in download_labels
     assert "Download Mermaid source" in download_labels
+    assert "Download readiness Markdown" in download_labels
+    assert "Download readiness DOCX" in download_labels
 
 
 def test_streamlit_preview_fields_exist_on_generated_packs() -> None:
