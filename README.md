@@ -1,15 +1,18 @@
 # Finance Systems Requirements Pack Generator
 
 [![CI](https://github.com/Chezhira/Finance-Systems-Requirements-Pack-Generator/actions/workflows/ci.yml/badge.svg)](https://github.com/Chezhira/Finance-Systems-Requirements-Pack-Generator/actions/workflows/ci.yml)
-![Release](https://img.shields.io/github/v/release/Chezhira/Finance-Systems-Requirements-Pack-Generator?label=release)
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://finance-systems-requirements-pack-generator.streamlit.app/)
+![Version](https://img.shields.io/github/v/tag/Chezhira/Finance-Systems-Requirements-Pack-Generator?label=version)
 ![Python](https://img.shields.io/badge/python-3.11%2B-blue)
-![Streamlit](https://img.shields.io/badge/streamlit-app-ff4b4b)
+![Streamlit](https://img.shields.io/badge/streamlit-cloud-ff4b4b)
 ![Ruff](https://img.shields.io/badge/lint-ruff-46a2f1)
 ![Pytest](https://img.shields.io/badge/tests-pytest-0a7f3f)
 ![Deterministic](https://img.shields.io/badge/design-deterministic-0e7c66)
 ![No External AI/API](https://img.shields.io/badge/external_AI%2FAPI-none-142238)
 
-A Streamlit application that turns finance process knowledge into implementation-ready ERP and finance transformation artefacts.
+**Live demo:** [Finance Systems Requirements Pack Generator](https://finance-systems-requirements-pack-generator.streamlit.app/)
+
+A deployed Streamlit application that turns finance process knowledge into implementation-ready ERP and finance transformation artefacts.
 
 Finance systems projects often fail because requirements are vague, controls are undocumented, data needs are unclear, process ownership is not agreed, and UAT expectations are defined too late. This project addresses that gap by converting structured finance intake, SOP/workflow documentation, and guided process discovery into reviewable requirements packs, control-risk matrices, process-flow documentation, and implementation-readiness packs.
 
@@ -312,6 +315,14 @@ They are available in:
 examples/sample_sops/
 ```
 
+## Live Deployment
+
+The app is deployed on Streamlit Cloud:
+
+[https://finance-systems-requirements-pack-generator.streamlit.app/](https://finance-systems-requirements-pack-generator.streamlit.app/)
+
+The live deployment is intended for public-safe portfolio demonstration. Use fictional or non-confidential inputs only. Do not upload employer, client, supplier, bank, VAT, payroll, HR, customer, or operational data into the public app.
+
 ## Why This Matters For Finance Transformation
 
 Finance systems projects rarely fail because teams cannot imagine a dashboard. They fail because process ownership, source data, approval evidence, audit trail requirements, exception handling, control design, and UAT expectations were not made specific early enough.
@@ -355,14 +366,14 @@ The bundled examples use fictional company names and public-safe sample inputs.
 
 The repository does not contain real employer, client, supplier, bank, VAT, payroll, HR, customer, or operational data.
 
-Do not upload confidential business information into a public demo.
+The live app is intended for public-safe portfolio demonstration only. Do not upload confidential business information into the public deployment.
 
 ## Technical Overview
 
 The application is built with:
 
 * Python
-* Streamlit
+* Streamlit and Streamlit Cloud deployment
 * YAML process library
 * Structured schemas
 * Deterministic template generation
@@ -370,8 +381,8 @@ The application is built with:
 * DOCX export
 * CSV/XLSX control-risk matrix export
 * Curated target-system mapping data
-* Mermaid process map generation
-* Browser-viewable HTML process map export
+* Deterministic browser-viewable HTML/CSS process-flow export
+* Mermaid source generation as a secondary technical output
 * Markdown/DOCX implementation readiness pack export
 * Pytest test suite
 * Ruff linting
@@ -413,6 +424,8 @@ GitHub Actions runs ruff, pytest, and a sample generation smoke step on push and
 ## Project Structure
 
 ```text
+.streamlit/
+  config.toml
 app.py
 src/finance_requirements_generator/
   questionnaire.py
@@ -483,10 +496,8 @@ The release adds finance-process-specific implementation, target-system, data, c
 
 ### Future Considerations
 
-Streamlit Cloud deployment will be added after final deployment verification.
+Potential future work may include AI-assisted drafting, but only with strict schema validation, traceability, and human review.
 
-Potential future work may include AI-assisted drafting, but only with strict schema validation, traceability, and user review.
-
-External AI/API calls, live web scraping, and uncontrolled web RAG are intentionally excluded from the current build and are not part of the deployment plan.
+External AI/API calls, live web scraping, and uncontrolled web RAG are intentionally excluded from the current build.
 
 See [v0.3.0 planning notes](docs/v0.3.0_intake_and_mapping_plan.md) for the SOP upload, guided SOP build, manual intake, and curated target-system mapping approach.
