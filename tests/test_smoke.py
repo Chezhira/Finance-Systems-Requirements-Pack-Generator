@@ -33,6 +33,7 @@ def test_streamlit_process_map_source_is_secondary_and_collapsed() -> None:
 
     assert not streamlit_app.exception
     download_labels = {item.label for item in streamlit_app.get("download_button")}
+    all_download_labels = [item.label for item in streamlit_app.get("download_button")]
     advanced = [
         item
         for item in streamlit_app.expander
@@ -45,6 +46,22 @@ def test_streamlit_process_map_source_is_secondary_and_collapsed() -> None:
     assert "Download Mermaid source" in download_labels
     assert "Download readiness Markdown" in download_labels
     assert "Download readiness DOCX" in download_labels
+    assert all(all_download_labels.count(label) == 1 for label in download_labels)
+    tab_labels = {tab.label for tab in streamlit_app.tabs}
+    assert {
+        "Scope & context",
+        "Requirements",
+        "Controls & evidence",
+        "Stories & UAT",
+        "Delivery",
+        "Process",
+        "Target system",
+        "Data",
+        "Controls & UAT",
+        "Workshop questions",
+        "Cutover",
+        "Open decisions",
+    }.issubset(tab_labels)
 
 
 def test_streamlit_preview_fields_exist_on_generated_packs() -> None:

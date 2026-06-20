@@ -95,21 +95,24 @@ def pack_process_map_html_bytes(pack: RequirementsPack) -> bytes:
       content:""; position:absolute; top:-4px; right:-1px; border-width:5px 0 5px 7px;
       border-style:solid; border-color:transparent transparent transparent var(--connector);
     }}
-    .branch-options {{
-      display:grid; width:242px; flex:0 0 242px; gap:14px; padding:0 10px;
+    .branch-stage {{
+      position:relative; width:290px; height:180px; flex:0 0 290px;
     }}
-    .branch {{ display:flex; align-items:center; gap:8px; }}
+    .branch-connectors {{
+      position:absolute; inset:0; width:290px; height:180px; overflow:visible;
+    }}
+    .branch-connectors > path {{
+      fill:none; stroke:var(--connector); stroke-width:2; vector-effect:non-scaling-stroke;
+    }}
     .branch-label {{
-      width:24px; flex:0 0 24px; color:var(--muted); font-family:var(--mono);
-      font-size:10px; font-weight:700; text-transform:uppercase;
+      position:absolute; z-index:2; padding:2px 5px; background:#fff; color:var(--muted);
+      font-family:var(--mono); font-size:10px; font-weight:700; text-transform:uppercase;
     }}
-    .branch-line {{ position:relative; height:2px; flex:1; background:var(--connector); }}
-    .branch-line::after {{
-      content:""; position:absolute; top:-4px; right:-1px; border-width:5px 0 5px 7px;
-      border-style:solid; border-color:transparent transparent transparent var(--connector);
+    .branch-label.no {{ top:18px; left:132px; }}
+    .branch-label.yes {{ top:69px; left:12px; }}
+    .branch-stage .flow-node.fix {{
+      position:absolute; z-index:3; top:51px; left:55px; width:178px; min-height:78px;
     }}
-    .branch.yes {{ align-items:center; }}
-    .branch.yes .branch-line {{ min-width:16px; }}
     .legend {{
       display:flex; flex-wrap:wrap; gap:10px 26px; padding:18px 22px;
       border-top:1px solid var(--line); background:#fbfcfe;
@@ -175,16 +178,7 @@ def pack_process_map_html_bytes(pack: RequirementsPack) -> bytes:
           {_node(flow.validation, "step", "Validate")}
           <span class="connector" aria-hidden="true"></span>
           {_node(flow.decision, "decide", "Decision")}
-          <div class="branch-options" aria-label="Exception decision routes">
-            <div class="branch no">
-              <span class="branch-label">No</span><span class="branch-line"></span>
-            </div>
-            <div class="branch yes">
-              <span class="branch-label">Yes</span>
-              {_node(flow.exception_resolution, "fix", "Remediate")}
-              <span class="branch-line"></span>
-            </div>
-          </div>
+          {_branch_stage(flow.exception_resolution)}
           {_node(flow.approval, "step", "Approve")}
           <span class="connector" aria-hidden="true"></span>
           {_node(flow.reporting, "step", "Evidence")}
@@ -283,3 +277,22 @@ def _legend() -> str:
         </div>
         <div class="key"><span class="swatch fix"></span><b>Exception</b> &mdash; remediate</div>
       </div>"""
+
+
+def _branch_stage(exception_label: str) -> str:
+    return f"""<div class="branch-stage" aria-label="Exception decision routes">
+            <svg class="branch-connectors" viewBox="0 0 290 180" aria-hidden="true">
+              <defs>
+                <marker id="branch-arrow" viewBox="0 0 10 10" refX="9" refY="5"
+                  markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#a9b6c8" stroke="none"></path>
+                </marker>
+              </defs>
+              <path d="M 0 90 H 32 V 30 H 270 V 90 H 290" marker-end="url(#branch-arrow)"></path>
+              <path d="M 0 90 H 55" marker-end="url(#branch-arrow)"></path>
+              <path d="M 233 90 H 290" marker-end="url(#branch-arrow)"></path>
+            </svg>
+            <span class="branch-label no">No &middot; continue</span>
+            <span class="branch-label yes">Yes</span>
+            {_node(exception_label, "fix", "Remediate")}
+          </div>"""

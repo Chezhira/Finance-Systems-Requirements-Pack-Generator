@@ -101,6 +101,13 @@ def test_browser_process_map_export_is_styled_and_offline_safe(monkeypatch) -> N
     assert escape(pack.mermaid_process_map) in html
     assert html.count(escape(pack.mermaid_process_map)) == 1
     assert 'class="flow-track"' in html
+    assert 'class="branch-stage"' in html
+    assert 'class="branch-connectors"' in html
+    assert 'd="M 0 90 H 32 V 30 H 270 V 90 H 290"' in html
+    assert 'd="M 233 90 H 290"' in html
+    assert "No &middot; continue" in html
+    assert '<span class="branch-label yes">Yes</span>' in html
+    assert "branch-options" not in html
     assert all(name in html for name in ("flow-node gate", "flow-node step", "flow-node decide"))
     assert "flow-node fix" in html
     assert pack.process_map_flow is not None
@@ -126,6 +133,17 @@ def test_browser_process_map_export_is_styled_and_offline_safe(monkeypatch) -> N
     assert "Rendering process map" not in html
     assert "Diagram could not render automatically" not in html
     assert "Print / Save as PDF" in html
+
+
+def test_representative_process_maps_use_the_robust_branch_layout() -> None:
+    for process_key in ("accounts_payable", "month_end_close", "payroll_controls"):
+        pack = generate_pack(DEFAULT_SAMPLE_INPUTS[process_key])
+        html = pack_process_map_html_bytes(pack).decode("utf-8")
+
+        assert html.count('class="branch-stage"') == 1
+        assert html.count('marker-end="url(#branch-arrow)"') == 3
+        assert escape(pack.process_map_flow.exception_resolution) in html
+        assert escape(pack.process_map_flow.approval) in html
 
 
 def test_markdown_and_docx_include_visual_sections() -> None:

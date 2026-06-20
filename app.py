@@ -60,40 +60,96 @@ INTAKE_MODES = [
     "Build SOP from guided questions",
 ]
 
+APP_STYLES = """
+<style>
+  :root {
+    --finance-ink:#142238;
+    --finance-green:#0e7c66;
+    --finance-gold:#b78323;
+    --finance-muted:#667085;
+    --finance-line:#d9e0e8;
+    --finance-surface:#ffffff;
+    --finance-bg:#f4f6f8;
+  }
+  [data-testid="stAppViewContainer"] { background:var(--finance-bg); }
+  [data-testid="stHeader"] { background:rgba(244,246,248,.94); }
+  .block-container { max-width:1480px; padding-top:1.8rem; padding-bottom:3.5rem; }
+  .app-header {
+    padding:0 0 1.35rem; margin-bottom:1.2rem; border-bottom:1px solid var(--finance-line);
+  }
+  .app-eyebrow {
+    margin:0 0 .45rem; color:var(--finance-green); font-size:.72rem; font-weight:700;
+    letter-spacing:.16em; text-transform:uppercase;
+  }
+  .app-header h1 {
+    margin:0; color:var(--finance-ink); font-size:2rem; line-height:1.2; letter-spacing:0;
+  }
+  .app-header p {
+    max-width:860px; margin:.55rem 0 0; color:#475467; font-size:1rem; line-height:1.55;
+  }
+  .section-heading { margin:.2rem 0 .8rem; }
+  .section-index {
+    display:inline-block; min-width:2rem; color:var(--finance-gold); font-size:.72rem;
+    font-weight:800; letter-spacing:.12em;
+  }
+  .section-heading h2 {
+    display:inline; margin:0; color:var(--finance-ink); font-size:1.32rem; letter-spacing:0;
+  }
+  .section-heading p { margin:.32rem 0 0 2.05rem; color:var(--finance-muted); font-size:.9rem; }
+  div[data-testid="stForm"] {
+    padding:1.2rem 1.25rem 1.3rem; background:var(--finance-surface);
+    border:1px solid var(--finance-line); border-radius:8px;
+  }
+  div[data-testid="stExpander"] {
+    background:var(--finance-surface); border-color:var(--finance-line);
+  }
+  div[data-testid="stTabs"] [data-baseweb="tab-list"] { gap:.25rem; }
+  div[data-testid="stTabs"] button { font-weight:600; }
+  div[data-testid="stDownloadButton"] button { width:100%; min-height:2.55rem; }
+  div[data-testid="stAlert"] { border-radius:6px; }
+  .download-group-title {
+    margin:0 0 .2rem; color:var(--finance-ink); font-size:.93rem; font-weight:700;
+  }
+  .download-group-copy { margin:0 0 .75rem; color:var(--finance-muted); font-size:.8rem; }
+  .public-safe-note { color:var(--finance-muted); font-size:.8rem; }
+</style>
+"""
+
 
 def main() -> None:
     st.set_page_config(
         page_title="Finance Requirements Pack Generator",
         layout="wide",
     )
+    inject_app_styles()
     templates = load_all_templates()
-
-    st.title("Finance Systems Requirements Pack Generator")
-    st.caption("BRD, controls, and UAT accelerator for ERP finance transformation.")
-
-    st.markdown(
-        "Weak finance requirements can turn ERP and automation projects into rework. "
-        "This app converts a structured finance intake into a practical requirements pack "
-        "covering controls, data, audit trail, user stories, UAT, and acceptance criteria."
+    render_app_header()
+    render_section_header(
+        "01",
+        "Intake",
+        "Set the finance process, discovery route, target-system context, and "
+        "implementation needs.",
     )
-
-    selected_process = st.selectbox(
-        "Finance process",
-        options=list(SUPPORTED_PROCESSES),
-        format_func=lambda key: process_option_label(key, templates),
-    )
+    selector_left, selector_right = st.columns([1, 1])
+    with selector_left:
+        selected_process = st.selectbox(
+            "Finance process",
+            options=list(SUPPORTED_PROCESSES),
+            format_func=lambda key: process_option_label(key, templates),
+        )
     process_key = resolve_process_key(selected_process, templates)
     sample = DEFAULT_SAMPLE_INPUTS[process_key]
-    intake_mode = st.radio("Intake mode", INTAKE_MODES, horizontal=True)
-    target_system = st.selectbox(
-        "Target ERP/system for candidate fit-gap mapping",
-        options=["No target-system mapping", *TARGET_SYSTEMS],
-        index=0,
-        help=(
-            "Uses curated repository mappings only. Candidate mapping requires implementation "
-            "validation and does not guarantee ERP capability."
-        ),
-    )
+    with selector_right:
+        target_system = st.selectbox(
+            "Target ERP/system",
+            options=["No target-system mapping", *TARGET_SYSTEMS],
+            index=0,
+            help=(
+                "Uses curated repository mappings only. Candidate mapping requires implementation "
+                "validation and does not guarantee ERP capability."
+            ),
+        )
+    intake_mode = select_intake_mode()
     mapped_fields = None
 
     if intake_mode == "Upload SOP / workflow document":
@@ -131,6 +187,7 @@ def main() -> None:
         mapped_fields = render_guided_sop_builder(templates[process_key]["name"], sample)
 
     with st.form("intake_form"):
+        st.markdown("#### Organisation and delivery context")
         left, right = st.columns(2)
         with left:
             company_name = st.text_input("Fictional company name", sample.company_name)
@@ -147,15 +204,19 @@ def main() -> None:
             deadline = st.text_input("Target delivery window", sample.deadline)
         with right:
             current_tools = st.text_area(
-                "Current tools/process",
+                "Current tools and workflow",
                 mapped_fields.current_tools if mapped_fields else sample.current_tools,
             )
             reporting_needs = st.text_area(
-                "Reporting requirement",
+                "Reporting and management information",
                 mapped_fields.reporting_needs if mapped_fields else sample.reporting_needs,
             )
+        st.divider()
+        st.markdown("#### Process risks, controls, and evidence")
+        left, right = st.columns(2)
+        with left:
             compliance_focus = st.text_area(
-                "Compliance/control focus",
+                "Compliance, control, and audit focus",
                 mapped_fields.compliance_focus if mapped_fields else sample.compliance_focus,
             )
             pain_point_options = templates[process_key]["pain_point_prompts"]
@@ -164,21 +225,22 @@ def main() -> None:
                 pain_point_options,
             )
             pain_points = st.multiselect(
-                "Pain points",
+                "Priority pain points",
                 options=pain_point_options,
                 default=default_pain_points,
             )
+        with right:
             control_options = templates[process_key]["controls"]
             default_controls = safe_multiselect_defaults(
                 mapped_fields.control_concerns if mapped_fields else sample.control_concerns,
                 control_options,
             )
             control_concerns = st.multiselect(
-                "Control concerns",
+                "Priority control concerns",
                 options=control_options,
                 default=default_controls,
             )
-        submitted = st.form_submit_button("Generate requirements pack")
+        submitted = st.form_submit_button("Generate finance systems pack", type="primary")
 
     intake = IntakeAnswers(
         process_key=process_key,
@@ -199,13 +261,85 @@ def main() -> None:
     pack = generate_pack(intake)
 
     if submitted:
-        st.success("Requirements pack generated.")
+        st.success("Finance systems requirements and readiness outputs generated.")
 
+    readiness_pack = generate_implementation_readiness_pack(pack)
+    process_map_html = pack_process_map_html_bytes(pack)
+    st.divider()
+    render_section_header(
+        "02",
+        "Requirements Pack",
+        "Review scope, requirements, controls, UAT coverage, and implementation dependencies.",
+    )
     render_pack(pack)
-    render_visual_outputs(pack)
-    render_implementation_readiness(generate_implementation_readiness_pack(pack))
-    render_downloads(pack)
+    st.divider()
+    render_section_header(
+        "03",
+        "Visual Process Documentation",
+        "Inspect the deterministic finance control flow and keep Mermaid as a secondary artefact.",
+    )
+    render_visual_outputs(pack, process_map_html)
+    st.divider()
+    render_section_header(
+        "04",
+        "Control-Risk Matrix",
+        "Compare process risks, control activities, evidence expectations, and related UAT cases.",
+    )
+    render_control_risk_matrix(pack)
+    st.divider()
+    render_section_header(
+        "05",
+        "Implementation Readiness",
+        "Review readiness evidence, target-system validation, workshop prompts, and "
+        "open decisions.",
+    )
+    render_implementation_readiness(readiness_pack)
+    st.divider()
+    render_section_header(
+        "06",
+        "Downloads",
+        "Download each implementation artefact in its most useful review format.",
+    )
+    render_downloads(pack, readiness_pack, process_map_html)
     render_gallery()
+
+
+def inject_app_styles() -> None:
+    st.markdown(APP_STYLES, unsafe_allow_html=True)
+
+
+def render_app_header() -> None:
+    st.markdown(
+        """<header class="app-header">
+          <p class="app-eyebrow">Finance systems · ERP implementation</p>
+          <h1>Finance Systems Requirements Pack Generator</h1>
+          <p>Turn finance process knowledge into reviewable requirements, controls, UAT evidence,
+          process documentation, and implementation-readiness outputs.</p>
+        </header>""",
+        unsafe_allow_html=True,
+    )
+
+
+def render_section_header(index: str, title: str, description: str) -> None:
+    st.markdown(
+        f"""<div class="section-heading">
+          <span class="section-index">{index}</span><h2>{title}</h2>
+          <p>{description}</p>
+        </div>""",
+        unsafe_allow_html=True,
+    )
+
+
+def select_intake_mode() -> str:
+    if hasattr(st, "segmented_control"):
+        selected = st.segmented_control(
+            "Intake approach",
+            INTAKE_MODES,
+            default=INTAKE_MODES[0],
+            selection_mode="single",
+        )
+        return selected or INTAKE_MODES[0]
+    return st.radio("Intake approach", INTAKE_MODES, horizontal=True)
 
 
 def safe_multiselect_defaults(defaults: list[str], options: list[str]) -> list[str]:
@@ -228,14 +362,45 @@ def resolve_process_key(selected_process: str, templates: dict) -> str:
 
 
 def render_pack(pack) -> None:
-    st.subheader(f"{pack.process_name} Pack Preview")
-    for title, value in preview_sections(pack):
-        with st.expander(title, expanded=title == "Executive Summary"):
-            if isinstance(value, str):
-                st.write(value)
-            else:
-                for item in value:
-                    st.markdown(f"- {item}")
+    sections = dict(preview_sections(pack))
+    tabs = st.tabs(
+        [
+            "Scope & context",
+            "Requirements",
+            "Controls & evidence",
+            "Stories & UAT",
+            "Delivery",
+        ]
+    )
+    groups = [
+        [
+            "Executive Summary",
+            "Business Problem",
+            "Process Scope",
+            "In Scope",
+            "Out of Scope",
+            "Stakeholders and Roles",
+        ],
+        ["Functional Requirements", "Data Requirements", "Reporting Requirements"],
+        ["Controls and Audit Trail", "Acceptance Criteria"],
+        ["User Stories", "UAT Test Cases"],
+        ["Risks and Dependencies", "Current-State SOP Draft", "Target-System Fit-Gap Mapping"],
+    ]
+    for tab, titles in zip(tabs, groups, strict=True):
+        with tab:
+            for title in titles:
+                if title not in sections:
+                    continue
+                with st.expander(title, expanded=title == "Executive Summary"):
+                    _render_preview_value(sections[title])
+
+
+def _render_preview_value(value) -> None:
+    if isinstance(value, str):
+        st.write(value)
+        return
+    for item in value:
+        st.markdown(f"- {item}")
 
 
 def preview_sections(pack) -> list[tuple[str, object]]:
@@ -269,7 +434,8 @@ def preview_sections(pack) -> list[tuple[str, object]]:
 
 
 def render_guided_sop_builder(process_name: str, sample: IntakeAnswers):
-    st.markdown(
+    st.markdown("##### Guided current-state discovery")
+    st.caption(
         "Answer current-state process questions to build a reviewable SOP draft before "
         "requirements pack generation."
     )
@@ -325,82 +491,117 @@ def split_lines(value: str) -> list[str]:
     return [line.strip(" -*") for line in value.splitlines() if line.strip(" -*")]
 
 
-def render_downloads(pack) -> None:
-    st.subheader("Export")
+def render_downloads(pack, readiness_pack, process_map_html: bytes) -> None:
     col_a, col_b, col_c, col_d = st.columns(4)
     filename_base = pack.process_key.replace("_", "-")
     with col_a:
-        st.download_button(
-            "Download Markdown",
-            data=pack_to_markdown(pack),
-            file_name=f"{filename_base}-requirements-pack.md",
-            mime="text/markdown",
-        )
+        with st.container(border=True):
+            _download_group_header(
+                "Requirements Pack",
+                "Core scope, requirements, controls, and UAT.",
+            )
+            st.download_button(
+                "Download DOCX",
+                data=pack_to_docx_bytes(pack),
+                file_name=f"{filename_base}-requirements-pack.docx",
+                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                type="primary",
+            )
+            st.download_button(
+                "Download Markdown",
+                data=pack_to_markdown(pack),
+                file_name=f"{filename_base}-requirements-pack.md",
+                mime="text/markdown",
+            )
     with col_b:
-        st.download_button(
-            "Download DOCX",
-            data=pack_to_docx_bytes(pack),
-            file_name=f"{filename_base}-requirements-pack.docx",
-            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        )
+        with st.container(border=True):
+            _download_group_header("Process Flow", "Browser review plus technical Mermaid source.")
+            st.download_button(
+                "Download process map as HTML",
+                data=process_map_html,
+                file_name=f"{filename_base}-process-map.html",
+                mime="text/html",
+            )
+            st.download_button(
+                "Download Mermaid source",
+                data=pack.mermaid_process_map,
+                file_name=f"{filename_base}-process-map.mmd",
+                mime="text/plain",
+            )
     with col_c:
-        st.download_button(
-            "Download Control-Risk CSV",
-            data=pack_control_risk_csv_bytes(pack),
-            file_name=f"{filename_base}-control-risk-matrix.csv",
-            mime="text/csv",
-        )
+        with st.container(border=True):
+            _download_group_header("Control-Risk Matrix", "Editable implementation control matrix.")
+            st.download_button(
+                "Download Control-Risk XLSX",
+                data=pack_control_risk_xlsx_bytes(pack),
+                file_name=f"{filename_base}-control-risk-matrix.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            )
+            st.download_button(
+                "Download Control-Risk CSV",
+                data=pack_control_risk_csv_bytes(pack),
+                file_name=f"{filename_base}-control-risk-matrix.csv",
+                mime="text/csv",
+            )
     with col_d:
-        st.download_button(
-            "Download Control-Risk XLSX",
-            data=pack_control_risk_xlsx_bytes(pack),
-            file_name=f"{filename_base}-control-risk-matrix.xlsx",
-            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        )
+        with st.container(border=True):
+            _download_group_header(
+                "Implementation Readiness",
+                "Evidence checks and workshop decisions.",
+            )
+            st.download_button(
+                "Download readiness DOCX",
+                data=pack_to_readiness_docx_bytes(readiness_pack),
+                file_name=f"{filename_base}-implementation-readiness-pack.docx",
+                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                type="primary",
+            )
+            st.download_button(
+                "Download readiness Markdown",
+                data=pack_to_readiness_markdown(readiness_pack),
+                file_name=f"{filename_base}-implementation-readiness-pack.md",
+                mime="text/markdown",
+            )
 
 
-def render_visual_outputs(pack) -> None:
-    st.subheader("Visual Process Documentation")
-    process_map_html = pack_process_map_html_bytes(pack)
+def _download_group_header(title: str, description: str) -> None:
+    st.markdown(
+        f'<p class="download-group-title">{title}</p>'
+        f'<p class="download-group-copy">{description}</p>',
+        unsafe_allow_html=True,
+    )
+
+
+def render_visual_outputs(pack, process_map_html: bytes) -> None:
     if hasattr(st, "iframe"):
-        st.iframe(process_map_html.decode("utf-8"), height=720)
+        st.iframe(process_map_html.decode("utf-8"), height=680)
     else:
-        components.html(process_map_html.decode("utf-8"), height=720, scrolling=True)
-    st.caption("Open the downloaded HTML file directly in a browser to review or print the map.")
-    html_col, source_col = st.columns(2)
-    with html_col:
-        st.download_button(
-            "Download process map as HTML",
-            data=process_map_html,
-            file_name=f"{pack.process_key.replace('_', '-')}-process-map.html",
-            mime="text/html",
-        )
-    with source_col:
-        st.download_button(
-            "Download Mermaid source",
-            data=pack.mermaid_process_map,
-            file_name=f"{pack.process_key.replace('_', '-')}-process-map.mmd",
-            mime="text/plain",
-        )
+        components.html(process_map_html.decode("utf-8"), height=680, scrolling=True)
     with st.expander("Advanced: Mermaid source", expanded=False):
         st.code(pack.mermaid_process_map, language="mermaid")
-    with st.expander("Control-risk matrix preview", expanded=False):
-        render_dataframe(
-            [
-                {
-                    "Risk Area": row.risk_area,
-                    "Control Activity": row.control_activity,
-                    "Control Type": row.control_type,
-                    "Evidence Required": row.evidence_required,
-                    "Related UAT Case": row.related_uat_case,
-                }
-                for row in pack.control_risk_matrix
-            ]
-        )
+
+
+def render_control_risk_matrix(pack) -> None:
+    render_dataframe(
+        [
+            {
+                "Risk Area": row.risk_area,
+                "Control Activity": row.control_activity,
+                "Control Type": row.control_type,
+                "Evidence Required": row.evidence_required,
+                "Related Requirement": row.related_requirement_id,
+                "Related UAT Case": row.related_uat_case,
+            }
+            for row in pack.control_risk_matrix
+        ]
+    )
+    st.caption(
+        "The preview is intentionally compact. Use the XLSX download for the full "
+        "implementation matrix."
+    )
 
 
 def render_implementation_readiness(readiness_pack) -> None:
-    st.subheader("Implementation Readiness")
     st.write(readiness_pack.readiness_summary)
     tabs = st.tabs(
         [
@@ -453,22 +654,6 @@ def render_implementation_readiness(readiness_pack) -> None:
         "All checks start as Not assessed. Review evidence and decisions with finance and the "
         "implementation team before configuration or cutover sign-off."
     )
-    filename_base = readiness_pack.process_key.replace("_", "-")
-    markdown_col, docx_col = st.columns(2)
-    with markdown_col:
-        st.download_button(
-            "Download readiness Markdown",
-            data=pack_to_readiness_markdown(readiness_pack),
-            file_name=f"{filename_base}-implementation-readiness-pack.md",
-            mime="text/markdown",
-        )
-    with docx_col:
-        st.download_button(
-            "Download readiness DOCX",
-            data=pack_to_readiness_docx_bytes(readiness_pack),
-            file_name=f"{filename_base}-implementation-readiness-pack.docx",
-            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        )
 
 
 def _readiness_check_rows(checks) -> list[dict[str, str]]:
@@ -494,7 +679,6 @@ def render_dataframe(data) -> None:
 
 
 def render_gallery() -> None:
-    st.subheader("Example Gallery")
     templates = load_all_templates()
     gallery_links = [
         (
@@ -503,8 +687,13 @@ def render_gallery() -> None:
         )
         for process_key in SUPPORTED_PROCESSES
     ]
-    st.markdown("\n".join(f"- {link}" for link in gallery_links))
-    st.caption("Safety note: bundled examples use fictional, public-safe sample inputs.")
+    with st.expander("Representative example outputs", expanded=False):
+        st.markdown("\n".join(f"- {link}" for link in gallery_links))
+    st.markdown(
+        '<p class="public-safe-note">Public-safe note: bundled examples use fictional inputs. '
+        "Do not upload confidential business information into a public demo.</p>",
+        unsafe_allow_html=True,
+    )
 
 
 if __name__ == "__main__":
