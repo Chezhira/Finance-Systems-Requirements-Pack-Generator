@@ -16,7 +16,7 @@ A deployed Streamlit application that turns finance process knowledge into imple
 
 Finance systems projects often fail because requirements are vague, controls are undocumented, data needs are unclear, process ownership is not agreed, and UAT expectations are defined too late. This project addresses that gap by converting structured finance intake, SOP/workflow documentation, and guided process discovery into reviewable requirements packs, control-risk matrices, process-flow documentation, and implementation-readiness packs.
 
-The v0.5.0 build supports the full implementation-preparation flow:
+The v0.5.1 build supports the full implementation-preparation flow and adds explicit quality gates for generated finance artefacts:
 
 ```text
 finance process knowledge
@@ -61,7 +61,7 @@ The project is designed as a public portfolio asset for roles such as:
 
 ## Supported Finance Processes
 
-The v0.5.0 build supports eight finance processes.
+The v0.5.1 build supports eight finance processes.
 
 | Process | Coverage |
 | --- | --- |
@@ -360,6 +360,18 @@ The project does not use:
 
 Target-system mappings are curated planning prompts, not implementation guarantees. Users must validate them against the selected system edition, modules, localisation, configuration, integration landscape, and implementation scope.
 
+## Evaluation and Quality Gates
+
+The project includes a lightweight pytest-based eval layer that checks generated finance artefacts for structure completeness, ID uniqueness, traceability, control coverage, readiness completeness, export integrity, public-safe content, and deterministic behaviour without external services. This makes the generator not only deterministic, but evaluable.
+
+Run the finance artefact evaluations with:
+
+```powershell
+python scripts\run_evals.py
+```
+
+The evals cover all eight supported finance processes, both selected and unselected target-system readiness paths, and representative Markdown, DOCX, CSV, XLSX, HTML, and Mermaid outputs.
+
 ## Public-Safe Sample Data
 
 The bundled examples use fictional company names and public-safe sample inputs.
@@ -445,11 +457,19 @@ examples/
   sample_sops/
   generated_packs/
 tests/
+  evals/
+    eval_helpers.py
+    test_pack_structure_eval.py
+    test_traceability_eval.py
+    test_control_coverage_eval.py
+    test_readiness_eval.py
+    test_export_integrity_eval.py
 docs/
   screenshots/
   v0.3.0_intake_and_mapping_plan.md
 scripts/
   generate_examples.py
+  run_evals.py
 ```
 
 ## Release History
@@ -491,6 +511,10 @@ The app now generates styled browser-viewable process maps, editable Mermaid sou
 Added a separate readiness pack derived from requirements, process templates, data needs, controls, reporting, audit requirements, UAT cases, fit-gap mapping, control-risk rows, and implementation dependencies.
 
 The release adds finance-process-specific implementation, target-system, data, controls/UAT, workshop, cutover, and open-decision outputs with source traceability and Markdown/DOCX downloads.
+
+### v0.5.1 - Evaluation and Finance Artefact Quality Gates
+
+Added pytest-based evaluations for requirements structure, ID uniqueness, traceability, control coverage, readiness completeness, export integrity, public-safe content, and deterministic generation across all supported finance processes.
 
 ## Roadmap
 
