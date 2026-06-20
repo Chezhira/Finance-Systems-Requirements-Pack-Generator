@@ -8,9 +8,12 @@
 ![Ruff](https://img.shields.io/badge/lint-ruff-46a2f1)
 ![Pytest](https://img.shields.io/badge/tests-pytest-0a7f3f)
 ![Deterministic](https://img.shields.io/badge/design-deterministic-0e7c66)
+![Evals](https://img.shields.io/badge/evals-finance_quality_gates-0e7c66)
 ![No External AI/API](https://img.shields.io/badge/external_AI%2FAPI-none-142238)
 
 **Live demo:** [Finance Systems Requirements Pack Generator](https://finance-systems-requirements-pack-generator.streamlit.app/)
+
+**Case study:** [Where this tool comes from](CASE_STUDY.md)
 
 A deployed Streamlit application that turns finance process knowledge into implementation-ready ERP and finance transformation artefacts.
 
@@ -362,7 +365,9 @@ Target-system mappings are curated planning prompts, not implementation guarante
 
 ## Evaluation and Quality Gates
 
-The project includes a lightweight pytest-based eval layer that checks generated finance artefacts for structure completeness, ID uniqueness, traceability, control coverage, readiness completeness, export integrity, public-safe content, and deterministic behaviour without external services. This makes the generator not only deterministic, but evaluable.
+The project includes a lightweight pytest-based eval layer that checks generated finance artefacts for structure completeness, ID uniqueness, traceability, control coverage, readiness completeness, export integrity, public-safe content, and deterministic behaviour.
+
+This makes the generator not only deterministic, but evaluable: generated requirements, controls, UAT, readiness checks, and exports are checked against finance-specific quality rules.
 
 Run the finance artefact evaluations with:
 
@@ -371,6 +376,12 @@ python scripts\run_evals.py
 ```
 
 The evals cover all eight supported finance processes, both selected and unselected target-system readiness paths, and representative Markdown, DOCX, CSV, XLSX, HTML, and Mermaid outputs.
+
+## Case Study
+
+This project is based on finance systems work from real multi-entity ERP migration and finance transformation experience. The case study explains the failure mode this tool is designed to prevent: requirements, controls, evidence, and UAT being defined too late to guide implementation.
+
+Read: [Where this tool comes from](CASE_STUDY.md)
 
 ## Public-Safe Sample Data
 
@@ -429,6 +440,8 @@ examples/generated_packs/
 ```powershell
 python -m ruff check .
 python -m pytest
+python -m pytest tests/evals
+python scripts\run_evals.py
 ```
 
 GitHub Actions runs ruff, pytest, and a sample generation smoke step on push and pull request.
@@ -439,6 +452,7 @@ GitHub Actions runs ruff, pytest, and a sample generation smoke step on push and
 .streamlit/
   config.toml
 app.py
+CASE_STUDY.md
 src/finance_requirements_generator/
   questionnaire.py
   readiness_engine.py
@@ -512,9 +526,11 @@ Added a separate readiness pack derived from requirements, process templates, da
 
 The release adds finance-process-specific implementation, target-system, data, controls/UAT, workshop, cutover, and open-decision outputs with source traceability and Markdown/DOCX downloads.
 
-### v0.5.1 - Evaluation and Finance Artefact Quality Gates
+### v0.5.1 - Evaluation and Quality Gates
 
-Added pytest-based evaluations for requirements structure, ID uniqueness, traceability, control coverage, readiness completeness, export integrity, public-safe content, and deterministic generation across all supported finance processes.
+Added pytest-based finance artefact evals covering structure, ID uniqueness, traceability, control coverage, implementation readiness completeness, export integrity, public-safe content checks, and deterministic generation.
+
+This release strengthens the project from a deterministic generator into an evaluable finance systems implementation tool.
 
 ## Roadmap
 
