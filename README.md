@@ -15,6 +15,12 @@
 
 **Case study:** [Where this tool comes from](CASE_STUDY.md)
 
+## Reviewer Summary
+
+This project demonstrates finance systems analysis by converting finance process knowledge into ERP-ready requirements, controls, UAT scenarios, process maps, and implementation readiness packs.
+
+It is designed to show how a finance professional can translate close, reconciliation, tax, accounts payable, accounts receivable, inventory, intercompany, and payroll processes into reviewable artefacts for ERP and finance transformation delivery.
+
 A deployed Streamlit application that turns finance process knowledge into implementation-ready ERP and finance transformation artefacts.
 
 Finance systems projects often fail because requirements are vague, controls are undocumented, data needs are unclear, process ownership is not agreed, and UAT expectations are defined too late. This project addresses that gap by converting structured finance intake, SOP/workflow documentation, and guided process discovery into reviewable requirements packs, control-risk matrices, process-flow documentation, and implementation-readiness packs.
@@ -55,6 +61,25 @@ Recommended examples to review first:
 | Browser-viewable process flow | [Month-end Close HTML](examples/generated_packs/month_end_close_process_map.html) |
 | Styled control-risk matrix | [Month-end Close XLSX](examples/generated_packs/month_end_close_control_risk_matrix.xlsx) |
 | Implementation readiness pack | [Month-end Close DOCX](examples/generated_packs/month_end_close_implementation_readiness_pack.docx) and [Markdown](examples/generated_packs/month_end_close_implementation_readiness_pack.md) |
+
+## Why This Matters For Finance Transformation
+
+Finance systems projects rarely fail because teams cannot imagine a dashboard. They fail because process ownership, source data, approval evidence, audit trail requirements, exception handling, control design, and UAT expectations were not made specific early enough.
+
+This project focuses on the implementation layer that often gets rushed:
+
+```text
+finance process knowledge
+-> structured intake
+-> requirements pack
+-> SOP draft
+-> target-system fit-gap mapping
+-> controls, evidence, and UAT coverage
+-> visual process documentation
+-> implementation readiness pack
+```
+
+The result is a practical bridge between finance operations and finance systems delivery.
 
 ## What This Project Demonstrates
 
@@ -346,24 +371,13 @@ The app is deployed on Streamlit Cloud:
 
 The live deployment is intended for public-safe portfolio demonstration. Use fictional or non-confidential inputs only. Do not upload employer, client, supplier, bank, VAT, payroll, HR, customer, or operational data into the public app.
 
-## Why This Matters For Finance Transformation
+## Public-Safe Sample Data
 
-Finance systems projects rarely fail because teams cannot imagine a dashboard. They fail because process ownership, source data, approval evidence, audit trail requirements, exception handling, control design, and UAT expectations were not made specific early enough.
+The bundled examples use fictional company names and public-safe sample inputs.
 
-This project focuses on the implementation layer that often gets rushed:
+The repository does not contain real employer, client, supplier, bank, VAT, payroll, HR, customer, or operational data.
 
-```text
-finance process knowledge
--> structured intake
--> requirements pack
--> SOP draft
--> target-system fit-gap mapping
--> controls, evidence, and UAT coverage
--> visual process documentation
--> implementation readiness pack
-```
-
-The result is a practical bridge between finance operations and finance systems delivery.
+The live app is intended for public-safe portfolio demonstration only. Do not upload confidential business information into the public deployment.
 
 ## Design Principles
 
@@ -404,14 +418,6 @@ This project is based on finance systems work from real multi-entity ERP migrati
 The case study explains why the tool is designed around traceability from intake to requirements, controls, UAT, and readiness rather than around generic document generation.
 
 Read: [Where this tool comes from](CASE_STUDY.md)
-
-## Public-Safe Sample Data
-
-The bundled examples use fictional company names and public-safe sample inputs.
-
-The repository does not contain real employer, client, supplier, bank, VAT, payroll, HR, customer, or operational data.
-
-The live app is intended for public-safe portfolio demonstration only. Do not upload confidential business information into the public deployment.
 
 ## Technical Overview
 
@@ -555,9 +561,7 @@ Added finance-specific evals for structure, ID uniqueness, traceability, control
 
 This release strengthens the project from a deterministic generator into an evaluable finance systems implementation tool.
 
-## Roadmap
-
-### Future Considerations
+## Future Considerations
 
 Potential future work may include AI-assisted drafting, but only with strict schema validation, traceability, and human review.
 
